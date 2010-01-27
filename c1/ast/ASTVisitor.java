@@ -6,7 +6,6 @@ public interface ASTVisitor {
 	  public void visit(StatementList node);
 	  public void visit(DeclarationStatement node);
 	  public void visit(AssignmentStatement node);
-	  public void visit(ExpressionStatement node);
 	  public void visit(IfStatement node);
 	  public void visit(WhileStatement node);
 	  public void visit(IntegerType node);

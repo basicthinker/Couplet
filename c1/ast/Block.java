@@ -2,16 +2,33 @@ package canto.c1.ast;
 
 public class Block extends Statement {
 
+	/** The statements in the block. */
+	private final StatementList statementList;
+	
+	/**
+	 * Construct a block.
+	 * @param statementList statements in the block
+	 */
+	public Block(StatementList statementList) {
+		this.statementList = statementList;
+	}
+	
 	@Override
 	public void accept(ASTVisitor visitor) {
-		// TODO Auto-generated method stub
-
+		visitor.visit(this);
 	}
 
 	@Override
-	public NodeType getType() {
-		// TODO Auto-generated method stub
-		return null;
+	public NodeType getNodeType() {
+		return NodeType.BLOCK;
+	}
+
+	/**
+	 * Get the statements in the block.
+	 * @return the statements list
+	 */
+	public StatementList getStatementList() {
+		return statementList;
 	}
 
 }

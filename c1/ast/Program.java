@@ -2,16 +2,33 @@ package canto.c1.ast;
 
 public class Program extends ASTNode {
 
+	/** The body block of the program. */
+	private final Block body;
+	
+	/**
+	 * Construct a program.
+	 * @param body the body block
+	 */
+	public Program(Block body) {
+		this.body = body;
+	}
+	
 	@Override
 	public void accept(ASTVisitor visitor) {
-		// TODO Auto-generated method stub
-
+		visitor.visit(this);
 	}
 
 	@Override
-	public NodeType getType() {
-		// TODO Auto-generated method stub
-		return null;
+	public NodeType getNodeType() {
+		return NodeType.PROGRAM;
 	}
 
+	/**
+	 * Get the body block of the program.
+	 * @return the body block
+	 */
+	public Block getBody() {
+		return body;
+	}
+	
 }

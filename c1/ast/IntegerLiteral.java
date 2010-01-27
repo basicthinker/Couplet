@@ -2,16 +2,33 @@ package canto.c1.ast;
 
 public class IntegerLiteral extends Literal {
 
-	@Override
-	public void accept(ASTVisitor visitor) {
-		// TODO Auto-generated method stub
-		
+	/** The value of the integer literal. */
+	private final Integer value;
+	
+	/**
+	 * Construct a integer literal.
+	 * @param value the value of integer literal
+	 */
+	public IntegerLiteral(Integer value) {
+		this.value = value;
 	}
 
 	@Override
-	public NodeType getType() {
-		// TODO Auto-generated method stub
-		return null;
+	public void accept(ASTVisitor visitor) {
+		visitor.visit(this);
+	}
+
+	@Override
+	public NodeType getNodeType() {
+		return NodeType.INTEGER_LITERAL;
+	}
+
+	/**
+	 * Get the value of the integer literal.
+	 * @return the value of the integer literal
+	 */
+	public Integer getValue() {
+		return value;
 	}
 
 }

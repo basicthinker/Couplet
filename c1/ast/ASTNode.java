@@ -2,6 +2,9 @@ package canto.c1.ast;
 
 public abstract class ASTNode {
 	
+	/**
+	 * AST node type.
+	 */
 	public enum NodeType {
 		PROGRAM,
 		BLOCK,
@@ -9,7 +12,6 @@ public abstract class ASTNode {
 		STATEMENT_LIST,
 		DECLARATION_STATEMENT,
 		ASSIGNMENT_STATEMENT,
-		EXPRESSION_STATEMENT,	
 		IF_STATEMENT,
 		WHILE_STATEMENT,
 		TYPE,
@@ -23,7 +25,15 @@ public abstract class ASTNode {
 		INTEGER_LITERAL,
 	}
 	
+	/**
+	 * Accepts the given visitor on a visit of the current node.
+	 * @param visitor the visitor
+	 */
 	public abstract void accept(ASTVisitor visitor);
 	
-	public abstract NodeType getType();
+	/**
+	 * Get the type of the AST node.
+	 * @return the node type
+	 */
+	public abstract NodeType getNodeType();
 }
