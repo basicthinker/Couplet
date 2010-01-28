@@ -2,7 +2,7 @@ package canto.c1.ast;
 
 public interface ASTVisitor {
 	  public void visit(Program node);
-	  public void visit(Block node);
+	  public void visit(BlockStatement node);
 	  public void visit(StatementList node);
 	  public void visit(DeclarationStatement node);
 	  public void visit(AssignmentStatement node);
