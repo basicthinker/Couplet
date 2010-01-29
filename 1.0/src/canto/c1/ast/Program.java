@@ -3,13 +3,13 @@ package canto.c1.ast;
 public class Program extends ASTNode {
 
 	/** The body block of the program. */
-	private final BlockStatement body;
+	private final Block body;
 	
 	/**
 	 * Construct a program.
 	 * @param body the body block
 	 */
-	public Program(BlockStatement body) {
+	public Program(Block body) {
 		this.body = body;
 	}
 	
@@ -27,7 +27,7 @@ public class Program extends ASTNode {
 	 * Get the body block of the program.
 	 * @return the body block
 	 */
-	public BlockStatement getBody() {
+	public Block getBody() {
 		return body;
 	}
 	

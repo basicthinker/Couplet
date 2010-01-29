@@ -36,4 +36,5 @@ public abstract class ASTNode {
 	 * @return the node type
 	 */
 	public abstract NodeType getNodeType();
+	
 }

@@ -1,6 +1,6 @@
 package canto.c1.ast;
 
-public class BlockStatement extends Statement {
+public class Block extends Statement {
 
 	/** The statements in the block. */
 	private final StatementList statementList;
@@ -9,7 +9,7 @@ public class BlockStatement extends Statement {
 	 * Construct a block.
 	 * @param statementList statements in the block
 	 */
-	public BlockStatement(StatementList statementList) {
+	public Block(StatementList statementList) {
 		this.statementList = statementList;
 	}
 	
