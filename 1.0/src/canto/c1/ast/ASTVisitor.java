@@ -8,7 +8,7 @@ public interface ASTVisitor {
 	  public void visit(AssignmentStatement node);
 	  public void visit(IfStatement node);
 	  public void visit(WhileStatement node);
-	  public void visit(IntegerType node);
+	  public void visit(PrimitiveType node);
 	  public void visit(Identifier node);
 	  public void visit(UnaryExpression node);
 	  public void visit(BinaryExpression node);
