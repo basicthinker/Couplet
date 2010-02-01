@@ -1,5 +1,11 @@
 package canto.c1.ast;
 
+/**
+ * The interface of the visitor for AST.
+ *     Each method of the interface is a visit for a special kind of AST node.
+ *     Each kind of the AST node has a accept method, it will invoke the 
+ * corresponding visit method of the interface.
+ */
 public interface ASTVisitor {
 	  public void visit(Program node);
 	  public void visit(Block node);
