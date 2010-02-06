@@ -12,12 +12,12 @@ import canto.c1.Token;
 public class Constant extends Token {
 
 	/**
-	 * @param line
-	 * @param column
+	 * @param lineNum
+	 * @param columnNum
 	 * @param lexeme
 	 */
-	public Constant(int line, int column, String lexeme) {
-		super(line, column, lexeme);
+	public Constant(int lineNumber, String lexeme) {
+		super(lineNumber, lexeme);
 		value = Integer.parseInt(lexeme);
 	}
 

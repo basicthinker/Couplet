@@ -12,12 +12,12 @@ import canto.c1.Token;
 public class Identifier extends Token {
 
 	/**
-	 * @param line
+	 * @param lineNumber
 	 * @param column
 	 * @param word
 	 */
-	public Identifier(int line, int column, String word) {
-		super(line, column, word);
+	public Identifier(int lineNumber, String word) {
+		super(lineNumber, word);
 		// TODO Auto-generated constructor stub
 	}
 

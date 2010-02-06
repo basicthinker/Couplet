@@ -12,12 +12,12 @@ import canto.c1.Token;
 public class Keyword extends Token {
 
 	/**
-	 * @param line
+	 * @param lineNumber
 	 * @param column
 	 * @param lexeme
 	 */
-	public Keyword(int line, int column, String lexeme) {
-		super(line, column, lexeme);
+	public Keyword(int lineNumber, String lexeme) {
+		super(lineNumber, lexeme);
 	}
 
 	/**

@@ -9,8 +9,7 @@ package canto.c1;
  */
 public abstract class Token implements canto.Token {
 
-	private int lineNum;
-	private int columnNum;
+	private int lineNumber;
 	private String lexeme;
 	
 	public static final int CONSTANT = 1;
@@ -20,13 +19,12 @@ public abstract class Token implements canto.Token {
 	public static final int PUNCTUATION = 5;
 	
 	/**
-	 * @param line 单词所在的行号
-	 * @param column 单词所在的列数
+	 * @param line 单词所在行号
+	 * @param column 单词所在列数
 	 * @param lexeme 单词的字面
 	 */
-	public Token(int line, int column, String lexeme) {
-		setLine(line);
-		setColumn(column);
+	public Token(int line, String lexeme) {
+		setLineNumber(line);
 		setLexeme(lexeme);
 	}
 	
@@ -34,37 +32,29 @@ public abstract class Token implements canto.Token {
 	 * 
 	 */
 	public Token() {
-		setLine(0);
-		setColumn(0);
+		setLineNumber(0);
 		setLexeme("");
 	}
 	
 	/**
-	 * @param line the line to set
+	 * @param lineNumber 单词所在行号
 	 */
-	public void setLine(int line) {
-		this.lineNum = line;
+	public void setLineNumber(int lineNumber) {
+		this.lineNumber = lineNumber;
 	}
 
 	/**
-	 * @return the line
+	 * @return 行号
 	 */
-	public int getLineNum() {
-		return lineNum;
-	}
-
-	/**
-	 * @param column the column to set
-	 */
-	public void setColumn(int column) {
-		this.columnNum = column;
+	public int getLineNumber() {
+		return lineNumber;
 	}
 
 	/**
 	 * @return the column
 	 */
-	public int getColumnNum() {
-		return columnNum;
+	public int getColumnNumber() {
+		return 0;
 	}
 
 	/**

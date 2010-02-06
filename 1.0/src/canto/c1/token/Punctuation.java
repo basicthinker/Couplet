@@ -12,12 +12,12 @@ import canto.c1.Token;
 public class Punctuation extends Token {
 
 	/**
-	 * @param line
+	 * @param lineNumber
 	 * @param column
 	 * @param lexeme
 	 */
-	public Punctuation(int line, int column, String lexeme) {
-		super(line, column, lexeme);
+	public Punctuation(int lineNumber, String lexeme) {
+		super(lineNumber, lexeme);
 		// TODO Auto-generated constructor stub
 	}
 

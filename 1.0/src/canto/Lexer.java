@@ -13,8 +13,10 @@ import java.util.List;
  */
 public interface Lexer {
 
-	public void open(InputStreamReader in_str) throws IOException;
+	public void open(InputStreamReader inStr) throws IOException;
 	
-	public List<canto.Token> scan();
+	public List<canto.Token> scan() throws IOException;
+	
+	public List<canto.Token> getTokenList();
 	
 }
