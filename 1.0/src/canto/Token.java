@@ -10,12 +10,12 @@ package canto;
 public interface Token {
 
 	/**
-	 * @return 返回单词所在行号，由1计起，如果为零表明行号未计算
+	 * @return 单词所在行号，由1计起，如果为零表明行号未计算
 	 */
 	public int getLineNumber();
 	
 	/**
-	 * @return 返回单词所在列数，由1计起，如果为零表明列数未计算
+	 * @return 单词所在列数，由1计起，如果为零表明列数未计算
 	 */
 	public int getColumnNumber();
 	
