@@ -136,7 +136,8 @@ public class Compiler implements canto.Compiler {
 						break;
 				}
 				
-				System.out.println(token.getLexeme());
+				System.out.print(token.getLexeme() + " ");
+				System.out.println(token.getAttribute().toString());
 				
 			} // for
 			
