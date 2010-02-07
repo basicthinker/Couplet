@@ -11,6 +11,8 @@ import canto.c1.Token;
  */
 public class Constant extends Token {
 
+	private final int value;
+	
 	/**
 	 * @param lineNum
 	 * @param columnNum
@@ -35,8 +37,6 @@ public class Constant extends Token {
 	public Integer getAttribute() {
 		return value;
 	}
-
-	private final int value;
 
 	@Override
 	public int getType() {

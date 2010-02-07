@@ -120,24 +120,25 @@ public class Compiler implements canto.Compiler {
 				
 				switch (token.getType()) { 
 					case canto.c1.Token.CONSTANT:
-						System.out.print(" CONSTANT: ");
+						System.out.print(" CONST:\t");
 						break;
 					case canto.c1.Token.ID:
-						System.out.print(" ID: ");
+						System.out.print(" ID:\t");
 						break;
 					case canto.c1.Token.KEYWORD:
-						System.out.print(" KEYWORD: ");
+						System.out.print(" KEYW:\t");
 						break;
 					case canto.c1.Token.OPERERATOR:
-						System.out.print(" OPER: ");
+						System.out.print(" OPER:\t");
 						break;
 					case canto.c1.Token.PUNCTUATION:
-						System.out.print(" PUNC: ");
+						System.out.print(" PUNC:\t");
 						break;
 				}
 				
-				System.out.print(token.getLexeme() + " ");
-				System.out.println(token.getAttribute().toString());
+				System.out.print(token.getLexeme() + "\twith ");
+				if (token.getAttribute() == null) System.out.println("null");
+				else System.out.println(token.getAttribute().toString());
 				
 			} // for
 			

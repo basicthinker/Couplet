@@ -36,6 +36,7 @@ public class Lexer implements canto.Lexer {
 	public void open(InputStreamReader inStr) throws IOException {
 		inBuf = new LineNumberReader(inStr);
 		inBuf.ready();
+		inBuf.setLineNumber(1);
 	}
 
 	/* (non-Javadoc)
@@ -44,16 +45,17 @@ public class Lexer implements canto.Lexer {
 	@Override
 	public List<Token> scan() throws IOException {
 		// TODO Auto-generated method stub
-		int bufChar = inBuf.read();
-		while (bufChar != -1) {
+		int intBufChar = inBuf.read();
+		while (intBufChar != -1) {
 			
 			int lineNumber = inBuf.getLineNumber();
-			String lexeme = null;
+			StringBuffer lexBuf = new StringBuffer();
 			
-			if (bufChar == '_' || 'a' <= bufChar && bufChar <= 'z' 
-					|| 'A' <= bufChar && bufChar <= 'Z') {
+			if (intBufChar == '_' || 'a' <= intBufChar && intBufChar <= 'z' 
+					|| 'A' <= intBufChar && intBufChar <= 'Z') {
 				
-				bufChar = recognizeWord((char)bufChar, lexeme);
+				intBufChar = recognizeWord((char)intBufChar, lexBuf);
+				String lexeme = lexBuf.toString();
 				
 				if (reserved.contains(lexeme)) {
 					tokenList.add(new Keyword(lineNumber, lexeme));
@@ -61,78 +63,81 @@ public class Lexer implements canto.Lexer {
 					tokenList.add(new Identifier(lineNumber, lexeme));
 				}
 				
-			} else if ('0' <= bufChar && bufChar <= '9') {
+			} else if ('0' <= intBufChar && intBufChar <= '9') {
 				
-				bufChar = recognizeInteger((char)bufChar, lexeme);
+				intBufChar = recognizeInteger((char)intBufChar, lexBuf);
+				String lexeme = lexBuf.toString();
 				tokenList.add(new Constant(lineNumber, lexeme));
 				
-			} else if (bufChar == ' ' || bufChar == '\t' || bufChar == '\n') {
+			} else if (intBufChar == ' ' || intBufChar == '\t' || intBufChar == '\n') {
 				
-				bufChar = skipWhiteSpaces();
+				intBufChar = skipWhiteSpaces();
 
-			} else if (bufChar == '=') {
+			} else if (intBufChar == '=') {
 				
 				int nextChar = inBuf.read();
 				if (nextChar == '=') {
 					tokenList.add(new Operator(lineNumber, "=="));
-					bufChar = -1;
+					intBufChar = -1;
 				} else {
 					tokenList.add(new Punctuation(lineNumber, "="));
-					bufChar = nextChar;
+					intBufChar = nextChar;
 				}
 				
-			} else if (bufChar == ';' || bufChar == '{' || bufChar == '}' 
-				|| bufChar == '(' || bufChar == ')') {
+			} else if (intBufChar == ';' || intBufChar == '{' || intBufChar == '}' 
+				|| intBufChar == '(' || intBufChar == ')') {
 				
-				bufChar = recognizePunctuation((char)bufChar, lexeme);
+				intBufChar = recognizePunctuation((char)intBufChar, lexBuf);
+				String lexeme = lexBuf.toString();
 				tokenList.add(new Punctuation(lineNumber, lexeme));
 				
 			} else {
 				
-				bufChar = recognizeOperator((char)bufChar, lexeme);
+				intBufChar = recognizeOperator((char)intBufChar, lexBuf);
+				String lexeme = lexBuf.toString();
 				tokenList.add(new Operator(lineNumber, lexeme));
 				
 			}
 			
-			if (bufChar == -1) {
-				bufChar = inBuf.read();
+			if (intBufChar == -1) {
+				intBufChar = inBuf.read();
 			}
 		} // while
 		return null;
 	}
 	
-	private int recognizePunctuation(char bufChar, String lexeme) {
-		lexeme = String.valueOf(bufChar);
+	private int recognizePunctuation(char bufChar, StringBuffer lexBuf) {
+		lexBuf.append(bufChar);
 		return -1;
 	}
 
-	private int recognizeOperator(char bufChar, String lexeme) throws IOException {
+	private int recognizeOperator(char bufChar, StringBuffer lexBuf) throws IOException {
 		switch (bufChar) {
 			case '+': 
 			case '-':
 			case '*':
-				lexeme = String.valueOf(bufChar);
+				lexBuf.append(bufChar);
 				break;
 			case '>':
 			case '<':
 			case '!':
-				int nextChar = inBuf.read();
-				if (nextChar == '=') {
-					lexeme = new StringBuffer().append(bufChar).append(nextChar).toString();
+				int intNextChar = inBuf.read();
+				if (intNextChar == '=') {
+					lexBuf.append(bufChar).append((char)intNextChar).toString();
 				} else {
-					lexeme = String.valueOf(bufChar);
-					return nextChar;
+					lexBuf.append(bufChar);
+					return intNextChar;
 				}
 				break;
 			case '=':
 			case '|':
 			case '&':
-				nextChar = inBuf.read();
-				if (nextChar == bufChar) {
-					lexeme = new StringBuffer().append(bufChar).append(nextChar).toString();
+				intNextChar = inBuf.read();
+				if (intNextChar == bufChar) {
+					lexBuf.append(bufChar).append((char)intNextChar).toString();
 				} else {
-					lexeme = String.valueOf(bufChar);
-					return nextChar;
+					lexBuf.append(bufChar);
+					return intNextChar;
 				}
 				break;
 			default:
@@ -141,15 +146,14 @@ public class Lexer implements canto.Lexer {
 		return -1;
 	}
 
-	private int recognizeInteger(char prefix, String lexeme) throws IOException {
-		StringBuffer lexBuf = new StringBuffer(prefix);
-		int nextChar = inBuf.read();
-		while (nextChar != -1 && '0' <= nextChar && nextChar <= '9') {
-			lexBuf.append(nextChar);
-			nextChar = inBuf.read();
+	private int recognizeInteger(char prefix, StringBuffer lexBuf) throws IOException {
+		lexBuf.append(prefix);
+		int intNextChar = inBuf.read();
+		while (intNextChar != -1 && '0' <= intNextChar && intNextChar <= '9') {
+			lexBuf.append((char)intNextChar);
+			intNextChar = inBuf.read();
 		}
-		lexeme = lexBuf.toString();
-		return nextChar;
+		return intNextChar;
 	}
 
 	private int skipWhiteSpaces() throws IOException {
@@ -162,18 +166,17 @@ public class Lexer implements canto.Lexer {
 		return nextChar;
 	}
 
-	private int recognizeWord(char prefix, String lexeme) throws IOException {
-		StringBuffer lexBuf = new StringBuffer(prefix);
-		int nextChar = inBuf.read();
-		while (nextChar != -1) {
-			if ('a' <= nextChar && nextChar <= 'z'
-				|| 'A' <= nextChar && nextChar <= 'Z') {
-				lexBuf.append(nextChar);
-				nextChar = inBuf.read();
+	private int recognizeWord(char prefix, StringBuffer lexBuf) throws IOException {
+		lexBuf.append(prefix);
+		int intNextChar = inBuf.read();
+		while (intNextChar != -1) {
+			if ('a' <= intNextChar && intNextChar <= 'z'
+				|| 'A' <= intNextChar && intNextChar <= 'Z') {
+				lexBuf.append((char)intNextChar);
+				intNextChar = inBuf.read();
 			} else break;
 		}
-		lexeme = lexBuf.toString();
-		return nextChar;
+		return intNextChar;
 	}
 
 	private void reserveWords() {

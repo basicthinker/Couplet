@@ -44,28 +44,28 @@ public abstract class Token implements canto.Token {
 	}
 
 	/**
-	 * @return 行号
+	 * @return 单词所在行号
 	 */
 	public int getLineNumber() {
 		return lineNumber;
 	}
 
 	/**
-	 * @return the column
+	 * @return 单词所在列数
 	 */
 	public int getColumnNumber() {
 		return 0;
 	}
 
 	/**
-	 * @param lexeme the lexeme to set
+	 * @param lexeme 单词
 	 */
 	public void setLexeme(String lexeme) {
 		this.lexeme = lexeme;
 	}
 
 	/**
-	 * @return the lexeme
+	 * @return 单词
 	 */
 	public String getLexeme() {
 		return lexeme;
