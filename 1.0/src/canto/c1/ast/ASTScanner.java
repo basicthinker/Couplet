@@ -18,17 +18,10 @@ public class ASTScanner implements ASTVisitor {
 
 	@Override
 	public void visit(Block node) {
-		node.getStatementList().accept(this);
 	}
 
 	@Override
-	public void visit(StatementList node) {
-		node.getHead().accept(this);
-		node.getTail().accept(this);
-	}
-
-	@Override
-	public void visit(DeclarationStatement node) {
+	public void visit(Declaration node) {
 		node.getType().accept(this);
 		node.getIdentifier().accept(this);
 	}
@@ -51,13 +44,15 @@ public class ASTScanner implements ASTVisitor {
 	}
 
 	@Override
-	public void visit(PrimitiveType node) {		
+	public void visit(InputStatement node) {
+		node.getIdentifier().accept(this);
 	}
 
 	@Override
-	public void visit(Identifier node) {
+	public void visit(OutputStatement node) {
+		node.getExpression().accept(this);
 	}
-
+	
 	@Override
 	public void visit(UnaryExpression node) {
 		node.getOperand().accept(this);
@@ -73,9 +68,26 @@ public class ASTScanner implements ASTVisitor {
 	public void visit(ParenthesizedExpression node) {
 		node.getBody().accept(this);
 	}
+	
+	@Override
+	public void visit(Identifier node) {
+	}
 
 	@Override
 	public void visit(IntegerLiteral node) {
+	}
+	
+	@Override
+	public void visit(PrimitiveType node) {		
+	}
+
+
+	@Override
+	public void visit(UnaryOperator node) {
+	}
+
+	@Override
+	public void visit(BinaryOperator node) {
 	}
 
 }

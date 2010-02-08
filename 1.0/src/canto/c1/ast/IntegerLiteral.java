@@ -19,8 +19,8 @@ public class IntegerLiteral extends Literal {
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		return NodeType.INTEGER_LITERAL;
+	public int getNodeType() {
+		return INTEGER_LITERAL;
 	}
 
 	/**

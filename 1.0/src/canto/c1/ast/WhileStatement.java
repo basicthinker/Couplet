@@ -24,8 +24,8 @@ public class WhileStatement extends Statement {
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		return NodeType.WHILE_STATEMENT;
+	public int getNodeType() {
+		return WHILE_STATEMENT;
 	}
 
 	/**

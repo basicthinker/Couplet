@@ -19,8 +19,8 @@ public class Identifier extends Expression {
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		return NodeType.IDENTIFIER;
+	public int getNodeType() {
+		return IDENTIFIER;
 	}
 
 	/**

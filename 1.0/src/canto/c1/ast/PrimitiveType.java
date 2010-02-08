@@ -2,22 +2,18 @@ package canto.c1.ast;
 
 public class PrimitiveType extends Type {
 
-	/**
-	 * Types of the primitive type. 
-	 */
-	enum Type {
-		INTEGER,
-	}
+	/** The type code constant of each primitive type. */
+	public static final int INTEGER = 1;
 	
-	/** The type of the primitive type. */
-	private final PrimitiveType.Type type;
+	/** The type code indicating the kind of the primitive type. */
+	private final int code;
 	
 	/**
 	 * Construct a primitive type.
-	 * @param type the type of the primitive type.
+	 * @param type the type code
 	 */
-	public PrimitiveType(PrimitiveType.Type type) {
-		this.type = type;
+	public PrimitiveType(int code) {
+		this.code = code;
 	}
 
 	@Override
@@ -26,16 +22,16 @@ public class PrimitiveType extends Type {
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		return NodeType.PRIMITIVE_TYPE;
+	public int getNodeType() {
+		return PRIMITIVE_TYPE;
 	}
 
 	/**
-	 * Get the type of the primitive type.
-	 * @return the type of the primitive type.
+	 * Get the type code of the primitive type.
+	 * @return the type code
 	 */
-	public PrimitiveType.Type getType() {
-		return type;
+	public int getTypeCode() {
+		return code;
 	}
 
 }

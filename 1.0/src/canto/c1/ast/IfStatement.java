@@ -41,8 +41,8 @@ public class IfStatement extends Statement {
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		return NodeType.IF_STATEMENT;
+	public int getNodeType() {
+		return IF_STATEMENT;
 	}
 
 	/**

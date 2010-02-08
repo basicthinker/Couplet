@@ -19,8 +19,8 @@ public class Program extends ASTNode {
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		return NodeType.PROGRAM;
+	public int getNodeType() {
+		return PROGRAM;
 	}
 
 	/**

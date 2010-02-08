@@ -15,14 +15,12 @@ public class InputStatement extends Statement {
 
 	@Override
 	public void accept(ASTVisitor visitor) {
-		// TODO Auto-generated method stub
-
+		visitor.visit(this);
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		// TODO Auto-generated method stub
-		return null;
+	public int getNodeType() {
+		return INPUT_STATEMENT;
 	}
 
 	/**

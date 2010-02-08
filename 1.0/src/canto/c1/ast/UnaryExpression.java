@@ -2,15 +2,6 @@ package canto.c1.ast;
 
 public class UnaryExpression extends Expression {
 
-	/**
-	 * Unary operator. 
-	 */
-	public enum Operator {
-		POSITIVE,
-		NEGTIVE,
-		NOT,
-	}
-	
 	/** The operator in the unary expression. */
 	private final Operator operator;
 	
@@ -33,8 +24,8 @@ public class UnaryExpression extends Expression {
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		return NodeType.UNARY_EXPRESSION;
+	public int getNodeType() {
+		return UNARY_EXPRESSION;
 	}
 
 	/**

@@ -1,16 +1,18 @@
 package canto.c1.ast;
 
+import java.util.List;
+
 public class Block extends Statement {
 
-	/** The statements in the block. */
-	private final StatementList statementList;
+	/** The list to store statements and declarations. */
+	private final List<Blockable> list;
 	
 	/**
 	 * Construct a block.
-	 * @param statementList statements in the block
+	 * @param list the list to store statements and declarations
 	 */
-	public Block(StatementList statementList) {
-		this.statementList = statementList;
+	public Block(List<Blockable> list) {
+		this.list = list;
 	}
 	
 	@Override
@@ -19,16 +21,16 @@ public class Block extends Statement {
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		return NodeType.BLOCK;
+	public int getNodeType() {
+		return BLOCK;
 	}
 
 	/**
-	 * Get the statements in the block.
-	 * @return the statements list
+	 * Get the list in the block.
+	 * @return the list to store statements and declarations
 	 */
-	public StatementList getStatementList() {
-		return statementList;
+	public List<Blockable> getList() {
+		return list;
 	}
 
 }

@@ -19,8 +19,8 @@ public class ParenthesizedExpression extends Expression {
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		return NodeType.PARENTHESIZED_EXPRESSION;
+	public int getNodeType() {
+		return PARENTHESIZED_EXPRESSION;
 	}
 
 	/**

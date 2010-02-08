@@ -24,8 +24,8 @@ public class AssignmentStatement extends Statement {
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		return NodeType.ASSIGNMENT_STATEMENT;
+	public int getNodeType() {
+		return ASSIGNMENT_STATEMENT;
 	}
 
 	/**

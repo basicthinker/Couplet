@@ -1,6 +1,6 @@
 package canto.c1.ast;
 
-public class DeclarationStatement extends Statement {
+public class Declaration extends ASTNode implements Blockable {
 
 	/** The type in the declaration. */
 	private final Type type;
@@ -13,7 +13,7 @@ public class DeclarationStatement extends Statement {
 	 * @param type
 	 * @param identifier
 	 */
-	public DeclarationStatement(Type type, Identifier identifier) {
+	public Declaration(Type type, Identifier identifier) {
 		this.type = type;
 		this.identifier = identifier;
 	}
@@ -24,8 +24,8 @@ public class DeclarationStatement extends Statement {
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		return NodeType.DECLARATION_STATEMENT;
+	public int getNodeType() {
+		return DECLARATION;
 	}
 
 	/**

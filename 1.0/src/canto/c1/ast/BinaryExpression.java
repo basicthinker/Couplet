@@ -2,23 +2,8 @@ package canto.c1.ast;
 
 public class BinaryExpression extends Expression {
 
-	/**
-	 * Binary operator. 
-	 */
-	public enum Operator {
-		PLUS,
-		MINUS,
-		TIMES,
-		LESS,
-		GREATER,
-		LESS_EQUALS,
-		GREATER_EQUALS,
-		EQUALS,
-		NOT_EQUALS,
-	}
-	
 	/** The operator in the binary expression. */
-	private final Operator operator;
+	private final BinaryOperator operator;
 	
 	/** The left operand in the binary expression. */
 	private final Expression leftOperand;
@@ -32,7 +17,7 @@ public class BinaryExpression extends Expression {
 	 * @param leftOperand the left operand
 	 * @param rightOperand the right operand
 	 */
-	public BinaryExpression(Operator operator,
+	public BinaryExpression(BinaryOperator operator,
 			Expression leftOperand, Expression rightOperand) {
 		this.operator = operator;
 		this.leftOperand = leftOperand;
@@ -45,8 +30,8 @@ public class BinaryExpression extends Expression {
 	}
 
 	@Override
-	public NodeType getNodeType() {
-		return NodeType.BINARY_EXPRESSION;
+	public int getNodeType() {
+		return BINARY_EXPRESSION;
 	}
 
 	/**
