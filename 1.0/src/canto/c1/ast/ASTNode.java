@@ -1,6 +1,6 @@
 package canto.c1.ast;
 
-public abstract class ASTNode {
+public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	
 	/** The AST node type code of each kind of AST node. */ 
 	public static final int PROGRAM = 1;

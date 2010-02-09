@@ -23,7 +23,7 @@ public interface Compiler {
 	
 	public List<Token> getTokenList(); 
 	
-	public SyntaxTree getSyntaxTree();
+	public AbstractSyntaxTree getSyntaxTree();
 	
 	public IntermediateCode getIntermediateCode();
 	

@@ -13,7 +13,7 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 
 import canto.IntermediateCode;
-import canto.SyntaxTree;
+import canto.AbstractSyntaxTree;
 import canto.Token;
 
 /**
@@ -65,7 +65,7 @@ public class Compiler implements canto.Compiler {
 	 * @see canto.Compiler#getSyntaxTree()
 	 */
 	@Override
-	public SyntaxTree getSyntaxTree() {
+	public AbstractSyntaxTree getSyntaxTree() {
 		// TODO Auto-generated method stub
 		return null;
 	}
