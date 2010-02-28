@@ -4,7 +4,8 @@
 
     if (t > 10) output(-1);
     else {
-        int x = 1;
+        int x;
+        x = 1;
         while (t) {
             x = x * t;
             t = t - 1;
