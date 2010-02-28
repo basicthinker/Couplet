@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 
  */
 package canto.c1.token;

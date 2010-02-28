@@ -1,4 +1,4 @@
-package canto.c1.ast;
+﻿package canto.c1.ast;
 
 public abstract class Operator extends ASTNode {
 	

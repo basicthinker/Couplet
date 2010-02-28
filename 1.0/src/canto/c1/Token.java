@@ -1,4 +1,4 @@
-/**
+ï»¿/**
  * 
  */
 package canto.c1;
@@ -19,9 +19,9 @@ public abstract class Token implements canto.Token {
 	public static final int PUNCTUATION = 5;
 	
 	/**
-	 * @param line µ¥´ÊËùÔÚĞĞºÅ
-	 * @param column µ¥´ÊËùÔÚÁĞÊı
-	 * @param lexeme µ¥´ÊµÄ×ÖÃæ
+	 * @param line å•è¯æ‰€åœ¨è¡Œå·
+	 * @param column å•è¯æ‰€åœ¨åˆ—æ•°
+	 * @param lexeme å•è¯çš„å­—é¢
 	 */
 	public Token(int line, String lexeme) {
 		setLineNumber(line);
@@ -37,35 +37,35 @@ public abstract class Token implements canto.Token {
 	}
 	
 	/**
-	 * @param lineNumber µ¥´ÊËùÔÚĞĞºÅ
+	 * @param lineNumber å•è¯æ‰€åœ¨è¡Œå·
 	 */
 	public void setLineNumber(int lineNumber) {
 		this.lineNumber = lineNumber;
 	}
 
 	/**
-	 * @return µ¥´ÊËùÔÚĞĞºÅ
+	 * @return å•è¯æ‰€åœ¨è¡Œå·
 	 */
 	public int getLineNumber() {
 		return lineNumber;
 	}
 
 	/**
-	 * @return µ¥´ÊËùÔÚÁĞÊı
+	 * @return å•è¯æ‰€åœ¨åˆ—æ•°
 	 */
 	public int getColumnNumber() {
 		return 0;
 	}
 
 	/**
-	 * @param lexeme µ¥´Ê
+	 * @param lexeme å•è¯
 	 */
 	public void setLexeme(String lexeme) {
 		this.lexeme = lexeme;
 	}
 
 	/**
-	 * @return µ¥´Ê
+	 * @return å•è¯
 	 */
 	public String getLexeme() {
 		return lexeme;

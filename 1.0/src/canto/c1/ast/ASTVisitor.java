@@ -1,4 +1,4 @@
-package canto.c1.ast;
+﻿package canto.c1.ast;
 
 /**
  * The interface of the visitor for AST.
