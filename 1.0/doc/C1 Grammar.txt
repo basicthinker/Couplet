@@ -1,0 +1,49 @@
+1  S -> PROGRAM
+2  PROGRAM -> BLOCK
+3  BLOCK -> { STMTS }
+4  STMTS -> STMTS DECL
+5         | STMTS STMT
+6         | ¦Å
+7  DECL -> TYPE id ;
+8  STMT -> BLOCK
+9        | id = EXPR ;
+10       | if ( EXPR ) STMT
+11       | if ( EXPR ) STMT else STMT
+12       | while ( EXPR ) STMT
+13       | input ( id ) ;
+14       | output ( EXPR ) ;
+15 EXPR -> id
+16       | literal
+17       | ( EXPR )
+18       | UN_OP EXPR
+19       | EXPR BI_OP1 EXPR
+20       | EXPR BI_OP2 EXPR
+21       | EXPR BI_OP3 EXPR
+22       | EXPR BI_OP4 EXPR
+23 TYPE -> int
+24 UN_OP -> + 
+25        | - 
+26        | !
+27 BI_OP1 -> *
+28 BI_OP2 -> + 
+29         | - 
+30 BI_OP3 -> < 
+31         | <= 
+32         | > 
+33         | >= 
+34 BI_OP4 -> == 
+35         | != 
+
+Follow-Set
+PROGRAM : $
+BLOCK : id { } int if while input output else $
+STMTS : id { } int if while input output
+DECL : id { } int if while input output else
+STMT : id { } int if while input output else
+EXPR : ) ; * + - < <= > >= == != 
+TYPE : id
+UN_OP : id literal ( + - !
+BI_OP1 : id literal ( + - !
+BI_OP2 : id literal ( + - !
+BI_OP3 : id literal ( + - !
+BI_OP4 : id literal ( + - !
