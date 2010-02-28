@@ -15,6 +15,7 @@ import java.util.List;
 import canto.IntermediateCode;
 import canto.AbstractSyntaxTree;
 import canto.Token;
+import canto.c1.ast.ASTPrinter;
 
 /**
  * @author basicthinker
@@ -24,7 +25,8 @@ public class Compiler implements canto.Compiler {
 
 	private InputStreamReader sourceReader;
 	private OutputStreamWriter targetWriter;
-	Lexer lexer;
+	private Lexer lexer;
+	private Parser parser;
 
 	/**
 	 * 
@@ -33,19 +35,22 @@ public class Compiler implements canto.Compiler {
 		sourceReader = null;
 		targetWriter = null;
 		lexer = new Lexer();
+		parser = new Parser();
 	}
 
 	/* (non-Javadoc)
 	 * @see canto.Compiler#compile()
 	 */
 	@Override
-	public void compile() {
+	public void compile() throws Exception {
 		// TODO Auto-generated method stub
 		if (sourceReader == null) return;
 		
 		try {
 			lexer.open(sourceReader);
 			lexer.scan();
+			parser.open(lexer.getTokenList());
+			parser.parse();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,9 +70,8 @@ public class Compiler implements canto.Compiler {
 	 * @see canto.Compiler#getSyntaxTree()
 	 */
 	@Override
-	public AbstractSyntaxTree getSyntaxTree() {
-		// TODO Auto-generated method stub
-		return null;
+	public AbstractSyntaxTree getAbstractSyntaxTree() {
+		return parser.getAbstractSyntaxTree();
 	}
 
 	/* (non-Javadoc)
@@ -105,14 +109,16 @@ public class Compiler implements canto.Compiler {
 
 	/**
 	 * @param args
+	 * @throws Exception 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		try {
 			FileInputStream inFile = new FileInputStream("source.c1");
 			Compiler compiler = new Compiler();
 			compiler.setSource(inFile);
 			compiler.compile();
 			List<Token> tokenList = compiler.getTokenList();
+			AbstractSyntaxTree ast = compiler.getAbstractSyntaxTree();
 			
 			for (Token token : tokenList) {
 				
@@ -141,6 +147,8 @@ public class Compiler implements canto.Compiler {
 				else System.out.println(token.getAttribute().toString());
 				
 			} // for
+			ASTPrinter astPrinter = new ASTPrinter();
+			ast.accept(astPrinter);
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

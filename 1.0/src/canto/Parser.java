@@ -6,8 +6,8 @@ public interface Parser {
 	
 	public void open(List<Token> tokenList);
 	
-	public AbstractSyntaxTree parse();
+	public AbstractSyntaxTree parse() throws Exception;
 	
-	public AbstractSyntaxTree getAST();
+	public AbstractSyntaxTree getAbstractSyntaxTree();
 	
 }

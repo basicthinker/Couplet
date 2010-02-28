@@ -6,8 +6,9 @@ package canto.c1.ast;
  *    Each visit method will visit a node and its descendants by pre-order.
  *    It will do nothing when visit a node.
  *    Subclasses may reimplement each method to add affairs during visit. You 
- * may put super() after your affairs so implement pre-order traversal. You may 
- * put super() before your affairs so implement post-order traversal.
+ * may put super.visit() after your affairs so implement pre-order traversal. 
+ * You may put super.visit() before your affairs so implement post-order 
+ * traversal.
  */
 public class ASTScanner implements ASTVisitor {
 
@@ -18,6 +19,13 @@ public class ASTScanner implements ASTVisitor {
 
 	@Override
 	public void visit(Block node) {
+		for (Blockable item : node.getList()) {
+			if (item instanceof Declaration) {
+				((Declaration) item).accept(this);
+			} else {
+				((Statement) item).accept(this);
+			}
+		}
 	}
 
 	@Override
@@ -36,6 +44,8 @@ public class ASTScanner implements ASTVisitor {
 	public void visit(IfStatement node) {
 		node.getCondition().accept(this);
 		node.getThenStatement().accept(this);
+		Statement elseStatement = node.getElseStatement();
+		if (elseStatement != null) elseStatement.accept(this);
 	}
 
 	@Override
@@ -55,20 +65,17 @@ public class ASTScanner implements ASTVisitor {
 	
 	@Override
 	public void visit(UnaryExpression node) {
+		node.getOperator().accept(this);
 		node.getOperand().accept(this);
 	}
 
 	@Override
 	public void visit(BinaryExpression node) {
 		node.getLeftOperand().accept(this);
+		node.getOperator().accept(this);
 		node.getRightOperand().accept(this);
 	}
 
-	@Override
-	public void visit(ParenthesizedExpression node) {
-		node.getBody().accept(this);
-	}
-	
 	@Override
 	public void visit(Identifier node) {
 	}

@@ -13,12 +13,11 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	public static final int OUTPUT_STATEMENT = 8;
 	public static final int UNARY_EXPRESSION = 9;
 	public static final int BINARY_EXPRESSION = 10;
-	public static final int PARENTHESIZED_EXPRESSION = 11;
-	public static final int	IDENTIFIER = 12;	
-	public static final int INTEGER_LITERAL = 13;
-	public static final int PRIMITIVE_TYPE = 14;
-	public static final int UNARY_OPERATOR = 15;
-	public static final int BINARY_OPERATOR = 16;
+	public static final int	IDENTIFIER = 11;	
+	public static final int INTEGER_LITERAL = 12;
+	public static final int PRIMITIVE_TYPE = 13;
+	public static final int UNARY_OPERATOR = 14;
+	public static final int BINARY_OPERATOR = 15;
 	
 	/**
 	 * Accepts the given visitor on a visit of the current node.

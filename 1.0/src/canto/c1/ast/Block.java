@@ -1,5 +1,6 @@
 package canto.c1.ast;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Block extends Statement {
@@ -11,8 +12,8 @@ public class Block extends Statement {
 	 * Construct a block.
 	 * @param list the list to store statements and declarations
 	 */
-	public Block(List<Blockable> list) {
-		this.list = list;
+	public Block() {
+		this.list = new LinkedList<Blockable>();
 	}
 	
 	@Override
@@ -31,6 +32,14 @@ public class Block extends Statement {
 	 */
 	public List<Blockable> getList() {
 		return list;
+	}
+
+	/**
+	 * Add a new blockable item to the list.
+	 * @param item
+	 */
+	public void addBlockable(Blockable item) {
+		list.add(item);
 	}
 
 }

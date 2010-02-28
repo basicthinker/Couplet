@@ -17,13 +17,13 @@ public interface Compiler {
 	
 	public void setTarget(OutputStream outStrm);
 	
-	public void compile();
+	public void compile() throws Exception;
 	
 	public void outputErrors(OutputStream outStrm);
 	
 	public List<Token> getTokenList(); 
 	
-	public AbstractSyntaxTree getSyntaxTree();
+	public AbstractSyntaxTree getAbstractSyntaxTree();
 	
 	public IntermediateCode getIntermediateCode();
 	
