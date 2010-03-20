@@ -1,9 +1,9 @@
-1  S -> PROGRAM
+ï»¿1  S -> PROGRAM
 2  PROGRAM -> BLOCK
 3  BLOCK -> { STMTS }
 4  STMTS -> STMTS DECL
 5         | STMTS STMT
-6         | ¦Å
+6         | Îµ
 7  DECL -> TYPE id ;
 8  STMT -> BLOCK
 9        | id = EXPR ;

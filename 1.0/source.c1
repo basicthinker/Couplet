@@ -1,4 +1,4 @@
-{
+﻿{
     int t;
     input(t);
 
@@ -7,7 +7,7 @@
         int x;
         x = 1;
         while (t) {
-            x = x * t;
+            x = 5 + x * t;
             t = t - 1;
         }
         output(x);
