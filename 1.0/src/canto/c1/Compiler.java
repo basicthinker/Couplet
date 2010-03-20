@@ -49,7 +49,7 @@ public class Compiler implements canto.Compiler {
 		try {
 			lexer.open(sourceReader);
 			lexer.scan();
-			parser.open(lexer.getTokenList());
+			parser.setTokenList(lexer.getTokenList());
 			parser.parse();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -120,6 +120,7 @@ public class Compiler implements canto.Compiler {
 			List<Token> tokenList = compiler.getTokenList();
 			AbstractSyntaxTree ast = compiler.getAbstractSyntaxTree();
 			
+			System.out.println("Output Token List");
 			for (Token token : tokenList) {
 				
 				System.out.print("Line Number: " + token.getLineNumber());
@@ -147,6 +148,10 @@ public class Compiler implements canto.Compiler {
 				else System.out.println(token.getAttribute().toString());
 				
 			} // for
+			
+			System.out.println();
+			
+			System.out.println("Output AST");
 			ASTPrinter astPrinter = new ASTPrinter();
 			ast.accept(astPrinter);
 			

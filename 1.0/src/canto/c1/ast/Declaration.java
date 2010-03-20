@@ -1,17 +1,20 @@
 ﻿package canto.c1.ast;
 
+/**
+ * 声明结点
+ */
 public class Declaration extends Listable {
 
-	/** The type in the declaration. */
+	/** 声明的类型 */
 	private final Type type;
 	
-	/** The identifier in the declaration. */
+	/** 声明的标识符 */
 	private final Identifier identifier;
 
 	/**
-	 * Construct a declaration.
-	 * @param type
-	 * @param identifier
+	 * 构造一个声明
+	 * @param type 声明的类型
+	 * @param identifier 声明的标识符
 	 */
 	public Declaration(Type type, Identifier identifier) {
 		this.type = type;
@@ -29,16 +32,16 @@ public class Declaration extends Listable {
 	}
 
 	/**
-	 * Get the type in the declaration. 
-	 * @return the type
+	 * 获取声明的类型
+	 * @return 声明的类型
 	 */
 	public Type getType() {
 		return type;
 	}
 
 	/**
-	 * Get the identifier in the declaration.
-	 * @return the identifier
+	 * 获取声明的标识符
+	 * @return 声明的标识符
 	 */
 	public Identifier getIdentifier() {
 		return identifier;

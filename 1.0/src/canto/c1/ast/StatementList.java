@@ -3,13 +3,16 @@ package canto.c1.ast;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * 语句列表结点（该列表中可存放声明和语句） 
+ */
 public class StatementList extends ASTNode {
 
-	/** The list to store statements and declarations. */
+	/** 用于存放声明和语句的List容器 */
 	private final List<Listable> list;
 	
 	/**
-	 * Construct a statement list.
+	 * 构造一个语句列表结点
 	 */
 	public StatementList() {
 		this.list = new LinkedList<Listable>();
@@ -26,16 +29,16 @@ public class StatementList extends ASTNode {
 	}
 	
 	/**
-	 * Get the list.
-	 * @return the list to store statements and declarations
+	 * 获取存放声明和语句的List容器
+	 * @return 用于存放声明和语句的List容器
 	 */
 	public List<Listable> getList() {
 		return list;
 	}
 
 	/**
-	 * Add a new listable item to the list.
-	 * @param item
+	 * 向语句列表中加入一个元素
+	 * @param item 一个可放入列表的元素（声明或语句）
 	 */
 	public void addListable(Listable item) {
 		list.add(item);

@@ -1,13 +1,16 @@
 ﻿package canto.c1.ast;
 
+/**
+ * BLOCK语句结点
+ */
 public class Block extends Statement {
 
-	/** The statement list. */
+	/** 语句列表 */
 	private final StatementList statementList;
 	
 	/**
-	 * Construct a block.
-	 * @param statementList the statement list
+	 * 构造一个Block语句结点
+	 * @param statementList 语句列表
 	 */
 	public Block(StatementList statementList) {
 		this.statementList = statementList;
@@ -24,8 +27,8 @@ public class Block extends Statement {
 	}
 
 	/**
-	 * Get the statement list.
-	 * @return the statement list
+	 * 获取语句列表
+	 * @return 语句列表
 	 */
 	public StatementList getStatementList() {
 		return statementList;

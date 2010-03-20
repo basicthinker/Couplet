@@ -1,8 +1,11 @@
 ﻿package canto.c1.ast;
 
+/**
+ * C1语言AST结点的基类 
+ */
 public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	
-	/** The AST node type code of each kind of AST node. */ 
+	/** 定义AST结点类型编号常量 */ 
 	public static final int PROGRAM = 1;
 	public static final int BLOCK = 2;
 	public static final int STATEMENT_LIST = 3;
@@ -19,17 +22,5 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	public static final int PRIMITIVE_TYPE = 14;
 	public static final int UNARY_OPERATOR = 15;
 	public static final int BINARY_OPERATOR = 16;
-	
-	/**
-	 * Accepts the given visitor on a visit of the current node.
-	 * @param visitor the visitor
-	 */
-	public abstract void accept(ASTVisitor visitor);
-	
-	/**
-	 * Get the type of the AST node.
-	 * @return the node type
-	 */
-	public abstract int getNodeType();
 	
 }

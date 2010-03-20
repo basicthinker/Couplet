@@ -1,17 +1,20 @@
 ﻿package canto.c1.ast;
 
+/**
+ * 赋值语句结点
+ */
 public class AssignmentStatement extends Statement {
 
-	/** The identifier on the left of assignment. */
+	/** 赋值语句左侧的标识符 */
 	private final Identifier identifier;
 	
-	/** The expression on the right of assignment. */
+	/** 赋值语句右侧的表达式 */
 	private final Expression expression;
 	
 	/**
-	 * Construct a assignment statement.
-	 * @param identifier the left identifier
-	 * @param expression the right expression
+	 * 构造一个赋值语句
+	 * @param identifier 左侧的标识符
+	 * @param expression 右侧的表达式
 	 */
 	public AssignmentStatement(Identifier identifier, Expression expression) {
 		this.identifier = identifier;
@@ -29,16 +32,16 @@ public class AssignmentStatement extends Statement {
 	}
 
 	/**
-	 * Get the identifier on the left of assignment.
-	 * @return the left identifier
+	 * 获取赋值语句左侧的标识符
+	 * @return 左侧的标识符
 	 */
 	public Identifier getIdentifier() {
 		return identifier;
 	}
 
 	/**
-	 * Get the expression on the right of assignment.
-	 * @return the right expression
+	 * 获取赋值语句右侧的表达式
+	 * @return 右侧的表达式
 	 */
 	public Expression getExpression() {
 		return expression;

@@ -1,14 +1,12 @@
 ﻿package canto.c1.ast;
 
 /**
- * The scanner for AST.
- *    It implement the visitor for AST.
- *    Each visit method will visit a node and its descendants by pre-order.
- *    It will do nothing when visit a node.
- *    Subclasses may reimplement each method to add affairs during visit. You 
- * may put super.visit() after your affairs so implement pre-order traversal. 
- * You may put super.visit() before your affairs so implement post-order 
- * traversal.
+ * AST的扫描器
+ *   该扫描器实现了AST访问者接口；
+ *   每个结点的visit方法仅递归访问它的所有子结点；
+ *   该类的子类可以重写每个visit方法以加入在访问该结点时的操作，将super.visit()置于
+ * 访问操作代码之后可以实现一个先序遍历，将super.visit()置于访问操作代码之前可以实现
+ * 一个后序遍历。 
  */
 public class ASTScanner implements ASTVisitor {
 

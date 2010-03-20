@@ -1,15 +1,18 @@
 ﻿package canto.c1.ast;
 
+/**
+ * 单元操作符结点
+ */
 public class UnaryOperator extends Operator {
 
-	/** The operator code constant of each unary operator. */
+	/** 定义单元操作符编码常量 */
 	public static final int POSITIVE = 1;
 	public static final int NEGTIVE = 2;
 	public static final int NOT = 3;
 	
 	/**
-	 * Construct an unary operator.
-	 * @param code the operator code
+	 * 构造一个单元运算符
+	 * @param code 单元运算符编码
 	 */
 	public UnaryOperator(int code) {
 		super(code);

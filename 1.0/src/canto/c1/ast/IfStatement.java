@@ -1,21 +1,24 @@
 ﻿package canto.c1.ast;
 
+/**
+ * IF语句结点
+ */
 public class IfStatement extends Statement {
 
-	/** The condition expression in the IF statement. */
+	/** IF语句的条件表达式 */
 	private final Expression condition;
 	
-	/** The THEN statement in the IF statement. */
+	/** 条件成立时执行的THEN语句 */
 	private final Statement thenStatement;
 	
-	/** The ELSE statement in the IF statement. */
+	/** 条件不成立时执行的ELSE语句 */
 	private final Statement elseStatement;
 			
 	/**
-	 * Construct a IF statement with THEN and ELSE statements. 
-	 * @param condition the condition expression
-	 * @param thenStatement the THEN statement
-	 * @param elseStatement the ELSE statement
+	 * 构造一个带有THEN语句和ELSE语句的IF语句 
+	 * @param condition 条件表达式
+	 * @param thenStatement THEN语句
+	 * @param elseStatement ELSE语句
 	 */
 	public IfStatement(Expression condition, Statement thenStatement,
 			Statement elseStatement) {
@@ -25,9 +28,9 @@ public class IfStatement extends Statement {
 	}
 	
 	/**
-	 * Construct a IF statement with only THEN statement. 
-	 * @param condition the condition expression
-	 * @param thenStatement the THEN statement
+	 * 构造一个只带有THEN语句IF语句 
+	 * @param condition 条件表达式
+	 * @param thenStatement THEN语句
 	 */
 	public IfStatement(Expression condition, Statement thenStatement) {
 		this.condition = condition;
@@ -46,24 +49,24 @@ public class IfStatement extends Statement {
 	}
 
 	/**
-	 * Get the condition expression.
-	 * @return the condition expression
+	 * 获取条件表达式
+	 * @return 条件表达式
 	 */
 	public Expression getCondition() {
 		return condition;
 	}
 
 	/**
-	 * Get the THEN statement.
-	 * @return the THEN statement
+	 * 获取THEN语句
+	 * @return THEN语句
 	 */
 	public Statement getThenStatement() {
 		return thenStatement;
 	}
 
 	/**
-	 * Get the ELSE statement.
-	 * @return the ELSE statement
+	 * 获取ELSE语句
+	 * @return ELSE语句
 	 */
 	public Statement getElseStatement() {
 		return elseStatement;

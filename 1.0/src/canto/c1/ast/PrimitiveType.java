@@ -1,16 +1,19 @@
 ﻿package canto.c1.ast;
 
+/**
+ * 原始类型结点
+ */
 public class PrimitiveType extends Type {
 
-	/** The type code constant of each primitive type. */
+	/** 定义原始类型编码常量 */
 	public static final int INTEGER = 1;
 	
-	/** The type code indicating the kind of the primitive type. */
+	/** 原始类型编码 */
 	private final int code;
 	
 	/**
-	 * Construct a primitive type.
-	 * @param type the type code
+	 * 构造一个原始类型结点
+	 * @param type 原始类型编码
 	 */
 	public PrimitiveType(int code) {
 		this.code = code;
@@ -27,8 +30,8 @@ public class PrimitiveType extends Type {
 	}
 
 	/**
-	 * Get the type code of the primitive type.
-	 * @return the type code
+	 * 获取原始类型编码
+	 * @return 原始类型编码
 	 */
 	public int getTypeCode() {
 		return code;

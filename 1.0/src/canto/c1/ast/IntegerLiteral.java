@@ -1,13 +1,16 @@
 ﻿package canto.c1.ast;
 
+/**
+ * 整型字面常量结点
+ */
 public class IntegerLiteral extends Literal {
 
-	/** The value of the integer literal. */
+	/** 整型字面常量的值 */
 	private final Integer value;
 	
 	/**
-	 * Construct a integer literal.
-	 * @param value the value of integer literal
+	 * 构造一个整型字面常量
+	 * @param value 整型值
 	 */
 	public IntegerLiteral(Integer value) {
 		this.value = value;
@@ -24,8 +27,8 @@ public class IntegerLiteral extends Literal {
 	}
 
 	/**
-	 * Get the value of the integer literal.
-	 * @return the value of the integer literal
+	 * 获取整型字面常量的值
+	 * @return 整形值
 	 */
 	public Integer getValue() {
 		return value;

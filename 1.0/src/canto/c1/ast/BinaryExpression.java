@@ -1,21 +1,24 @@
 ﻿package canto.c1.ast;
 
+/**
+ * 二元运算表达式结点
+ */
 public class BinaryExpression extends Expression {
 
-	/** The operator in the binary expression. */
+	/** 二元操作符 */
 	private final BinaryOperator operator;
 	
-	/** The left operand in the binary expression. */
+	/** 操作符左侧的表达式 */
 	private final Expression leftOperand;
 	
-	/** The right operand in the binary expression. */
+	/** 操作符右侧的表达式 */
 	private final Expression rightOperand;
 	
 	/**
-	 * Construct a binary expression. 
-	 * @param operator the operator
-	 * @param leftOperand the left operand
-	 * @param rightOperand the right operand
+	 * 构造一个二元运算表达式 
+	 * @param operator 二元操作符
+	 * @param leftOperand 左操作表达式
+	 * @param rightOperand 右操作表达式
 	 */
 	public BinaryExpression(BinaryOperator operator,
 			Expression leftOperand, Expression rightOperand) {
@@ -35,24 +38,24 @@ public class BinaryExpression extends Expression {
 	}
 
 	/**
-	 * Get the operator in the binary expression.
-	 * @return the operator
+	 * 获取二元操作符
+	 * @return 二元操作符
 	 */
 	public Operator getOperator() {
 		return operator;
 	}
 
 	/**
-	 * Get the left operand in the binary expression.
-	 * @return the left operand
+	 * 获取操作符左侧的表达式
+	 * @return 左操作表达式
 	 */
 	public Expression getLeftOperand() {
 		return leftOperand;
 	}
 
 	/**
-	 * Get the right operand in the binary expression.
-	 * @return the right operand
+	 * 获取操作符右侧的表达式
+	 * @return 右操作表达式
 	 */
 	public Expression getRightOperand() {
 		return rightOperand;

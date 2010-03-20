@@ -1,13 +1,16 @@
 ﻿package canto.c1.ast;
 
+/**
+ * 程序结点
+ */
 public class Program extends ASTNode {
 
-	/** The body block of the program. */
+	/** 程序体的Block */
 	private final Block body;
 	
 	/**
-	 * Construct a program.
-	 * @param body the body block
+	 * 构造一个程序结点
+	 * @param body 程序体的Block
 	 */
 	public Program(Block body) {
 		this.body = body;
@@ -24,8 +27,8 @@ public class Program extends ASTNode {
 	}
 
 	/**
-	 * Get the body block of the program.
-	 * @return the body block
+	 * 获取程序体的Block
+	 * @return 程序体的Block
 	 */
 	public Block getBody() {
 		return body;

@@ -1,26 +1,22 @@
-﻿/**
- * 
- */
-package canto;
+﻿package canto;
 
 import canto.c1.ast.ASTVisitor;
 
 /**
- * @author
- *
+ * AST的顶层接口
  */
 public interface AbstractSyntaxTree {
 	
 	/**
-	 * Accepts the given visitor on a visit of the current node.
-	 * @param visitor the visitor
+	 * 接受访问者访问该AST结点的方法
+	 * @param visitor 访问者
 	 */
-	public abstract void accept(ASTVisitor visitor);
+	public void accept(ASTVisitor visitor);
 	
 	/**
-	 * Get the type of the AST node.
-	 * @return the node type
+	 * 获取AST结点的类型
+	 * @return AST结点类型编号
 	 */
-	public abstract int getNodeType();
+	public int getNodeType();
 	
 }

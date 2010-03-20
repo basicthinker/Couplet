@@ -1,13 +1,16 @@
 ﻿package canto.c1.ast;
 
+/**
+ * 输出语句结点
+ */
 public class OutputStatement extends Statement {
 
-	/** The expression of output. */
+	/** 用于输出的表达式 */
 	private final Expression expression;
 		
 	/**
-	 * Construct a input statement.
-	 * @param expression the expression of output.
+	 * 构造一个输出语句
+	 * @param expression 输出的表达式
 	 */
 	public OutputStatement(Expression expression) {
 		this.expression = expression;
@@ -24,8 +27,8 @@ public class OutputStatement extends Statement {
 	}
 
 	/**
-	 * Get the expression of output.
-	 * @return the expression of output
+	 * 获取输出的表达式
+	 * @return 输出的表达式
 	 */
 	public Expression getExpression() {
 		return expression;

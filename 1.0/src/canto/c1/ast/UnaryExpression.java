@@ -1,17 +1,20 @@
 ﻿package canto.c1.ast;
 
+/**
+ * 单元运算表达式结点
+ */
 public class UnaryExpression extends Expression {
 
-	/** The operator in the unary expression. */
+	/** 单元操作符 */
 	private final Operator operator;
 	
-	/** The expression in the unary expression. */
+	/** 参与运算的表达式 */
 	private final Expression operand;
 		
 	/**
-	 * Construct an unary expression.
-	 * @param operator the operator
-	 * @param operand the operand
+	 * 构造一个单元运算表达式
+	 * @param operator 单元运算符
+	 * @param operand 操作表达式
 	 */
 	public UnaryExpression(Operator operator, Expression operand) {
 		this.operator = operator;
@@ -29,16 +32,16 @@ public class UnaryExpression extends Expression {
 	}
 
 	/**
-	 * Get the operator of the expression.
-	 * @return the operator
+	 * 获取单元操作符
+	 * @return 单元操作符
 	 */
 	public Operator getOperator() {
 		return operator;
 	}
 
 	/**
-	 * Get the operand of the expression.
-	 * @return the operand
+	 * 获取参与运算的表达式
+	 * @return 参与运算的表达式
 	 */
 	public Expression getOperand() {
 		return operand;

@@ -1,17 +1,20 @@
 ﻿package canto.c1.ast;
 
+/**
+ * WHILE语句结点
+ */
 public class WhileStatement extends Statement {
 
-	/** The condition expression in the WHILE statement. */
+	/** WHILE语句的条件表达式 */
 	private final Expression condition;
 	
-	/** The body statement in the WHILE statement. */
+	/** WHILE语句条件成立时执行的语句 */
 	private final Statement body;
 	
 	/**
-	 * Construct from the condition expression and body statement.
-	 * @param condition the condition expression
-	 * @param body the body statement
+	 * 构造一个WHILE语句
+	 * @param condition 条件表达式
+	 * @param body 主体语句
 	 */
 	public WhileStatement(Expression condition, Statement body) {
 		this.condition = condition;
@@ -29,16 +32,16 @@ public class WhileStatement extends Statement {
 	}
 
 	/**
-	 * Get the condition expression in the WHILE statement. 
-	 * @return the condition expression
+	 * 获取条件表达式
+	 * @return 条件表达式
 	 */
 	public Expression getCondition() {
 		return condition;
 	}
 
 	/**
-	 * Get the body statement in the WHILE statement.
-	 * @return the body statement
+	 * 获取主体语句
+	 * @return 主体语句
 	 */
 	public Statement getBody() {
 		return body;

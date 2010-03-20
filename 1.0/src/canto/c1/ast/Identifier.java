@@ -1,13 +1,16 @@
 ﻿package canto.c1.ast;
 
+/**
+ * 标识符结点
+ */
 public class Identifier extends Expression {
 
-	/** The name of the identifier. */
+	/** 标识符的名称 */
 	private final String name;
 	
 	/**
-	 * Construct an identifier.
-	 * @param name the name of the identifier
+	 * 构造一个标识符
+	 * @param name 标识符的名称
 	 */
 	public Identifier(String name) {
 		this.name = name;
@@ -24,8 +27,8 @@ public class Identifier extends Expression {
 	}
 
 	/**
-	 * Get the name of the identifier.
-	 * @return the name of the identifier
+	 * 获取标识符的名称
+	 * @return 标识符的名称
 	 */
 	public String getName() {
 		return name;
