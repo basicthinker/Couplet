@@ -1,6 +1,6 @@
 ﻿package canto.c1.ast;
 
-public class Declaration extends ASTNode implements Blockable {
+public class Declaration extends Listable {
 
 	/** The type in the declaration. */
 	private final Type type;

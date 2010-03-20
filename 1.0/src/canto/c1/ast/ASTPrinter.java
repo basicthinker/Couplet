@@ -25,6 +25,15 @@ public class ASTPrinter extends ASTScanner {
 		super.visit(node);
 		depth--;
 	}
+	
+	@Override
+	public void visit(StatementList node) {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("StatementList :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
 
 	@Override
 	public void visit(Declaration node) {

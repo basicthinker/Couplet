@@ -19,7 +19,12 @@ public class ASTScanner implements ASTVisitor {
 
 	@Override
 	public void visit(Block node) {
-		for (Blockable item : node.getList()) {
+		node.getStatementList().accept(this);
+	}
+	
+	@Override
+	public void visit(StatementList node) {
+		for (Listable item : node.getList()) {
 			if (item instanceof Declaration) {
 				((Declaration) item).accept(this);
 			} else {
@@ -27,7 +32,7 @@ public class ASTScanner implements ASTVisitor {
 			}
 		}
 	}
-
+	
 	@Override
 	public void visit(Declaration node) {
 		node.getType().accept(this);

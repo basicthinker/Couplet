@@ -9,6 +9,7 @@
 public interface ASTVisitor {
 	public void visit(Program node);
 	public void visit(Block node);
+	public void visit(StatementList node);
 	public void visit(Declaration node);
 	public void visit(AssignmentStatement node);
 	public void visit(IfStatement node);

@@ -505,7 +505,10 @@ public class Parser implements canto.Parser {
 	 *   BLOCK -> { STMTS }
 	 */
 	private void reduceBlock() {
-		// STMTS对应的已是Block结点，不对AST栈进行操作
+		// 弹出产生式右侧的AST结点
+		StatementList list = (StatementList) nodeStack.pop();
+		// 创建Block结点并压栈
+		nodeStack.push(new Block(list));
 		// 状态向上返回3层
 		stateStack.pop();
 		stateStack.pop();
@@ -520,10 +523,11 @@ public class Parser implements canto.Parser {
 	 */
 	private void reduceStmts() {
 		// 弹出产生式右侧的AST结点
-		Blockable blockable = (Blockable) nodeStack.pop();
-		Block block = (Block) nodeStack.peek();
-		// 向栈顶的Block结点添加内容
-		block.addBlockable(blockable);
+		Listable listable = (Listable) nodeStack.pop();
+		// 由于StatementList结点还要压回栈中，不弹出
+		StatementList list = (StatementList) nodeStack.peek();
+		// 向栈顶的StatementList结点添加内容
+		list.addListable(listable);
 		// 状态向上返回2层
 		stateStack.pop();
 		stateStack.pop();
@@ -535,7 +539,7 @@ public class Parser implements canto.Parser {
 	 */
 	private void reduceNullStmts() {
 		// 该产生式仅在STMTS的首部发生，在此处创建Block结点并压栈
-		nodeStack.push(new Block());
+		nodeStack.push(new StatementList());
 	}
 	
 	/**
