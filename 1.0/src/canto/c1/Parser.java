@@ -200,7 +200,7 @@ public class Parser implements canto.Parser {
 	/** Token链 */
 	private List<Token> tokenList;
 	/** AST结点栈 */
-	private Stack<Object> symbolStack;
+	private Stack<AbstractSyntaxTree> nodeStack;
 	/** 状态栈 */ 
 	private Stack<Integer> stateStack;
 	/** Token迭代器 */
@@ -222,7 +222,7 @@ public class Parser implements canto.Parser {
 	@Override
 	public AbstractSyntaxTree parse() throws ParserException {
 		tokenIterator = tokenList.listIterator();
-		symbolStack = new Stack<Object>();
+		nodeStack = new Stack<AbstractSyntaxTree>();
 		stateStack = new Stack<Integer>();
 		int state = 1;
 		int terminal = nextTerminal();
@@ -244,7 +244,15 @@ public class Parser implements canto.Parser {
 				state = action;
 				// 将新状态号压栈
 				stateStack.push(state);
-				symbolStack.push(nowToken);
+				// 将某些终极符直接转换成AST结点压栈
+				switch (terminal) {
+				case ID :
+					nodeStack.push(new Identifier(nowToken.getLexeme()));
+					break;
+				case LITERAL :
+					nodeStack.push(new IntegerLiteral((Integer)nowToken.getAttribute()));
+					break;
+				}
 				// 获取下一个终极符
 				terminal = nextTerminal();
 			} else {
@@ -400,7 +408,7 @@ public class Parser implements canto.Parser {
 				stateStack.push(state);
 			}
 		}
-		treeRoot = (AbstractSyntaxTree) symbolStack.pop();
+		treeRoot = (AbstractSyntaxTree) nodeStack.pop();
 		return treeRoot;
 	}
 	
@@ -484,10 +492,10 @@ public class Parser implements canto.Parser {
 	 * PROGRAM -> BLOCK
 	 */
 	private void reduceProgram() {
-		// 弹出产生式右侧的符号
-		Block block = (Block) symbolStack.pop();
+		// 弹出产生式右侧的AST结点
+		Block block = (Block) nodeStack.pop();
 		// 创建Program结点并压栈
-		symbolStack.push(new Program(block));
+		nodeStack.push(new Program(block));
 		// 状态向上回退1层
 		stateStack.pop();
 	}
@@ -497,12 +505,7 @@ public class Parser implements canto.Parser {
 	 *   BLOCK -> { STMTS }
 	 */
 	private void reduceBlock() {
-		// 弹出产生式右侧的符号
-		symbolStack.pop();
-		Block block = (Block) symbolStack.pop();
-		symbolStack.pop();
-		// STMTS已是Block结点，直接将其再压回栈中
-		symbolStack.push(block);
+		// STMTS对应的已是Block结点，不对AST栈进行操作
 		// 状态向上返回3层
 		stateStack.pop();
 		stateStack.pop();
@@ -516,9 +519,9 @@ public class Parser implements canto.Parser {
 	 *   STMTS -> STMTS STMT
 	 */
 	private void reduceStmts() {
-		// 弹出产生式右侧的符号
-		Blockable blockable = (Blockable) symbolStack.pop();
-		Block block = (Block) symbolStack.peek();
+		// 弹出产生式右侧的AST结点
+		Blockable blockable = (Blockable) nodeStack.pop();
+		Block block = (Block) nodeStack.peek();
 		// 向栈顶的Block结点添加内容
 		block.addBlockable(blockable);
 		// 状态向上返回2层
@@ -532,7 +535,7 @@ public class Parser implements canto.Parser {
 	 */
 	private void reduceNullStmts() {
 		// 该产生式仅在STMTS的首部发生，在此处创建Block结点并压栈
-		symbolStack.push(new Block());
+		nodeStack.push(new Block());
 	}
 	
 	/**
@@ -540,13 +543,11 @@ public class Parser implements canto.Parser {
 	 *   DECL -> TYPE id ;
 	 */
 	private void reduceDeclaration() {
-		// 弹出产生式右侧的符号
-		symbolStack.pop();
-		Token token = (Token) symbolStack.pop();
-		Type type = (Type) symbolStack.pop();
+		// 弹出产生式右侧的AST结点
+		Identifier id = (Identifier) nodeStack.pop();
+		Type type = (Type) nodeStack.pop();
 		// 创建Declaration结点并压栈
-		symbolStack.push(new Declaration(type, 
-				new Identifier(token.getLexeme())));
+		nodeStack.push(new Declaration(type, id));
 		// 状态向上返回3层
 		stateStack.pop();
 		stateStack.pop();
@@ -558,7 +559,7 @@ public class Parser implements canto.Parser {
 	 *   STMT -> BLOCK
 	 */
 	private void reduceBlockStatement() {
-		// Block已是STMT的代表，不做栈操作
+		// Block结点已是Statement的子类，不做AST栈的操作
 		// 状态向上返回1层
 		stateStack.pop();
 	}
@@ -568,14 +569,11 @@ public class Parser implements canto.Parser {
 	 *   STMT -> id = EXPR ;
 	 */
 	private void reduceAssignmentStatement() {
-		// 弹出产生式右侧的符号
-		symbolStack.pop();
-		Expression expr = (Expression) symbolStack.pop();
-		symbolStack.pop();
-		Token token = (Token) symbolStack.pop();
+		// 弹出产生式右侧的AST结点
+		Expression expr = (Expression) nodeStack.pop();
+		Identifier id = (Identifier) nodeStack.pop();
 		// 创建AssignmentStatement结点并压栈
-		symbolStack.push(new AssignmentStatement(
-				new Identifier(token.getLexeme()), expr));
+		nodeStack.push(new AssignmentStatement(id, expr));
 		// 状态向上返回4层
 		stateStack.pop();
 		stateStack.pop();
@@ -588,14 +586,11 @@ public class Parser implements canto.Parser {
 	 *   STMT -> if ( EXPR ) STMT
 	 */
 	private void reduceIfStatement() {
-		// 弹出产生式右侧的符号
-		Statement stmt = (Statement) symbolStack.pop();
-		symbolStack.pop();
-		Expression expr = (Expression) symbolStack.pop();
-		symbolStack.pop();
-		symbolStack.pop();
+		// 弹出产生式右侧的AST结点
+		Statement stmt = (Statement) nodeStack.pop();
+		Expression expr = (Expression) nodeStack.pop();
 		// 创建IfStatement结点并压栈
-		symbolStack.push(new IfStatement(expr, stmt));
+		nodeStack.push(new IfStatement(expr, stmt));
 		// 状态向上返回5层
 		stateStack.pop();
 		stateStack.pop();
@@ -609,16 +604,12 @@ public class Parser implements canto.Parser {
 	 *   STMT -> ( EXPR ) STMT else STMT
 	 */
 	private void reduceIfElseStatment() {
-		// 弹出产生式右侧的符号
-		Statement elseStmt = (Statement) symbolStack.pop();
-		symbolStack.pop();
-		Statement thenStmt = (Statement) symbolStack.pop();
-		symbolStack.pop();
-		Expression expr = (Expression) symbolStack.pop();
-		symbolStack.pop();
-		symbolStack.pop();
+		// 弹出产生式右侧的AST结点
+		Statement elseStmt = (Statement) nodeStack.pop();
+		Statement thenStmt = (Statement) nodeStack.pop();
+		Expression expr = (Expression) nodeStack.pop();
 		// 创建IfStatement结点并压栈
-		symbolStack.push(new IfStatement(expr, thenStmt, elseStmt));
+		nodeStack.push(new IfStatement(expr, thenStmt, elseStmt));
 		// 状态向上返回7层
 		stateStack.pop();
 		stateStack.pop();
@@ -634,14 +625,11 @@ public class Parser implements canto.Parser {
 	 *   STMT -> while ( EXPR ) STMT
 	 */
 	private void reduceWhileStatement() {
-		// 弹出产生式右侧的符号
-		Statement stmt = (Statement) symbolStack.pop();
-		symbolStack.pop();
-		Expression expr = (Expression) symbolStack.pop();
-		symbolStack.pop();
-		symbolStack.pop();
+		// 弹出产生式右侧的AST结点
+		Statement stmt = (Statement) nodeStack.pop();
+		Expression expr = (Expression) nodeStack.pop();
 		// 创建WhileStatement结点并压栈
-		symbolStack.push(new WhileStatement(expr, stmt));
+		nodeStack.push(new WhileStatement(expr, stmt));
 		// 状态向上返回5层
 		stateStack.pop();
 		stateStack.pop();
@@ -655,14 +643,10 @@ public class Parser implements canto.Parser {
 	 *   STMT -> input ( id ) ;
 	 */
 	private void reduceInputStatement() {
-		// 弹出产生式右侧的符号
-		symbolStack.pop();
-		symbolStack.pop();
-		Token token = (Token) symbolStack.pop();
-		symbolStack.pop();
-		symbolStack.pop();
+		// 弹出产生式右侧的AST结点
+		Identifier id = (Identifier) nodeStack.pop();
 		// 创建InputStatement结点并压栈
-		symbolStack.push(new InputStatement(new Identifier(token.getLexeme())));
+		nodeStack.push(new InputStatement(id));
 		// 状态向上返回5层
 		stateStack.pop();
 		stateStack.pop();
@@ -676,14 +660,10 @@ public class Parser implements canto.Parser {
 	 *   STMT -> output ( EXPR ) ;
 	 */
 	private void reduceOutputStatement() {
-		// 弹出产生式右侧的符号
-		symbolStack.pop();
-		symbolStack.pop();
-		Expression expr = (Expression) symbolStack.pop();
-		symbolStack.pop();
-		symbolStack.pop();
+		// 弹出产生式右侧的AST结点
+		Expression expr = (Expression) nodeStack.pop();
 		// 创建OutputStatement结点并压栈
-		symbolStack.push(new OutputStatement(expr));
+		nodeStack.push(new OutputStatement(expr));
 		// 状态向上返回5层
 		stateStack.pop();
 		stateStack.pop();
@@ -697,10 +677,7 @@ public class Parser implements canto.Parser {
 	 *   EXPR -> id
 	 */
 	private void reduceIdentifier() {
-		// 弹出产生式右侧的符号
-		Token token = (Token) symbolStack.pop(); 
-		// 创建Identifier结点并压栈
-		symbolStack.push(new Identifier(token.getLexeme()));
+		// Identifier已是Expression的子类，不做AST栈的操作
 		// 状态向上返回1层
 		stateStack.pop();
 	}
@@ -710,10 +687,7 @@ public class Parser implements canto.Parser {
 	 *   EXPR -> literal
 	 */
 	private void reduceLiteral() {
-		// 弹出产生式右侧的符号
-		Token token = (Token) symbolStack.pop();
-		// 创建Literal结点并压栈
-		symbolStack.push(new IntegerLiteral((Integer)token.getAttribute()));
+		// Literal已是Expression的子类，不做AST栈的操作
 		// 状态向上返回1层
 		stateStack.pop();
 	}
@@ -723,12 +697,10 @@ public class Parser implements canto.Parser {
 	 *   EXPR -> ( EXPR )
 	 */
 	private void reduceParenthesisExpression() {
-		// 弹出产生式右侧的符号
-		symbolStack.pop();
-		Expression expression = (Expression) symbolStack.pop();
-		symbolStack.pop();
+		// 弹出产生式右侧的AST结点
+		Expression expression = (Expression) nodeStack.pop();
 		// 不创建新的AST结点，直接将原结点压栈
-		symbolStack.push(expression);
+		nodeStack.push(expression);
 		// 状态向上返回3层
 		stateStack.pop();
 		stateStack.pop();
@@ -740,11 +712,11 @@ public class Parser implements canto.Parser {
 	 *   EXPR -> UN_OP EXPR
 	 */
 	private void reduceUnaryExpression() {
-		// 弹出产生式右侧的符号
-		Expression expr = (Expression) symbolStack.pop();
-		UnaryOperator unOp = (UnaryOperator) symbolStack.pop();
+		// 弹出产生式右侧的AST结点
+		Expression expr = (Expression) nodeStack.pop();
+		UnaryOperator unOp = (UnaryOperator) nodeStack.pop();
 		// 创建UnaryOperator结点并压栈
-		symbolStack.push(new UnaryExpression(unOp, expr));
+		nodeStack.push(new UnaryExpression(unOp, expr));
 		// 状态向上返回2层
 		stateStack.pop();
 		stateStack.pop();
@@ -761,12 +733,12 @@ public class Parser implements canto.Parser {
 	 *   EXPR -> EXPR BI_OP4 EXPR
 	 */
 	private void reduceBinaryExpression() {
-		// 弹出产生式右侧的符号
-		Expression rightExpr = (Expression) symbolStack.pop();
-		BinaryOperator biOp = (BinaryOperator) symbolStack.pop();
-		Expression leftExpr = (Expression) symbolStack.pop();
+		// 弹出产生式右侧的AST结点
+		Expression rightExpr = (Expression) nodeStack.pop();
+		BinaryOperator biOp = (BinaryOperator) nodeStack.pop();
+		Expression leftExpr = (Expression) nodeStack.pop();
 		// 创建BinaryOperator结点并压栈
-		symbolStack.push(new BinaryExpression(biOp, leftExpr, rightExpr));
+		nodeStack.push(new BinaryExpression(biOp, leftExpr, rightExpr));
 		// 状态向上返回3层
 		stateStack.pop();
 		stateStack.pop();
@@ -779,10 +751,9 @@ public class Parser implements canto.Parser {
 	 * @param type 类型编号
 	 */
 	private void reduceType(int type) {
-		// 弹出产生式右侧的符号
-		symbolStack.pop();
+		// 产生式右侧无AST结点，不做AST栈的操作
 		// 创建Type结点并压栈
-		symbolStack.push(new PrimitiveType(type));
+		nodeStack.push(new PrimitiveType(type));
 		// 状态向上返回1层
 		stateStack.pop();
 	}
@@ -795,10 +766,9 @@ public class Parser implements canto.Parser {
 	 * @param op 单元操作符编号
 	 */
 	private void reduceUnaryOperator(int op) {
-		// 弹出产生式右侧的符号
-		symbolStack.pop();
+		// 产生式右侧无AST结点，不做AST栈的操作
 		// 创建UnaryOperatorType结点并压栈
-		symbolStack.push(new UnaryOperator(op));
+		nodeStack.push(new UnaryOperator(op));
 		// 状态向上返回1层
 		stateStack.pop();
 	}
@@ -817,10 +787,9 @@ public class Parser implements canto.Parser {
 	 * @param op 二元操作符编号
 	 */
 	private void reduceBinaryOperator(int op) {
-		// 弹出产生式右侧的符号
-		symbolStack.pop();
+		// 产生式右侧无AST结点，不做AST栈的操作
 		// 创建BinaryOperatorType结点并压栈
-		symbolStack.push(new BinaryOperator(op));
+		nodeStack.push(new BinaryOperator(op));
 		// 状态向上返回1层
 		stateStack.pop();
 	}
