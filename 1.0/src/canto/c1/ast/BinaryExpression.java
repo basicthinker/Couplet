@@ -41,7 +41,7 @@ public class BinaryExpression extends Expression {
 	 * 获取二元操作符
 	 * @return 二元操作符
 	 */
-	public Operator getOperator() {
+	public BinaryOperator getOperator() {
 		return operator;
 	}
 
