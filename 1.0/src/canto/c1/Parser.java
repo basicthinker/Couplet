@@ -229,7 +229,7 @@ public class Parser implements canto.Parser {
 
 	
 	@Override
-	public AbstractSyntaxTree getAbstractSyntaxTree() {
+	public AbstractSyntaxTree getAST() {
 		return treeRoot;
 	}
 

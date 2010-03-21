@@ -24,6 +24,6 @@ public interface Parser {
 	 * 获取生成的AST
 	 * @return 生成的AST
 	 */
-	public AbstractSyntaxTree getAbstractSyntaxTree();
+	public AbstractSyntaxTree getAST();
 	
 }

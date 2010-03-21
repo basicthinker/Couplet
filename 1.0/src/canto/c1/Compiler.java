@@ -71,7 +71,7 @@ public class Compiler implements canto.Compiler {
 	 */
 	@Override
 	public AbstractSyntaxTree getAbstractSyntaxTree() {
-		return parser.getAbstractSyntaxTree();
+		return parser.getAST();
 	}
 
 	/* (non-Javadoc)
