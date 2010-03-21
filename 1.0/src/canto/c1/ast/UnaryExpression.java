@@ -6,7 +6,7 @@
 public class UnaryExpression extends Expression {
 
 	/** 单元操作符 */
-	private final Operator operator;
+	private final UnaryOperator operator;
 	
 	/** 参与运算的表达式 */
 	private final Expression operand;
@@ -16,7 +16,7 @@ public class UnaryExpression extends Expression {
 	 * @param operator 单元运算符
 	 * @param operand 操作表达式
 	 */
-	public UnaryExpression(Operator operator, Expression operand) {
+	public UnaryExpression(UnaryOperator operator, Expression operand) {
 		this.operator = operator;
 		this.operand = operand;
 	}
@@ -35,7 +35,7 @@ public class UnaryExpression extends Expression {
 	 * 获取单元操作符
 	 * @return 单元操作符
 	 */
-	public Operator getOperator() {
+	public UnaryOperator getOperator() {
 		return operator;
 	}
 
