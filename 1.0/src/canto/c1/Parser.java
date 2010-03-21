@@ -366,7 +366,7 @@ public class Parser implements canto.Parser {
 					nonterminal = EXPR;
 					break;
 				case 23 :
-					reduceType(PrimitiveType.INTEGER);
+					reduceType();
 					nonterminal = TYPE;
 					break;
 				case 24 :
@@ -753,10 +753,10 @@ public class Parser implements canto.Parser {
 	 *   TYPE -> int
 	 * @param type 类型编号
 	 */
-	private void reduceType(int type) {
+	private void reduceType() {
 		// 产生式右侧无AST结点，不做AST栈的操作
 		// 创建Type结点并压栈
-		nodeStack.push(new PrimitiveType(type));
+		nodeStack.push(new IntegerType());
 		// 状态向上返回1层
 		popStateStack(1);
 	}

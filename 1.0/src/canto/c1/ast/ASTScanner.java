@@ -88,7 +88,7 @@ public class ASTScanner implements ASTVisitor {
 	}
 	
 	@Override
-	public void visit(PrimitiveType node) {		
+	public void visit(IntegerType node) {		
 	}
 
 

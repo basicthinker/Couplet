@@ -126,9 +126,9 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(PrimitiveType node) {
+	public void visit(IntegerType node) {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
-		System.out.println("Type : " + node.getTypeCode());
+		System.out.println("Type : int");
 		depth++;
 		super.visit(node);
 		depth--;

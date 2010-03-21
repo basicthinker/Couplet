@@ -18,7 +18,7 @@ public interface ASTVisitor {
 	public void visit(BinaryExpression node);
 	public void visit(Identifier node);
 	public void visit(IntegerLiteral node);
-	public void visit(PrimitiveType node);
+	public void visit(IntegerType node);
 	public void visit(UnaryOperator node);
 	public void visit(BinaryOperator node);
 }
