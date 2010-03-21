@@ -289,11 +289,7 @@ public class Parser implements canto.Parser {
 					reduceBlock();
 					nonterminal = BLOCK;
 					break;
-				case 4 :
-					reduceStmts();
-					nonterminal = STMTS;
-					break;
-				case 5 :
+				case 4 : case 5 :
 					reduceStmts();
 					nonterminal = STMTS;
 					break;
@@ -349,19 +345,7 @@ public class Parser implements canto.Parser {
 					reduceUnaryExpression();
 					nonterminal = EXPR;
 					break;
-				case 19 :
-					reduceBinaryExpression();
-					nonterminal = EXPR;
-					break;
-				case 20 :
-					reduceBinaryExpression();
-					nonterminal = EXPR;
-					break;
-				case 21 :
-					reduceBinaryExpression();
-					nonterminal = EXPR;
-					break;
-				case 22 :
+				case 19 : case 20 : case 21 : case 22 :
 					reduceBinaryExpression();
 					nonterminal = EXPR;
 					break;
@@ -728,13 +712,10 @@ public class Parser implements canto.Parser {
 	}
 	
 	/**
-	 * 19号产生式
+	 * 归约19-22号产生式
 	 *   EXPR -> EXPR BI_OP1 EXPR
-	 * 20号产生式
 	 *   EXPR -> EXPR BI_OP2 EXPR
-	 * 21号产生式
 	 *   EXPR -> EXPR BI_OP3 EXPR
-	 * 22号产生式
 	 *   EXPR -> EXPR BI_OP4 EXPR
 	 */
 	private void reduceBinaryExpression() {
@@ -749,7 +730,7 @@ public class Parser implements canto.Parser {
 	}
 
 	/**
-	 * 23号产生式
+	 * 归约23号产生式
 	 *   TYPE -> int
 	 * @param type 类型编号
 	 */
@@ -762,7 +743,7 @@ public class Parser implements canto.Parser {
 	}
 	
 	/**
-	 * 24-26号产生式
+	 * 归约24-26号产生式
 	 *   UN_OP -> + 
 	 *   UN_OP -> - 
 	 *   UN_OP -> !
