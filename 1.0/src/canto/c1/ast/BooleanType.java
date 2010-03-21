@@ -1,9 +1,9 @@
-﻿package canto.c1.ast;
+package canto.c1.ast;
 
 /**
- * 整型结点
+ * 布尔型结点
  */
-public class IntegerType extends Type {
+public class BooleanType extends Type {
 
 	@Override
 	public void accept(ASTVisitor visitor) {
@@ -12,7 +12,7 @@ public class IntegerType extends Type {
 
 	@Override
 	public int getNodeType() {
-		return INTEGER_TYPE;
+		return BOOLEAN_TYPE;
 	}
 
 }

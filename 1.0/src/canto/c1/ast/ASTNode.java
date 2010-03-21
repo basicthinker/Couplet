@@ -20,7 +20,8 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	public static final int	IDENTIFIER = 12;	
 	public static final int INTEGER_LITERAL = 13;
 	public static final int INTEGER_TYPE = 14;
-	public static final int UNARY_OPERATOR = 15;
-	public static final int BINARY_OPERATOR = 16;
+	public static final int BOOLEAN_TYPE = 15;
+	public static final int UNARY_OPERATOR = 16;
+	public static final int BINARY_OPERATOR = 17;
 	
 }

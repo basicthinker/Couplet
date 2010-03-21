@@ -91,6 +91,9 @@ public class ASTScanner implements ASTVisitor {
 	public void visit(IntegerType node) {		
 	}
 
+	@Override
+	public void visit(BooleanType node) {
+	}
 
 	@Override
 	public void visit(UnaryOperator node) {
