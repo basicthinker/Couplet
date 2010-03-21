@@ -8,7 +8,7 @@ import java.util.List;
 public interface Parser {
 	
 	/**
-	 * 设置一个Token链作为输入
+	 * 设置待分析的Token链
 	 * @param tokenList
 	 */
 	public void setTokenList(List<Token> tokenList);
