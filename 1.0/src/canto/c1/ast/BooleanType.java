@@ -6,7 +6,7 @@ package canto.c1.ast;
 public class BooleanType extends Type {
 
 	@Override
-	public void accept(ASTVisitor visitor) {
+	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

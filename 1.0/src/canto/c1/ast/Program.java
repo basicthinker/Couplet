@@ -17,7 +17,7 @@ public class Program extends ASTNode {
 	}
 	
 	@Override
-	public void accept(ASTVisitor visitor) {
+	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

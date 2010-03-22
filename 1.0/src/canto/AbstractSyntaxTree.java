@@ -11,7 +11,7 @@ public interface AbstractSyntaxTree {
 	 * 接受访问者访问该AST结点的方法
 	 * @param visitor 访问者
 	 */
-	public void accept(ASTVisitor visitor);
+	public void accept(ASTVisitor visitor) throws Exception;
 	
 	/**
 	 * 获取AST结点的类型

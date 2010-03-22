@@ -11,17 +11,17 @@
 public class ASTScanner implements ASTVisitor {
 
 	@Override
-	public void visit(Program node) {
+	public void visit(Program node) throws Exception {
 		node.getBody().accept(this);
 	}
 
 	@Override
-	public void visit(Block node) {
+	public void visit(Block node) throws Exception {
 		node.getStatementList().accept(this);
 	}
 	
 	@Override
-	public void visit(StatementList node) {
+	public void visit(StatementList node) throws Exception {
 		for (Listable item : node.getList()) {
 			if (item instanceof Declaration) {
 				((Declaration) item).accept(this);
@@ -32,19 +32,19 @@ public class ASTScanner implements ASTVisitor {
 	}
 	
 	@Override
-	public void visit(Declaration node) {
+	public void visit(Declaration node) throws Exception {
 		node.getType().accept(this);
 		node.getIdentifier().accept(this);
 	}
 
 	@Override
-	public void visit(AssignmentStatement node) {
+	public void visit(AssignmentStatement node) throws Exception {
 		node.getIdentifier().accept(this);
 		node.getExpression().accept(this);
 	}
 
 	@Override
-	public void visit(IfStatement node) {
+	public void visit(IfStatement node) throws Exception {
 		node.getCondition().accept(this);
 		node.getThenStatement().accept(this);
 		Statement elseStatement = node.getElseStatement();
@@ -52,55 +52,56 @@ public class ASTScanner implements ASTVisitor {
 	}
 
 	@Override
-	public void visit(WhileStatement node) {
+	public void visit(WhileStatement node) throws Exception {
+		node.getCondition().accept(this);
 		node.getBody().accept(this);
 	}
 
 	@Override
-	public void visit(InputStatement node) {
+	public void visit(InputStatement node) throws Exception {
 		node.getIdentifier().accept(this);
 	}
 
 	@Override
-	public void visit(OutputStatement node) {
+	public void visit(OutputStatement node) throws Exception {
 		node.getExpression().accept(this);
 	}
 	
 	@Override
-	public void visit(UnaryExpression node) {
+	public void visit(UnaryExpression node) throws Exception {
 		node.getOperator().accept(this);
 		node.getOperand().accept(this);
 	}
 
 	@Override
-	public void visit(BinaryExpression node) {
+	public void visit(BinaryExpression node) throws Exception {
 		node.getLeftOperand().accept(this);
 		node.getOperator().accept(this);
 		node.getRightOperand().accept(this);
 	}
 
 	@Override
-	public void visit(Identifier node) {
+	public void visit(Identifier node) throws Exception {
 	}
 
 	@Override
-	public void visit(IntegerLiteral node) {
+	public void visit(IntegerLiteral node) throws Exception {
 	}
 	
 	@Override
-	public void visit(IntegerType node) {		
+	public void visit(IntegerType node) throws Exception {		
 	}
 
 	@Override
-	public void visit(BooleanType node) {
+	public void visit(BooleanType node) throws Exception {
 	}
 
 	@Override
-	public void visit(UnaryOperator node) {
+	public void visit(UnaryOperator node) throws Exception {
 	}
 
 	@Override
-	public void visit(BinaryOperator node) {
+	public void visit(BinaryOperator node) throws Exception {
 	}
 
 }

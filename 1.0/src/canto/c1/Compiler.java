@@ -1,4 +1,5 @@
-﻿/**
+﻿
+/**
  * 
  */
 package canto.c1;
@@ -27,6 +28,7 @@ public class Compiler implements canto.Compiler {
 	private OutputStreamWriter targetWriter;
 	private Lexer lexer;
 	private Parser parser;
+	private Checker checker;
 
 	/**
 	 * 
@@ -36,6 +38,7 @@ public class Compiler implements canto.Compiler {
 		targetWriter = null;
 		lexer = new Lexer();
 		parser = new Parser();
+		checker = new Checker();
 	}
 
 	/* (non-Javadoc)
@@ -51,6 +54,8 @@ public class Compiler implements canto.Compiler {
 			lexer.scan();
 			parser.setTokenList(lexer.getTokenList());
 			parser.parse();
+			checker.setAST(parser.getAST());
+			checker.check();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

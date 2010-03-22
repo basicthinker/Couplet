@@ -9,7 +9,7 @@ public class ASTPrinter extends ASTScanner {
 	int depth = 0;
 	
 	@Override
-	public void visit(Program node) {
+	public void visit(Program node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Prgoram :");
 		depth++;
@@ -18,7 +18,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(Block node) {
+	public void visit(Block node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Block :");
 		depth++;
@@ -27,7 +27,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(StatementList node) {
+	public void visit(StatementList node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("StatementList :");
 		depth++;
@@ -36,7 +36,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(Declaration node) {
+	public void visit(Declaration node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Declaration :");
 		depth++;
@@ -45,7 +45,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(AssignmentStatement node) {
+	public void visit(AssignmentStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Assignment :");
 		depth++;
@@ -54,7 +54,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(IfStatement node) {
+	public void visit(IfStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("If :");
 		depth++;
@@ -63,7 +63,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(WhileStatement node) {
+	public void visit(WhileStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("While :");
 		depth++;
@@ -72,7 +72,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(InputStatement node) {
+	public void visit(InputStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Input :");
 		depth++;
@@ -81,7 +81,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(OutputStatement node) {
+	public void visit(OutputStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Output :");
 		depth++;
@@ -90,7 +90,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(UnaryExpression node) {
+	public void visit(UnaryExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Unary Expression :");
 		depth++;
@@ -99,7 +99,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(BinaryExpression node) {
+	public void visit(BinaryExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Binary Expression :");
 		depth++;
@@ -108,7 +108,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(Identifier node) {
+	public void visit(Identifier node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Identifier : " + node.getName() + "");
 		depth++;
@@ -117,7 +117,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(IntegerLiteral node) {
+	public void visit(IntegerLiteral node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Literal : " + node.getValue() + "");
 		depth++;
@@ -126,7 +126,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(IntegerType node) {
+	public void visit(IntegerType node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Type : int");
 		depth++;
@@ -136,7 +136,7 @@ public class ASTPrinter extends ASTScanner {
 
 
 	@Override
-	public void visit(UnaryOperator node) {
+	public void visit(UnaryOperator node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Unary Operator : " + node.getOperatorCode());
 		depth++;
@@ -145,7 +145,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(BinaryOperator node) {
+	public void visit(BinaryOperator node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Binary Operator : " + node.getOperatorCode());
 		depth++;
