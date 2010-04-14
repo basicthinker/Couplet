@@ -67,7 +67,7 @@ public class Lexer implements canto.Lexer {
 				
 				intBufChar = recognizeInteger((char)intBufChar, lexBuf);
 				String lexeme = lexBuf.toString();
-				tokenList.add(new Constant(lineNumber, lexeme));
+				tokenList.add(new IntegerLiteral(lineNumber, lexeme));
 				
 			} else if (intBufChar == ' ' || intBufChar == '\t' || intBufChar == '\n') {
 				

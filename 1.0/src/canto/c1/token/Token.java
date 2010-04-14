@@ -1,7 +1,7 @@
 ﻿/**
  * 
  */
-package canto.c1;
+package canto.c1.token;
 
 /**
  * @author basicthinker

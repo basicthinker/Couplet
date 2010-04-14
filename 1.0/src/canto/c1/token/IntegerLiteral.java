@@ -3,13 +3,12 @@
  */
 package canto.c1.token;
 
-import canto.c1.Token;
 
 /**
  * @author basicthinker
  *
  */
-public class Constant extends Token {
+public class IntegerLiteral extends Token {
 
 	private final int value;
 	
@@ -18,7 +17,7 @@ public class Constant extends Token {
 	 * @param columnNum
 	 * @param lexeme
 	 */
-	public Constant(int lineNumber, String lexeme) {
+	public IntegerLiteral(int lineNumber, String lexeme) {
 		super(lineNumber, lexeme);
 		value = Integer.parseInt(lexeme);
 	}
@@ -26,7 +25,7 @@ public class Constant extends Token {
 	/**
 	 * @param lexeme 
 	 */
-	public Constant(String lexeme) {
+	public IntegerLiteral(String lexeme) {
 		value = Integer.parseInt(lexeme);
 	}
 

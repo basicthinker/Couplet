@@ -436,11 +436,11 @@ public class Parser implements canto.Parser {
 			String lexeme = nowToken.getLexeme();
 			// 判断该终极符的编号
 			switch (type) {
-			case canto.c1.Token.ID :
+			case canto.c1.token.Token.ID :
 				return ID;
-			case canto.c1.Token.CONSTANT :
+			case canto.c1.token.Token.CONSTANT :
 				return LITERAL;
-			case canto.c1.Token.KEYWORD :				
+			case canto.c1.token.Token.KEYWORD :				
 				if (lexeme.equals("if")) {
 					return IF;
 				} else if (lexeme.equals("else")) {
@@ -454,7 +454,7 @@ public class Parser implements canto.Parser {
 				} else if (lexeme.equals("int")) {
 					return INT;
 				}
-			case canto.c1.Token.PUNCTUATION :
+			case canto.c1.token.Token.PUNCTUATION :
 				if (lexeme.equals("{")) {
 					return L_BRACE;
 				} else if (lexeme.equals("}")) {
@@ -466,7 +466,7 @@ public class Parser implements canto.Parser {
 				} else if (lexeme.equals(";")) {
 					return SEMI;
 				}
-			case canto.c1.Token.OPERERATOR :
+			case canto.c1.token.Token.OPERERATOR :
 				if (lexeme.equals("=")) {
 					return EQUALS;
 				} else if (lexeme.equals("!")) {

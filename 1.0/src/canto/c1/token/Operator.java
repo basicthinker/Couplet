@@ -3,7 +3,6 @@
  */
 package canto.c1.token;
 
-import canto.c1.Token;
 
 /**
  * @author basicthinker
