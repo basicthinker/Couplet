@@ -1,16 +1,31 @@
 <program> ::= <block>
 
+<fun_list> ::= <fun_list> <fun> | ¦Å
+
+<fun> ::= <type> id "(" <form_list> ")" <block>
+
+<form_list> ::= <form_list> "," <form>
+
+<form> ::= <type> id
+
 <block> ::= "{" <stmt_list> "}"
 
-<stmt_list> ::= <stmt_list> <stmt> | ¦Å
+<stmt_list> ::= <stmt_list> <stmt> | <stmt_list> <decl> | ¦Å
+
+<decl> ::= <type> id ";"
 
 <stmt> ::= <block>
-         | id "=" <expr> ";"
+         | <loc> "=" <expr> ";"
          | "if" "(" <expr> ")" <stmt>
          | "if" "(" <expr> ")" <stmt> "else" <stmt>
          | "while" "(" <expr> ")" <stmt>
-         | "input" "(" id ")" ";"
+         | "input" "(" <loc> ")" ";"
          | "output" "(" <expr> ")" ";"
+         | id "(" <expr_list> ")" ";"
+         | "return" ";"
+         | "return" <expr> ";"
+
+<expr_list> ::= <expr_list> "," <expr>
 
 <expr> ::= <expr> <bi_op_1> <expr_1> | <expr_1>
 
@@ -26,8 +41,11 @@
 
 <expr_6> ::= <un_op> <expr>
            | "(" <expr> ")"
-           | id
+           | <loc>
            | integer_literal
+           | float_literal
+           | string_literal
+           | char_literal
 
 <un_op> ::= "!" | "+" | "-"
 
@@ -41,4 +59,8 @@
 
 <bi_op_5> ::= "+" | "-"
 
-<bi_op_6> ::= "*"
+<bi_op_6> ::= "*" | "/" | "%"
+
+<type> ::= <type> "[" <expr> "]" | "int" | "bool" | "float" | "char"
+
+<loc> ::= <loc> "[" <expr> "]" | id

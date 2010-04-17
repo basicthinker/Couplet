@@ -1,0 +1,20 @@
+<program> ::= <block>
+
+<block> ::= "{" <stmt_list> "}"
+
+<stmt_list> ::= <stmt_list> <stmt> | ¦Å
+
+<stmt> ::= id "=" <expr> ";"
+         | "input" "(" id ")" ";"
+         | "output" "(" <expr> ")" ";"
+
+<expr> ::= <expr> <bi_op_1> <expr_1> | <expr_1>
+
+<expr_1> ::= <expr_1> <bi_op_2> <expr_2> | <expr_2>
+
+<expr_2> ::= id
+           | integer_literal
+
+<bi_op_1> ::= "+"
+
+<bi_op_2> ::= "*"

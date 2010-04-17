@@ -2,14 +2,16 @@
 
 <block> ::= "{" <stmt_list> "}"
 
-<stmt_list> ::= <stmt_list> <stmt> | ¦Å
+<stmt_list> ::= <stmt_list> <stmt> | <stmt_list> <decl> | ¦Å
+
+<decl> ::= <type> id ";"
 
 <stmt> ::= <block>
-         | id "=" <expr> ";"
+         | <loc> "=" <expr> ";"
          | "if" "(" <expr> ")" <stmt>
          | "if" "(" <expr> ")" <stmt> "else" <stmt>
          | "while" "(" <expr> ")" <stmt>
-         | "input" "(" id ")" ";"
+         | "input" "(" <loc> ")" ";"
          | "output" "(" <expr> ")" ";"
 
 <expr> ::= <expr> <bi_op_1> <expr_1> | <expr_1>
@@ -26,8 +28,11 @@
 
 <expr_6> ::= <un_op> <expr>
            | "(" <expr> ")"
-           | id
+           | <loc>
            | integer_literal
+           | float_literal
+           | string_literal
+           | char_literal
 
 <un_op> ::= "!" | "+" | "-"
 
@@ -41,4 +46,8 @@
 
 <bi_op_5> ::= "+" | "-"
 
-<bi_op_6> ::= "*"
+<bi_op_6> ::= "*" | "/" | "%"
+
+<type> ::= <type> "[" <expr> "]" | "int" | "bool" | "float" | "char"
+
+<loc> ::= <loc> "[" <expr> "]" | id
