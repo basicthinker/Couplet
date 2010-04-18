@@ -4,17 +4,26 @@
 
 <stmt_list> ::= <stmt_list> <stmt> | ¦Å
 
-<stmt> ::= id "=" <expr> ";"
-         | "input" "(" id ")" ";"
-         | "output" "(" <expr> ")" ";"
+<stmt> ::= <assign_stmt> | <input_stmt> | <output_stmt>
+
+<assign_stmt> ::= <access> "=" <expr> ";"
+
+<input_stmt> ::= "input" "(" <access> ")" ";"
+
+<output_stmt> ::= "output" "(" <expr> ")" ";"
 
 <expr> ::= <expr> <bi_op_1> <expr_1> | <expr_1>
 
 <expr_1> ::= <expr_1> <bi_op_2> <expr_2> | <expr_2>
 
-<expr_2> ::= id
-           | integer_literal
+<expr_2> ::= <access> | <literal>
 
 <bi_op_1> ::= "+"
 
 <bi_op_2> ::= "*"
+
+<access> ::= <id>
+
+<id> ::= id
+
+<literal> ::= integer_literal

@@ -4,13 +4,17 @@
 
 <stmt_list> ::= <stmt_list> <stmt> | ¦Å
 
-<stmt> ::= <block>
-         | id "=" <expr> ";"
-         | "if" "(" <expr> ")" <stmt>
-         | "if" "(" <expr> ")" <stmt> "else" <stmt>
-         | "while" "(" <expr> ")" <stmt>
-         | "input" "(" id ")" ";"
-         | "output" "(" <expr> ")" ";"
+<stmt> ::= <block> | <assign_stmt> | <if_stmt> | <while_stmt> | <input_stmt> | <output_stmt>
+
+<assign_stmt> ::= <access> "=" <expr> ";"
+
+<if_stmt> ::= "if" "(" <expr> ")" <stmt> | "if" "(" <expr> ")" <stmt> "else" <stmt>
+
+<while_stmt> ::= "while" "(" <expr> ")" <stmt>
+
+<input_stmt> ::= "input" "(" <access> ")" ";"
+
+<output_stmt> ::= "output" "(" <expr> ")" ";"
 
 <expr> ::= <expr> <bi_op_1> <expr_1> | <expr_1>
 
@@ -24,10 +28,7 @@
 
 <expr_5> ::= <expr_5> <bi_op_6> <expr_6> | <expr_6>
 
-<expr_6> ::= <un_op> <expr>
-           | "(" <expr> ")"
-           | id
-           | integer_literal
+<expr_6> ::= <un_op> <expr> | "(" <expr> ")" | <access> | <literal>
 
 <un_op> ::= "!" | "+" | "-"
 
@@ -42,3 +43,9 @@
 <bi_op_5> ::= "+" | "-"
 
 <bi_op_6> ::= "*"
+
+<access> ::= <id>
+
+<id> ::= id
+
+<literal> ::= integer_literal

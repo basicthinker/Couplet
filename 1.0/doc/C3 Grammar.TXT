@@ -1,8 +1,8 @@
-<program> ::= <block>
+<program> ::= <fun_list>
 
 <fun_list> ::= <fun_list> <fun> | ¦Å
 
-<fun> ::= <type> id "(" <form_list> ")" <block>
+<fun> ::= <type> id "(" <form_list> ")" <block> | "void" id "(" <form_list> ")" <block>
 
 <form_list> ::= <form_list> "," <form>
 
@@ -14,18 +14,23 @@
 
 <decl> ::= <type> id ";"
 
-<stmt> ::= <block>
-         | <loc> "=" <expr> ";"
-         | "if" "(" <expr> ")" <stmt>
-         | "if" "(" <expr> ")" <stmt> "else" <stmt>
-         | "while" "(" <expr> ")" <stmt>
-         | "input" "(" <loc> ")" ";"
-         | "output" "(" <expr> ")" ";"
-         | id "(" <expr_list> ")" ";"
-         | "return" ";"
-         | "return" <expr> ";"
+<type> ::= <type> "[" <expr> "]" | "int" | "bool" | "float" | "char"
 
-<expr_list> ::= <expr_list> "," <expr>
+<stmt> ::= <block> | <assign_stmt> | <if_stmt> | <while_stmt> | <input_stmt> | <output_stmt> | <call_stmt> | <return_stmt>
+
+<assign_stmt> ::= <access> "=" <expr> ";"
+
+<if_stmt> ::= "if" "(" <expr> ")" <stmt> | "if" "(" <expr> ")" <stmt> "else" <stmt>
+
+<while_stmt> ::= "while" "(" <expr> ")" <stmt>
+
+<input_stmt> ::= "input" "(" <access> ")" ";"
+
+<output_stmt> ::= "output" "(" <expr> ")" ";"
+
+<call_stmt> ::= id "(" <expr_list> ")" ";"
+
+<return_stmt> ::= "return" ";" | "return" <expr> ";"
 
 <expr> ::= <expr> <bi_op_1> <expr_1> | <expr_1>
 
@@ -39,13 +44,7 @@
 
 <expr_5> ::= <expr_5> <bi_op_6> <expr_6> | <expr_6>
 
-<expr_6> ::= <un_op> <expr>
-           | "(" <expr> ")"
-           | <loc>
-           | integer_literal
-           | float_literal
-           | string_literal
-           | char_literal
+<expr_6> ::= <un_op> <expr> | "(" <expr> ")" | <access> | <literal>
 
 <un_op> ::= "!" | "+" | "-"
 
@@ -61,6 +60,8 @@
 
 <bi_op_6> ::= "*" | "/" | "%"
 
-<type> ::= <type> "[" <expr> "]" | "int" | "bool" | "float" | "char"
+<access> ::= <id> | <access> "[" <expr> "]"
 
-<loc> ::= <loc> "[" <expr> "]" | id
+<id> ::= id
+
+<literal> ::= integer_literal | float_literal | string_literal | char_literal | bool_literal
