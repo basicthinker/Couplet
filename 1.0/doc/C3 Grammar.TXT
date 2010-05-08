@@ -1,50 +1,105 @@
-<program> ::= <fun_list>
+ï»¿<program> ::= <decl_list>
 
-<fun_list> ::= <fun_list> <fun> | ¦Å
+<decl_list> ::= <decl_list> <var_decl>
+              | <decl_list> <fun_decl>
+              | Îµ
 
-<fun> ::= <type> id "(" <form_list> ")" <block> | "void" id "(" <form_list> ")" <block>
+<fun_list> ::= <fun_list> <fun>
+             | Îµ
 
-<form_list> ::= <form_list> "," <form>
+<fun> ::= <type> id "(" <para_list> ")" <block>
+        | <type> id "(" ")" <block> 
+        | "void" id "(" <para_list> ")" <block>
+        | "void" id "(" ")" <block>
 
-<form> ::= <type> id
+<para_list> ::= <para_list> "," <para>
+              | <para>
+
+<para> ::= <type> id
+         | <type> <array_def>
+
+<var_decl> ::= <type> id ";"
+             | <type> <array_def> ";"
+
+<type> ::= "int" 
+         | "bool" 
+         | "float" 
+         | "char"
+
+<array_def> ::= <array_def> "[" <expr> "]"
+              | id "[" <expr> "]"
+
+<stmt_list> ::= <stmt_list> <stmt> 
+              | <stmt_list> <var_decl> 
+              | Îµ
+
+<stmt> ::= <block>
+         | <assign_stmt>
+         | <expr_stmt>
+         | <if_stmt>
+         | <while_stmt>
+         | <break_stmt> 
+         | <continue_stmt>
+         | <input_stmt>
+         | <output_stmt>
+         | <call_stmt>
+         | <return_stmt>
 
 <block> ::= "{" <stmt_list> "}"
 
-<stmt_list> ::= <stmt_list> <stmt> | <stmt_list> <decl> | ¦Å
-
-<decl> ::= <type> id ";"
-
-<type> ::= <type> "[" <expr> "]" | "int" | "bool" | "float" | "char"
-
-<stmt> ::= <block> | <assign_stmt> | <if_stmt> | <while_stmt> | <input_stmt> | <output_stmt> | <call_stmt> | <return_stmt>
-
 <assign_stmt> ::= <access> "=" <expr> ";"
 
-<if_stmt> ::= "if" "(" <expr> ")" <stmt> | "if" "(" <expr> ")" <stmt> "else" <stmt>
+<expr_stmt> ::= <expr> ";"
+
+<if_stmt> ::= "if" "(" <expr> ")" <stmt> 
+            | "if" "(" <expr> ")" <stmt> "else" <stmt>
 
 <while_stmt> ::= "while" "(" <expr> ")" <stmt>
+
+<break_stmt> ::= "break" ";"
+
+<continue_stmt> ::= "continue" ";"
 
 <input_stmt> ::= "input" "(" <access> ")" ";"
 
 <output_stmt> ::= "output" "(" <expr> ")" ";"
 
-<call_stmt> ::= id "(" <expr_list> ")" ";"
+<call_stmt> ::= <call> ";"
 
-<return_stmt> ::= "return" ";" | "return" <expr> ";"
+<return_stmt> ::= "return" ";"
+                | "return" <expr> ";"
 
-<expr> ::= <expr> <bi_op_1> <expr_1> | <expr_1>
+<expr> ::= <expr> <bi_op_1> <expr_1>
+         | <expr_1>
 
-<expr_1> ::= <expr_1> <bi_op_2> <expr_2> | <expr_2>
+<expr_1> ::= <expr_1> <bi_op_2> <expr_2>
+           | <expr_2>
 
-<expr_2> ::= <expr_2> <bi_op_3> <expr_3> | <expr_3>
+<expr_2> ::= <expr_2> <bi_op_3> <expr_3>
+           | <expr_3>
 
-<expr_3> ::= <expr_3> <bi_op_4> <expr_4> | <expr_4>
+<expr_3> ::= <expr_3> <bi_op_4> <expr_4>
+           | <expr_4>
 
-<expr_4> ::= <expr_4> <bi_op_5> <expr_5> | <expr_5>
+<expr_4> ::= <expr_4> <bi_op_5> <expr_5>
+           | <expr_5>
 
-<expr_5> ::= <expr_5> <bi_op_6> <expr_6> | <expr_6>
+<expr_5> ::= <expr_5> <bi_op_6> <expr_6>
+           | <expr_6>
 
-<expr_6> ::= <un_op> <expr> | "(" <expr> ")" | <access> | <literal>
+<expr_6> ::= <un_op> <expr7>
+           | <expr_7>
+
+<expr_7> ::= "(" <expr> ")"
+           | <access>
+           | <literal>
+           | <call>
+
+<call> ::= id "(" <expr_list> ")"
+         | id "(" ")"
+
+<expr_list> ::= <expr_list> "," <expr>
+              | <expr>
 
 <un_op> ::= "!" | "+" | "-"
 
@@ -60,8 +115,11 @@
 
 <bi_op_6> ::= "*" | "/" | "%"
 
-<access> ::= <id> | <access> "[" <expr> "]"
+<access> ::= id
+           | <access> "[" <expr> "]"
 
-<id> ::= id
-
-<literal> ::= integer_literal | float_literal | string_literal | char_literal | bool_literal
+<literal> ::= integer_literal
+            | float_literal
+            | string_literal
+            | char_literal
+            | bool_literal

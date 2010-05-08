@@ -1,10 +1,13 @@
-<program> ::= <block>
+ï»¿<program> ::= <block>
 
 <block> ::= "{" <stmt_list> "}"
 
-<stmt_list> ::= <stmt_list> <stmt> | ¦Å
+<stmt_list> ::= <stmt_list> <stmt> 
+              | Îµ
 
-<stmt> ::= <assign_stmt> | <input_stmt> | <output_stmt>
+<stmt> ::= <assign_stmt>
+         | <input_stmt> 
+         | <output_stmt>
 
 <assign_stmt> ::= <access> "=" <expr> ";"
 
@@ -12,18 +15,19 @@
 
 <output_stmt> ::= "output" "(" <expr> ")" ";"
 
-<expr> ::= <expr> <bi_op_1> <expr_1> | <expr_1>
+<expr> ::= <expr> <bi_op_1> <expr_1> 
+         | <expr_1>
 
-<expr_1> ::= <expr_1> <bi_op_2> <expr_2> | <expr_2>
+<expr_1> ::= <expr_1> <bi_op_2> <expr_2>
+           | <expr_2>
 
-<expr_2> ::= <access> | <literal>
+<expr_2> ::= <access>
+           | <literal>
 
 <bi_op_1> ::= "+"
 
 <bi_op_2> ::= "*"
 
-<access> ::= <id>
-
-<id> ::= id
+<access> ::= id
 
 <literal> ::= integer_literal

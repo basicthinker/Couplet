@@ -1,38 +1,73 @@
-<program> ::= <block>
+ï»¿<program> ::= <block>
+
+<var_decl> ::= <type> id ";"
+             | <type> <array_def> ";"
+
+<type> ::= "int" 
+         | "bool" 
+         | "float" 
+         | "char"
+
+<array_def> ::= <array_def> "[" <expr> "]"
+              | id "[" <expr> "]"
+              
+<stmt_list> ::= <stmt_list> <stmt> 
+              | <stmt_list> <var_decl> 
+              | Îµ
+
+<stmt> ::= <block> 
+         | <assign_stmt>
+         | <expr_stmt>
+         | <if_stmt> 
+         | <while_stmt> 
+         | <break_stmt> 
+         | <continue_stmt> 
+         | <input_stmt> 
+         | <output_stmt>
 
 <block> ::= "{" <stmt_list> "}"
 
-<stmt_list> ::= <stmt_list> <stmt> | <stmt_list> <decl> | ¦Å
-
-<decl> ::= <type> id ";"
-
-<type> ::= <type> "[" <expr> "]" | "int" | "bool" | "float" | "char"
-
-<stmt> ::= <block> | <assign_stmt> | <if_stmt> | <while_stmt> | <input_stmt> | <output_stmt>
-
 <assign_stmt> ::= <access> "=" <expr> ";"
 
-<if_stmt> ::= "if" "(" <expr> ")" <stmt> | "if" "(" <expr> ")" <stmt> "else" <stmt>
+<expr_stmt> ::= <expr> ";"
+
+<if_stmt> ::= "if" "(" <expr> ")" <stmt>
+            | "if" "(" <expr> ")" <stmt> "else" <stmt>
 
 <while_stmt> ::= "while" "(" <expr> ")" <stmt>
+
+<break_stmt> ::= "break" ";"
+
+<continue_stmt> ::= "continue" ";"
 
 <input_stmt> ::= "input" "(" <access> ")" ";"
 
 <output_stmt> ::= "output" "(" <expr> ")" ";"
 
-<expr> ::= <expr> <bi_op_1> <expr_1> | <expr_1>
+<expr> ::= <expr> <bi_op_1> <expr_1> 
+         | <expr_1>
 
-<expr_1> ::= <expr_1> <bi_op_2> <expr_2> | <expr_2>
+<expr_1> ::= <expr_1> <bi_op_2> <expr_2>
+           | <expr_2>
 
-<expr_2> ::= <expr_2> <bi_op_3> <expr_3> | <expr_3>
+<expr_2> ::= <expr_2> <bi_op_3> <expr_3>
+           | <expr_3>
 
-<expr_3> ::= <expr_3> <bi_op_4> <expr_4> | <expr_4>
+<expr_3> ::= <expr_3> <bi_op_4> <expr_4>
+           | <expr_4>
 
-<expr_4> ::= <expr_4> <bi_op_5> <expr_5> | <expr_5>
+<expr_4> ::= <expr_4> <bi_op_5> <expr_5>
+           | <expr_5>
 
-<expr_5> ::= <expr_5> <bi_op_6> <expr_6> | <expr_6>
+<expr_5> ::= <expr_5> <bi_op_6> <expr_6>
+           | <expr_6>
 
-<expr_6> ::= <un_op> <expr> | "(" <expr> ")" | <access> | <literal>
+<expr_6> ::= <un_op> <expr7>
+           | <expr_7>
+
+<expr_7> ::= "(" <expr> ")"
+           | <access>
+           | <literal>
 
 <un_op> ::= "!" | "+" | "-"
 
@@ -48,8 +83,10 @@
 
 <bi_op_6> ::= "*" | "/" | "%"
 
-<access> ::= <id> | <access> "[" <expr> "]"
+<access> ::= id | <access> "[" <expr> "]"
 
-<id> ::= id
-
-<literal> ::= integer_literal | float_literal | string_literal | char_literal | bool_literal
+<literal> ::= integer_literal
+            | float_literal
+            | string_literal
+            | char_literal
+            | bool_literal
