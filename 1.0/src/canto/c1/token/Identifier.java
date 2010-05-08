@@ -11,20 +11,12 @@ package canto.c1.token;
 public class Identifier extends Token {
 
 	/**
-	 * @param lineNumber
+	 * @param line
 	 * @param column
 	 * @param word
 	 */
-	public Identifier(int lineNumber, String word) {
-		super(lineNumber, word);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * 
-	 */
-	public Identifier() {
-		// TODO Auto-generated constructor stub
+	public Identifier(int line, int column, String word) {
+		super(line, column, word, ID);
 	}
 
 	/* (non-Javadoc)
@@ -34,11 +26,6 @@ public class Identifier extends Token {
 	public Object getAttribute() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public int getType() {
-		return Token.ID;
 	}
 
 }

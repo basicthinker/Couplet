@@ -12,8 +12,10 @@ public class Program extends ASTNode {
 	 * 构造一个程序结点
 	 * @param body 程序体的Block
 	 */
-	public Program(Block body) {
+	public Program(Block body, int line, int column) {
+		super(line, column);
 		this.body = body;
+		body.setParent(this);
 	}
 	
 	@Override

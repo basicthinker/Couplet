@@ -16,30 +16,25 @@ public class ASTScanner implements ASTVisitor {
 	}
 
 	@Override
+	public void visit(StatementList node) throws Exception {
+		for (Statement item : node.getList()) {
+			item.accept(this);
+		}
+	}
+	
+	@Override
 	public void visit(Block node) throws Exception {
 		node.getStatementList().accept(this);
 	}
 	
 	@Override
-	public void visit(StatementList node) throws Exception {
-		for (Listable item : node.getList()) {
-			if (item instanceof Declaration) {
-				((Declaration) item).accept(this);
-			} else {
-				((Statement) item).accept(this);
-			}
-		}
+	public void visit(AssignmentStatement node) throws Exception {
+		node.getAccess().accept(this);
+		node.getExpression().accept(this);
 	}
 	
 	@Override
-	public void visit(Declaration node) throws Exception {
-		node.getType().accept(this);
-		node.getIdentifier().accept(this);
-	}
-
-	@Override
-	public void visit(AssignmentStatement node) throws Exception {
-		node.getIdentifier().accept(this);
+	public void visit(ExpressionStatement node) throws Exception {
 		node.getExpression().accept(this);
 	}
 
@@ -56,10 +51,18 @@ public class ASTScanner implements ASTVisitor {
 		node.getCondition().accept(this);
 		node.getBody().accept(this);
 	}
+	
+	@Override
+	public void visit(BreakStatement node) throws Exception {
+	}
 
 	@Override
+	public void visit(ContinueStatement node) throws Exception {
+	}
+	
+	@Override
 	public void visit(InputStatement node) throws Exception {
-		node.getIdentifier().accept(this);
+		node.getAccess().accept(this);
 	}
 
 	@Override
@@ -88,14 +91,6 @@ public class ASTScanner implements ASTVisitor {
 	public void visit(IntegerLiteral node) throws Exception {
 	}
 	
-	@Override
-	public void visit(IntegerType node) throws Exception {		
-	}
-
-	@Override
-	public void visit(BooleanType node) throws Exception {
-	}
-
 	@Override
 	public void visit(UnaryOperator node) throws Exception {
 	}

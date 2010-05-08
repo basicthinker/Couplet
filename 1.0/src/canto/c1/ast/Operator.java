@@ -12,7 +12,8 @@ public abstract class Operator extends ASTNode {
 	 * 构造一个操作符
 	 * @param code 操作符类型编码
 	 */
-	public Operator(int code) {
+	public Operator(int code, int line, int column) {
+		super(line, column);
 		this.code = code;
 	}
 	

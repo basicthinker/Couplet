@@ -12,17 +12,17 @@ public interface Token {
 	/**
 	 * @return 单词所在行号，由1计起，如果为零表明行号未计算
 	 */
-	public int getLineNumber();
+	public int getLine();
 	
 	/**
 	 * @return 单词所在列数，由1计起，如果为零表明列数未计算
 	 */
-	public int getColumnNumber();
+	public int getColumn();
 	
 	public String getLexeme();
 	
 	public Object getAttribute();
 	
-	public int getType();
+	public int getTokenType();
 	
 }

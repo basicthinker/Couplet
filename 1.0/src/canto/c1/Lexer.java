@@ -1,7 +1,4 @@
-﻿/**
- * 
- */
-package canto.c1;
+﻿package canto.c1;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,13 +17,22 @@ import canto.c1.token.*;
 public class Lexer implements canto.Lexer {
 
 	private LineNumberReader inBuf;
-	private HashSet<String> reserved;
+	private static HashSet<String> reserved;
 	private List<Token> tokenList;
 	
-	public Lexer() {
+	static {
 		reserved = new HashSet<String>();
+		reserved.add("if");
+		reserved.add("else");
+		reserved.add("while");
+		reserved.add("break");
+		reserved.add("continue");
+		reserved.add("input");
+		reserved.add("output");
+	}
+	
+	public Lexer() {
 		tokenList = new LinkedList<Token>();
-		reserveWords();
 	}
 	
 	/* (non-Javadoc)
@@ -48,7 +54,7 @@ public class Lexer implements canto.Lexer {
 		int intBufChar = inBuf.read();
 		while (intBufChar != -1) {
 			
-			int lineNumber = inBuf.getLineNumber();
+			int line = inBuf.getLineNumber();
 			StringBuffer lexBuf = new StringBuffer();
 			
 			if (intBufChar == '_' || 'a' <= intBufChar && intBufChar <= 'z' 
@@ -58,16 +64,16 @@ public class Lexer implements canto.Lexer {
 				String lexeme = lexBuf.toString();
 				
 				if (reserved.contains(lexeme)) {
-					tokenList.add(new Keyword(lineNumber, lexeme));
+					tokenList.add(new Keyword(line, 0, lexeme));
 				} else {
-					tokenList.add(new Identifier(lineNumber, lexeme));
+					tokenList.add(new Identifier(line, 0, lexeme));
 				}
 				
 			} else if ('0' <= intBufChar && intBufChar <= '9') {
 				
 				intBufChar = recognizeInteger((char)intBufChar, lexBuf);
 				String lexeme = lexBuf.toString();
-				tokenList.add(new IntegerLiteral(lineNumber, lexeme));
+				tokenList.add(new IntegerLiteral(line, 0, lexeme));
 				
 			} else if (intBufChar == ' ' || intBufChar == '\t' || intBufChar == '\n') {
 				
@@ -77,10 +83,10 @@ public class Lexer implements canto.Lexer {
 				
 				int nextChar = inBuf.read();
 				if (nextChar == '=') {
-					tokenList.add(new Operator(lineNumber, "=="));
+					tokenList.add(new Operator(line, 0, "=="));
 					intBufChar = -1;
 				} else {
-					tokenList.add(new Punctuation(lineNumber, "="));
+					tokenList.add(new Punctuation(line, 0, "="));
 					intBufChar = nextChar;
 				}
 				
@@ -89,13 +95,13 @@ public class Lexer implements canto.Lexer {
 				
 				intBufChar = recognizePunctuation((char)intBufChar, lexBuf);
 				String lexeme = lexBuf.toString();
-				tokenList.add(new Punctuation(lineNumber, lexeme));
+				tokenList.add(new Punctuation(line, 0, lexeme));
 				
 			} else {
 				
 				intBufChar = recognizeOperator((char)intBufChar, lexBuf);
 				String lexeme = lexBuf.toString();
-				tokenList.add(new Operator(lineNumber, lexeme));
+				tokenList.add(new Operator(line, 0, lexeme));
 				
 			}
 			
@@ -177,15 +183,6 @@ public class Lexer implements canto.Lexer {
 			} else break;
 		}
 		return intNextChar;
-	}
-
-	private void reserveWords() {
-		reserved.add("int");
-		reserved.add("if");
-		reserved.add("else");
-		reserved.add("while");
-		reserved.add("input");
-		reserved.add("output");
 	}
 
 	@Override

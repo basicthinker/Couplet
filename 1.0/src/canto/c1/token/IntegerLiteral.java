@@ -13,19 +13,12 @@ public class IntegerLiteral extends Token {
 	private final int value;
 	
 	/**
-	 * @param lineNum
-	 * @param columnNum
+	 * @param line
+	 * @param column
 	 * @param lexeme
 	 */
-	public IntegerLiteral(int lineNumber, String lexeme) {
-		super(lineNumber, lexeme);
-		value = Integer.parseInt(lexeme);
-	}
-
-	/**
-	 * @param lexeme 
-	 */
-	public IntegerLiteral(String lexeme) {
+	public IntegerLiteral(int line, int column, String lexeme) {
+		super(line, column, lexeme, INTEGER_LITERAL);
 		value = Integer.parseInt(lexeme);
 	}
 
@@ -37,8 +30,4 @@ public class IntegerLiteral extends Token {
 		return value;
 	}
 
-	@Override
-	public int getType() {
-		return Token.CONSTANT;
-	}
 }

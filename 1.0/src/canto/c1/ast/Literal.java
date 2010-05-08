@@ -5,4 +5,8 @@
  */
 public abstract class Literal extends Expression {
 
+	public Literal(int line, int column) {
+		super(line, column);
+	}
+
 }

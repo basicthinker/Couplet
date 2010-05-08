@@ -1,29 +1,14 @@
-﻿/**
- * 
- */
-package canto.c1.token;
+﻿package canto.c1.token;
 
-
-/**
- * @author basicthinker
- *
- */
 public class Keyword extends Token {
 
 	/**
-	 * @param lineNumber
+	 * @param line
 	 * @param column
 	 * @param lexeme
 	 */
-	public Keyword(int lineNumber, String lexeme) {
-		super(lineNumber, lexeme);
-	}
-
-	/**
-	 * 
-	 */
-	public Keyword() {
-		
+	public Keyword(int line, int column, String lexeme) {
+		super(line, column, lexeme, terminalMap.get(lexeme));
 	}
 
 	/* (non-Javadoc)
@@ -32,11 +17,6 @@ public class Keyword extends Token {
 	@Override
 	public String getAttribute() {
 		return super.getLexeme();
-	}
-
-	@Override
-	public int getType() {
-		return Token.KEYWORD;
 	}
 
 }

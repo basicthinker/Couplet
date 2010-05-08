@@ -11,20 +11,12 @@ package canto.c1.token;
 public class Operator extends Token {
 
 	/**
-	 * @param lineNumber
+	 * @param line
 	 * @param column
 	 * @param lexeme
 	 */
-	public Operator(int lineNumber, String lexeme) {
-		super(lineNumber, lexeme);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * 
-	 */
-	public Operator() {
-		// TODO Auto-generated constructor stub
+	public Operator(int line, int column, String lexeme) {
+		super(line, column, lexeme, terminalMap.get(lexeme));
 	}
 
 	/* (non-Javadoc)
@@ -34,11 +26,6 @@ public class Operator extends Token {
 	public Object getAttribute() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public int getType() {
-		return Token.OPERERATOR;
 	}
 
 }

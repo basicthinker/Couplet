@@ -11,20 +11,12 @@ package canto.c1.token;
 public class Punctuation extends Token {
 
 	/**
-	 * @param lineNumber
+	 * @param line
 	 * @param column
 	 * @param lexeme
 	 */
-	public Punctuation(int lineNumber, String lexeme) {
-		super(lineNumber, lexeme);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * 
-	 */
-	public Punctuation() {
-		// TODO Auto-generated constructor stub
+	public Punctuation(int line, int column, String lexeme) {
+		super(line, column, lexeme, terminalMap.get(lexeme));
 	}
 
 	/* (non-Javadoc)
@@ -34,11 +26,6 @@ public class Punctuation extends Token {
 	public Object getAttribute() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public int getType() {
-		return Token.PUNCTUATION;
 	}
 
 }

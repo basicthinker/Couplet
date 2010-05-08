@@ -14,10 +14,22 @@ public class UnaryOperator extends Operator {
 	 * 构造一个单元运算符
 	 * @param code 单元运算符编码
 	 */
-	public UnaryOperator(int code) {
-		super(code);
+	public UnaryOperator(int code, int line, int column) {
+		super(code, line, column);
 	}
 
+	public static UnaryOperator newPositive(int line, int column) {
+		return new UnaryOperator(POSITIVE, line, column);
+	}
+	
+	public static UnaryOperator newNegtive(int line, int column) {
+		return new UnaryOperator(NEGTIVE, line, column);
+	}
+	
+	public static UnaryOperator newNot(int line, int column) {
+		return new UnaryOperator(NOT, line, column);
+	}
+	
 	@Override
 	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);

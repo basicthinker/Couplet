@@ -16,9 +16,13 @@ public class WhileStatement extends Statement {
 	 * @param condition 条件表达式
 	 * @param body 主体语句
 	 */
-	public WhileStatement(Expression condition, Statement body) {
+	public WhileStatement(Expression condition, Statement body, 
+			int line, int column) {
+		super(line, column);
 		this.condition = condition;
 		this.body = body;
+		condition.setParent(this);
+		body.setParent(this);
 	}
 
 	@Override

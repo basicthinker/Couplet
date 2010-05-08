@@ -12,8 +12,10 @@ public class OutputStatement extends Statement {
 	 * 构造一个输出语句
 	 * @param expression 输出的表达式
 	 */
-	public OutputStatement(Expression expression) {
+	public OutputStatement(Expression expression, int line, int column) {
+		super(line, column);
 		this.expression = expression;
+		expression.setParent(this);
 	}
 
 	@Override

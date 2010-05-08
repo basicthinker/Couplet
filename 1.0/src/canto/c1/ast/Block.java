@@ -12,8 +12,10 @@ public class Block extends Statement {
 	 * 构造一个Block语句结点
 	 * @param statementList 语句列表
 	 */
-	public Block(StatementList statementList) {
+	public Block(StatementList statementList, int line, int column) {
+		super(line, column);
 		this.statementList = statementList;
+		statementList.setParent(this);
 	}
 	
 	@Override

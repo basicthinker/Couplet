@@ -12,7 +12,8 @@ public class IntegerLiteral extends Literal {
 	 * 构造一个整型字面常量
 	 * @param value 整型值
 	 */
-	public IntegerLiteral(Integer value) {
+	public IntegerLiteral(Integer value, int line, int column) {
+		super(line, column);
 		this.value = value;
 	}
 

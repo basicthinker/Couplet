@@ -20,11 +20,15 @@ public class BinaryExpression extends Expression {
 	 * @param leftOperand 左操作表达式
 	 * @param rightOperand 右操作表达式
 	 */
-	public BinaryExpression(BinaryOperator operator,
-			Expression leftOperand, Expression rightOperand) {
+	public BinaryExpression(BinaryOperator operator, Expression leftOperand, 
+			Expression rightOperand, int line, int column) {
+		super(line, column);
 		this.operator = operator;
 		this.leftOperand = leftOperand;
 		this.rightOperand = rightOperand;
+		operator.setParent(this);
+		leftOperand.setParent(this);
+		rightOperand.setParent(this);
 	}
 
 	@Override

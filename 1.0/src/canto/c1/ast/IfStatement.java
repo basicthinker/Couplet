@@ -21,7 +21,8 @@ public class IfStatement extends Statement {
 	 * @param elseStatement ELSE语句
 	 */
 	public IfStatement(Expression condition, Statement thenStatement,
-			Statement elseStatement) {
+			Statement elseStatement, int line, int column) {
+		super(line, column);
 		this.condition = condition;
 		this.thenStatement = thenStatement;
 		this.elseStatement = elseStatement;
@@ -32,7 +33,9 @@ public class IfStatement extends Statement {
 	 * @param condition 条件表达式
 	 * @param thenStatement THEN语句
 	 */
-	public IfStatement(Expression condition, Statement thenStatement) {
+	public IfStatement(Expression condition, Statement thenStatement, 
+			int lineNumber, int columnNumber) {
+		super(lineNumber, columnNumber);
 		this.condition = condition;
 		this.thenStatement = thenStatement;
 		this.elseStatement = null;

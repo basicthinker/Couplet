@@ -15,6 +15,7 @@ import java.util.List;
 
 import canto.IntermediateCode;
 import canto.AbstractSyntaxTree;
+import canto.Parser;
 import canto.Token;
 import canto.c1.ast.ASTPrinter;
 
@@ -28,7 +29,6 @@ public class Compiler implements canto.Compiler {
 	private OutputStreamWriter targetWriter;
 	private Lexer lexer;
 	private Parser parser;
-	private Checker checker;
 
 	/**
 	 * 
@@ -37,8 +37,8 @@ public class Compiler implements canto.Compiler {
 		sourceReader = null;
 		targetWriter = null;
 		lexer = new Lexer();
-		parser = new Parser();
-		checker = new Checker();
+		parser = new LLParser();
+
 	}
 
 	/* (non-Javadoc)
@@ -54,8 +54,6 @@ public class Compiler implements canto.Compiler {
 			lexer.scan();
 			parser.setTokenList(lexer.getTokenList());
 			parser.parse();
-			checker.setAST(parser.getAST());
-			checker.check();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -128,26 +126,8 @@ public class Compiler implements canto.Compiler {
 			System.out.println("Output Token List");
 			for (Token token : tokenList) {
 				
-				System.out.print("Line Number: " + token.getLineNumber());
-				
-				switch (token.getType()) { 
-					case canto.c1.token.Token.CONSTANT:
-						System.out.print(" CONST:\t");
-						break;
-					case canto.c1.token.Token.ID:
-						System.out.print(" ID:\t");
-						break;
-					case canto.c1.token.Token.KEYWORD:
-						System.out.print(" KEYW:\t");
-						break;
-					case canto.c1.token.Token.OPERERATOR:
-						System.out.print(" OPER:\t");
-						break;
-					case canto.c1.token.Token.PUNCTUATION:
-						System.out.print(" PUNC:\t");
-						break;
-				}
-				
+				System.out.print("Line " + token.getLine() + ": ");
+						
 				System.out.print(token.getLexeme() + "\twith ");
 				if (token.getAttribute() == null) System.out.println("null");
 				else System.out.println(token.getAttribute().toString());

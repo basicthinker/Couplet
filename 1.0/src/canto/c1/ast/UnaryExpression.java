@@ -16,9 +16,13 @@ public class UnaryExpression extends Expression {
 	 * @param operator 单元运算符
 	 * @param operand 操作表达式
 	 */
-	public UnaryExpression(UnaryOperator operator, Expression operand) {
+	public UnaryExpression(UnaryOperator operator, Expression operand, 
+			int line, int column) {
+		super(line, column);
 		this.operator = operator;
 		this.operand = operand;
+		operator.setParent(this);
+		operand.setParent(this);
 	}
 
 	@Override

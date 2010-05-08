@@ -5,20 +5,24 @@
  */
 public class AssignmentStatement extends Statement {
 
-	/** 赋值语句左侧的标识符 */
-	private final Identifier identifier;
+	/** 赋值语句左侧的符号 */
+	private final Access access;
 	
 	/** 赋值语句右侧的表达式 */
 	private final Expression expression;
 	
 	/**
 	 * 构造一个赋值语句
-	 * @param identifier 左侧的标识符
+	 * @param access 左侧的符号
 	 * @param expression 右侧的表达式
 	 */
-	public AssignmentStatement(Identifier identifier, Expression expression) {
-		this.identifier = identifier;
+	public AssignmentStatement(Access access, Expression expression,
+			int line, int column) {
+		super(line, column);
+		this.access = access;
 		this.expression = expression;
+		access.setParent(this);
+		expression.setParent(this);
 	}
 	
 	@Override
@@ -32,11 +36,11 @@ public class AssignmentStatement extends Statement {
 	}
 
 	/**
-	 * 获取赋值语句左侧的标识符
-	 * @return 左侧的标识符
+	 * 获取赋值语句左侧的符号
+	 * @return 左侧的符号
 	 */
-	public Identifier getIdentifier() {
-		return identifier;
+	public Access getAccess() {
+		return access;
 	}
 
 	/**

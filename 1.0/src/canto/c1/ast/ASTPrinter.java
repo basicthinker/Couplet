@@ -18,15 +18,6 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(Block node) throws Exception {
-		for (int i = 0; i < depth; i++) System.out.print("\t");
-		System.out.println("Block :");
-		depth++;
-		super.visit(node);
-		depth--;
-	}
-	
-	@Override
 	public void visit(StatementList node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("StatementList :");
@@ -34,11 +25,11 @@ public class ASTPrinter extends ASTScanner {
 		super.visit(node);
 		depth--;
 	}
-
+	
 	@Override
-	public void visit(Declaration node) throws Exception {
+	public void visit(Block node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
-		System.out.println("Declaration :");
+		System.out.println("Block :");
 		depth++;
 		super.visit(node);
 		depth--;
@@ -48,6 +39,15 @@ public class ASTPrinter extends ASTScanner {
 	public void visit(AssignmentStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Assignment :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
+	
+	@Override
+	public void visit(ExpressionStatement node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Expression Statement :");
 		depth++;
 		super.visit(node);
 		depth--;
@@ -70,7 +70,19 @@ public class ASTPrinter extends ASTScanner {
 		super.visit(node);
 		depth--;
 	}
+	
+	@Override
+	public void visit(BreakStatement node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Break");
+	}
 
+	@Override
+	public void visit(ContinueStatement node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Continue");
+	}
+	
 	@Override
 	public void visit(InputStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
@@ -125,16 +137,6 @@ public class ASTPrinter extends ASTScanner {
 		depth--;
 	}
 	
-	@Override
-	public void visit(IntegerType node) throws Exception {
-		for (int i = 0; i < depth; i++) System.out.print("\t");
-		System.out.println("Type : int");
-		depth++;
-		super.visit(node);
-		depth--;
-	}
-
-
 	@Override
 	public void visit(UnaryOperator node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
