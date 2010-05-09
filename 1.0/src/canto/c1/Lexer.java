@@ -12,6 +12,7 @@ import canto.c1.token.*;
 
 /**
  * @author basicthinker
+ * @author WANGZHE
  *
  */
 public class Lexer implements canto.Lexer {
@@ -19,6 +20,7 @@ public class Lexer implements canto.Lexer {
 	private LineNumberReader inBuf;
 	private static HashSet<String> reserved;
 	private List<Token> tokenList;
+	private static int tabWith;
 	
 	static {
 		reserved = new HashSet<String>();
@@ -33,6 +35,7 @@ public class Lexer implements canto.Lexer {
 	
 	public Lexer() {
 		tokenList = new LinkedList<Token>();
+		tabWith = 4;
 	}
 	
 	/* (non-Javadoc)
@@ -50,58 +53,85 @@ public class Lexer implements canto.Lexer {
 	 */
 	@Override
 	public List<Token> scan() throws IOException {
-		// TODO Auto-generated method stub
 		int intBufChar = inBuf.read();
+		
+		//设置初始列号
+		int column = 1;
 		while (intBufChar != -1) {
 			
-			int line = inBuf.getLineNumber();
+			int line = inBuf.getLineNumber();		
 			StringBuffer lexBuf = new StringBuffer();
 			
 			if (intBufChar == '_' || 'a' <= intBufChar && intBufChar <= 'z' 
 					|| 'A' <= intBufChar && intBufChar <= 'Z') {
 				
 				intBufChar = recognizeWord((char)intBufChar, lexBuf);
+				
 				String lexeme = lexBuf.toString();
 				
 				if (reserved.contains(lexeme)) {
-					tokenList.add(new Keyword(line, 0, lexeme));
+					tokenList.add(new Keyword(line, column, lexeme));
 				} else {
-					tokenList.add(new Identifier(line, 0, lexeme));
+					tokenList.add(new Identifier(line, column, lexeme));
 				}
+				
+				column += lexeme.length();
 				
 			} else if ('0' <= intBufChar && intBufChar <= '9') {
 				
 				intBufChar = recognizeInteger((char)intBufChar, lexBuf);
 				String lexeme = lexBuf.toString();
-				tokenList.add(new IntegerLiteral(line, 0, lexeme));
+				tokenList.add(new IntegerLiteral(line, column, lexeme));
 				
-			} else if (intBufChar == ' ' || intBufChar == '\t' || intBufChar == '\n') {
+				column += lexeme.length();
 				
-				intBufChar = skipWhiteSpaces();
+			} else if (intBufChar == ' '  ) {
+				
+				//intBufChar = skipWhiteSpaces();
+				intBufChar = inBuf.read();
+				column += 1;
+				
+			} else if (intBufChar == '\t') {
+				
+				//intBufChar = skipWhiteSpaces();
+				intBufChar = inBuf.read();
+				column += tabWith;
+				
+			}else if (intBufChar == '\n'){
+
+				intBufChar = inBuf.read();
+				
+				//换行之后列号重置为1
+				column = 1;
 
 			} else if (intBufChar == '=') {
 				
 				int nextChar = inBuf.read();
 				if (nextChar == '=') {
-					tokenList.add(new Operator(line, 0, "=="));
+					tokenList.add(new Operator(line, column, "=="));
+					column += 2;
 					intBufChar = -1;
 				} else {
-					tokenList.add(new Punctuation(line, 0, "="));
+					tokenList.add(new Punctuation(line, column, "="));
+					column += 1;
 					intBufChar = nextChar;
 				}
+				
 				
 			} else if (intBufChar == ';' || intBufChar == '{' || intBufChar == '}' 
 				|| intBufChar == '(' || intBufChar == ')') {
 				
 				intBufChar = recognizePunctuation((char)intBufChar, lexBuf);
 				String lexeme = lexBuf.toString();
-				tokenList.add(new Punctuation(line, 0, lexeme));
+				tokenList.add(new Punctuation(line, column, lexeme));
+				column += lexeme.length();
 				
 			} else {
 				
 				intBufChar = recognizeOperator((char)intBufChar, lexBuf);
 				String lexeme = lexBuf.toString();
-				tokenList.add(new Operator(line, 0, lexeme));
+				tokenList.add(new Operator(line, column, lexeme));
+				column += lexeme.length();
 				
 			}
 			
@@ -164,8 +194,10 @@ public class Lexer implements canto.Lexer {
 
 	private int skipWhiteSpaces() throws IOException {
 		int nextChar = inBuf.read();
+
 		while (nextChar != -1) {
 			if (nextChar == ' ' || nextChar == '\t' || nextChar == '\n') {
+
 				nextChar = inBuf.read();
 			} else break;		
 		}
