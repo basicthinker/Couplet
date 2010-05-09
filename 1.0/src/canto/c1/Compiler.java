@@ -126,7 +126,7 @@ public class Compiler implements canto.Compiler {
 			System.out.println("Output Token List");
 			for (Token token : tokenList) {
 				
-				System.out.print("Line " + token.getLine() + ": ");
+				System.out.print("Line " + token.getLine() + " Column " + token.getColumn() + ": ");
 						
 				System.out.print(token.getLexeme() + "\twith ");
 				if (token.getAttribute() == null) System.out.println("null");

@@ -25,7 +25,7 @@ public class Punctuation extends Token {
 	@Override
 	public Object getAttribute() {
 		// TODO Auto-generated method stub
-		return null;
+		return super.getLexeme();
 	}
 
 }

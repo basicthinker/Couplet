@@ -9,6 +9,7 @@ package canto.c1.token;
  *
  */
 public class Operator extends Token {
+	
 
 	/**
 	 * @param line
@@ -25,7 +26,7 @@ public class Operator extends Token {
 	@Override
 	public Object getAttribute() {
 		// TODO Auto-generated method stub
-		return null;
+		return super.getLexeme();
 	}
 
 }
