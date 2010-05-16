@@ -8,12 +8,6 @@ import canto.c1.ast.ASTVisitor;
 public interface AbstractSyntaxTree {
 	
 	/**
-	 * 接受访问者访问该AST结点的方法
-	 * @param visitor 访问者
-	 */
-	public void accept(ASTVisitor visitor) throws Exception;
-	
-	/**
 	 * 获取该AST结点的父结点
 	 * @return 该AST结点的父结点
 	 */

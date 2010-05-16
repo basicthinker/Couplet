@@ -59,4 +59,9 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 		this.column = column;
 	}
 	
+	/**
+	 * 接受访问者访问该AST结点的方法
+	 * @param visitor 访问者
+	 */
+	public abstract void accept(ASTVisitor visitor) throws Exception;
 }
