@@ -1,7 +1,5 @@
 ﻿package canto;
 
-import canto.c1.ast.ASTVisitor;
-
 /**
  * AST的顶层接口
  */

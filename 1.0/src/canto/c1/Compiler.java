@@ -17,6 +17,7 @@ import canto.IntermediateCode;
 import canto.AbstractSyntaxTree;
 import canto.Parser;
 import canto.Token;
+import canto.c1.ast.ASTNode;
 import canto.c1.ast.ASTPrinter;
 
 /**
@@ -138,7 +139,7 @@ public class Compiler implements canto.Compiler {
 			
 			System.out.println("Output AST");
 			ASTPrinter astPrinter = new ASTPrinter();
-			ast.accept(astPrinter);
+			((ASTNode) ast).accept(astPrinter);
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
