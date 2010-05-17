@@ -26,7 +26,7 @@ import canto.c1.ast.StatementList;
 import canto.c1.ast.UnaryExpression;
 import canto.c1.ast.UnaryOperator;
 import canto.c1.ast.WhileStatement;
-import canto.c1.exception.ParserException;
+import canto.c1.exception.ParseException;
 
 public class LLParser implements Parser {
 
@@ -89,13 +89,13 @@ public class LLParser implements Parser {
 	/**
 	 * 匹配某一指定的Token，并且向后移动
 	 * @param tokenType 指定的Token类型代码
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private void match(int tokenType) throws ParserException {
+	private void match(int tokenType) throws ParseException {
 		if (nextToken.getTokenType() == tokenType) {
 			move();
 		} else {
-			throw new ParserException();
+			throw new ParseException();
 		}
 	}
 	
@@ -103,22 +103,22 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符program
 	 * <program> ::= <block>
 	 * @return 程序的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private Program program() throws ParserException {
+	private Program program() throws ParseException {
 		Program program =  new Program(block(), line, column);
 		// 判断确实已经分析到Token链尾
 		if (nextToken == null) return program;
-		else throw new ParserException();
+		else throw new ParseException();
 	}
 	
 	/**
 	 * 向下推导非终极符block
 	 * <block> ::= "{" <stmt_list> "}"
 	 * @return BLOCK语句的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private Block block() throws ParserException {
+	private Block block() throws ParseException {
 		match(Token.L_BRACE);
 		Block block = new Block(stmt_list(), line, column);
 		match(Token.R_BRACE);
@@ -129,9 +129,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符stmt_list
 	 * <stmt_list> ::= <stmt_list> <stmt> | ε
 	 * @return 语句列表的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private StatementList stmt_list() throws ParserException {
+	private StatementList stmt_list() throws ParseException {
 		StatementList stmt_list = new StatementList(line, column);
 		while (tokenType == Token.L_BRACE || tokenType == Token.ID || 
 				tokenType == Token.IF || tokenType == Token.WHILE || 
@@ -146,9 +146,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符stmt
 	 * <stmt> ::= <block> | <assign_stmt> | <if_stmt> | <while_stmt> | <input_stmt> | <output_stmt>
 	 * @return 语句的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private Statement stmt() throws ParserException {
+	private Statement stmt() throws ParseException {
 		switch (tokenType) {
 		case Token.L_BRACE :
 			return block();
@@ -167,7 +167,7 @@ public class LLParser implements Parser {
 		case Token.OUTPUT :
 			return output_stmt();
 		default:
-			throw new ParserException();
+			throw new ParseException();
 		}
 	}
 	
@@ -175,9 +175,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符assign_stmt
 	 * <assign_stmt> ::= <access> "=" <expr> ";"
 	 * @return 赋值语句的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private AssignmentStatement assign_stmt() throws ParserException {
+	private AssignmentStatement assign_stmt() throws ParseException {
 		Access access = access();
 		match(Token.EQUAL);
 		AssignmentStatement stmt = new AssignmentStatement(access, expr(), line, column);
@@ -189,9 +189,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符if_stmt
 	 * "if" "(" <expr> ")" <stmt> | "if" "(" <expr> ")" <stmt> "else" <stmt>
 	 * @return IF语句的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private IfStatement if_stmt() throws ParserException {
+	private IfStatement if_stmt() throws ParseException {
 		match(Token.IF);
 		match(Token.L_PARENT);
 		Expression expr = expr();
@@ -209,9 +209,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符while_stmt
 	 * <while_stmt> ::= "while" "(" <expr> ")" <stmt>
 	 * @return WHILE语句的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private WhileStatement while_stmt() throws ParserException {
+	private WhileStatement while_stmt() throws ParseException {
 		match(Token.WHILE);
 		match(Token.L_PARENT);
 		Expression expr = expr();
@@ -224,9 +224,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符break_stmt
 	 * <break_stmt> ::= "break" ";"
 	 * @return BREAK语句的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private BreakStatement break_stmt() throws ParserException {
+	private BreakStatement break_stmt() throws ParseException {
 		match(Token.BREAK);
 		match(Token.SEMI);
 		return new BreakStatement(line, column);
@@ -236,9 +236,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符continue_stmt
 	 * <continue_stmt> ::= "continue" ";"
 	 * @return CONTINUE语句的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private ContinueStatement continue_stmt() throws ParserException {
+	private ContinueStatement continue_stmt() throws ParseException {
 		match(Token.CONTINUE);
 		match(Token.SEMI);
 		return new ContinueStatement(line, column);
@@ -248,9 +248,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符input_stmt
 	 * <input_stmt> ::= "input" "(" <access> ")" ";"
 	 * @return 输入语句的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private InputStatement input_stmt() throws ParserException {
+	private InputStatement input_stmt() throws ParseException {
 		match(Token.INPUT);
 		match(Token.L_PARENT);
 		Access access = access();
@@ -263,9 +263,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符output_stmt
 	 * <output_stmt> ::= "output" "(" <expr> ")" ";"
 	 * @return 输出语句的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private OutputStatement output_stmt() throws ParserException {
+	private OutputStatement output_stmt() throws ParseException {
 		match(Token.OUTPUT);
 		match(Token.L_PARENT);
 		Expression expr = expr();
@@ -278,9 +278,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符expr
 	 * <expr> ::= <expr> <bi_op_1> <expr_1> | <expr_1>
 	 * @return 表达式的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private Expression expr() throws ParserException {
+	private Expression expr() throws ParseException {
 		Expression expr;
 		expr = expr_1();
 		while (tokenType == Token.OR_OR) {		
@@ -293,9 +293,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符expr_1
 	 * <expr_1> ::= <expr_1> <bi_op_2> <expr_2> | <expr_2>
 	 * @return 表达式的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */	
-	private Expression expr_1() throws ParserException {
+	private Expression expr_1() throws ParseException {
 		Expression expr;
 		expr = expr_2();
 		while (tokenType == Token.AND_AND) {		
@@ -308,9 +308,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符expr_2
 	 * <expr_2> ::= <expr_2> <bi_op_3> <expr_3> | <expr_3>
 	 * @return 表达式的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */	
-	private Expression expr_2() throws ParserException {
+	private Expression expr_2() throws ParseException {
 		Expression expr;
 		expr = expr_3();
 		while (tokenType == Token.EQUAL_EQUAL || tokenType == Token.NOT_EQUAL) {		
@@ -323,9 +323,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符expr_3
 	 * <expr_3> ::= <expr_3> <bi_op_4> <expr_4> | <expr_4>
 	 * @return 表达式的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */	
-	private Expression expr_3() throws ParserException {
+	private Expression expr_3() throws ParseException {
 		Expression expr;
 		expr = expr_4();
 		while (tokenType == Token.LESS || tokenType == Token.LESS_EQUAL ||
@@ -339,9 +339,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符expr_4
 	 * <expr_4> ::= <expr_4> <bi_op_5> <expr_5> | <expr_5>
 	 * @return 表达式的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */	
-	private Expression expr_4() throws ParserException {
+	private Expression expr_4() throws ParseException {
 		Expression expr;
 		expr = expr_5();
 		while (tokenType == Token.PLUS || tokenType == Token.MINUS) {		
@@ -354,9 +354,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符expr_5
 	 * <expr_5> ::= <expr_5> <bi_op_6> <expr_6> | <expr_6>
 	 * @return 表达式的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */	
-	private Expression expr_5() throws ParserException {
+	private Expression expr_5() throws ParseException {
 		Expression expr;
 		expr = expr_6();
 		while (tokenType == Token.TIMES) {		
@@ -369,9 +369,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符expr_6
 	 * <expr_6> ::= <un_op> <expr_7> | <expr_7>
 	 * @return 表达式的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */	
-	private Expression expr_6() throws ParserException {
+	private Expression expr_6() throws ParseException {
 		Expression expr;
 		switch (tokenType) {
 		case Token.PLUS : case Token.MINUS : case Token.NOT :
@@ -381,7 +381,7 @@ public class LLParser implements Parser {
 			expr = expr_7();
 			break;
 		default :
-			throw new ParserException();
+			throw new ParseException();
 		}
 		return expr;
 	}
@@ -390,9 +390,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符expr_7
 	 * <expr_7> ::= "(" <expr> ")" | <access> | <literal>
 	 * @return 表达式的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */	
-	private Expression expr_7() throws ParserException {
+	private Expression expr_7() throws ParseException {
 		Expression expr;
 		switch (tokenType) {
 		case Token.L_PARENT :
@@ -407,7 +407,7 @@ public class LLParser implements Parser {
 			expr = literal();
 			break;
 		default :
-			throw new ParserException();
+			throw new ParseException();
 		}
 		return expr;
 	}
@@ -416,9 +416,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符un_op
 	 * <un_op> ::= "!" | "+" | "-"
 	 * @return 一元运算符的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */	
-	private UnaryOperator un_op() throws ParserException {
+	private UnaryOperator un_op() throws ParseException {
 		UnaryOperator un_op;
 		switch (tokenType) {			
 		case Token.PLUS :
@@ -431,7 +431,7 @@ public class LLParser implements Parser {
 			un_op = UnaryOperator.newNot(line, column);
 			break;
 		default :
-			throw new ParserException();
+			throw new ParseException();
 		}
 		move();
 		return un_op;
@@ -441,16 +441,16 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符bi_op_1
 	 * <bi_op_1> ::= "||"
 	 * @return 二元运算符的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private BinaryOperator bi_op_1() throws ParserException {
+	private BinaryOperator bi_op_1() throws ParseException {
 		BinaryOperator bi_op;
 		switch (tokenType) {			
 		case Token.OR_OR :
 			bi_op = BinaryOperator.newAndAnd(line, column);
 			break;
 		default :
-			throw new ParserException();
+			throw new ParseException();
 		}
 		move();
 		return bi_op;
@@ -460,16 +460,16 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符bi_op_2
 	 * <bi_op_2> ::= "&&"
 	 * @return 二元运算符的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private BinaryOperator bi_op_2() throws ParserException {
+	private BinaryOperator bi_op_2() throws ParseException {
 		BinaryOperator bi_op;
 		switch (tokenType) {			
 		case Token.AND_AND :
 			bi_op = BinaryOperator.newAndAnd(line, column);
 			break;
 		default :
-			throw new ParserException();
+			throw new ParseException();
 		}
 		move();
 		return bi_op;
@@ -479,9 +479,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符bi_op_3
 	 * <bi_op_3> ::= "==" | "!="
 	 * @return 二元运算符的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private BinaryOperator bi_op_3() throws ParserException {
+	private BinaryOperator bi_op_3() throws ParseException {
 		BinaryOperator bi_op;
 		switch (tokenType) {			
 		case Token.EQUAL_EQUAL :
@@ -491,7 +491,7 @@ public class LLParser implements Parser {
 			bi_op = BinaryOperator.newNotEqual(line, column);
 			break;
 		default :
-			throw new ParserException();
+			throw new ParseException();
 		}
 		move();
 		return bi_op;
@@ -501,9 +501,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符bi_op_4
 	 * <bi_op_4> ::= "<" | "<=" | ">" | ">="
 	 * @return 二元运算符的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private BinaryOperator bi_op_4() throws ParserException {
+	private BinaryOperator bi_op_4() throws ParseException {
 		BinaryOperator bi_op;
 		switch (tokenType) {			
 		case Token.LESS :
@@ -518,7 +518,7 @@ public class LLParser implements Parser {
 			bi_op = BinaryOperator.newGreaterEqual(line, column);
 			break;
 		default :
-			throw new ParserException();
+			throw new ParseException();
 		}
 		move();
 		return bi_op;
@@ -528,9 +528,9 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符bi_op_5
 	 * <bi_op_5> ::= "+" | "-"
 	 * @return 二元运算符的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private BinaryOperator bi_op_5() throws ParserException {
+	private BinaryOperator bi_op_5() throws ParseException {
 		BinaryOperator bi_op;
 		switch (tokenType) {			
 		case Token.PLUS :
@@ -540,7 +540,7 @@ public class LLParser implements Parser {
 			bi_op = BinaryOperator.newMinus(line, column);
 			break;
 		default :
-			throw new ParserException();
+			throw new ParseException();
 		}
 		move();
 		return bi_op;
@@ -550,16 +550,16 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符bi_op_6
 	 * <bi_op_6> ::= "*"
 	 * @return 二元运算符的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private BinaryOperator bi_op_6() throws ParserException {
+	private BinaryOperator bi_op_6() throws ParseException {
 		BinaryOperator bi_op;
 		switch (tokenType) {			
 		case Token.TIMES :
 			bi_op = BinaryOperator.newTimes(line, column);
 			break;
 		default :
-			throw new ParserException();
+			throw new ParseException();
 		}
 		move();
 		return bi_op;
@@ -569,41 +569,41 @@ public class LLParser implements Parser {
 	 * 向下推导非终极符access
 	 * <access> ::= id
 	 * @return 
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private Access access() throws ParserException {
+	private Access access() throws ParseException {
 		if (tokenType == Token.ID) return id();
-		else throw new ParserException();
+		else throw new ParseException();
 	}
 	
 	/**
 	 * 向下推导非终极符literal
 	 * <literal> ::= integer_literal
 	 * @return 常量的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private Literal literal() throws ParserException {
+	private Literal literal() throws ParseException {
 		if (tokenType == Token.INTEGER_LITERAL) {
 			Literal literal = new IntegerLiteral((Integer)nextToken.getAttribute(), line, column);
 			move();
 			return literal;
 		} else {
-			throw new ParserException();
+			throw new ParseException();
 		}
 	}
 	
 	/**
 	 * 读入非终极符id，将其转换化标识符的AST结点
 	 * @return 标识符的AST结点
-	 * @throws ParserException
+	 * @throws ParseException
 	 */
-	private Identifier id() throws ParserException {
+	private Identifier id() throws ParseException {
 		if (tokenType == Token.ID) {
 			Identifier id = new Identifier(nextToken.getLexeme(), line, column);
 			move();
 			return id;
 		} else {
-			throw new ParserException();
+			throw new ParseException();
 		}
 	}
 	
