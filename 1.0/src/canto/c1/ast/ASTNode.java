@@ -1,5 +1,8 @@
 ﻿package canto.c1.ast;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import canto.AbstractSyntaxTree;
 
 /**
@@ -35,6 +38,9 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	/** 存储该AST结点所在的列号 */
 	private final int column;
 	
+	/** 存储该AST结点属性的Map  */
+	private Map<String, Object> attributesMap; 
+	
 	@Override
 	public AbstractSyntaxTree getParent() {
 		return parent;
@@ -57,6 +63,7 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	public ASTNode(int line, int column) {
 		this.line = line;
 		this.column = column;
+		attributesMap = new HashMap<String, Object>();
 	}
 	
 	/**
@@ -64,4 +71,23 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	 * @param visitor 访问者
 	 */
 	public abstract void accept(ASTVisitor visitor) throws Exception;
+	
+	/**
+	 * 获取AST结点的某属性
+	 * @param name 属性名称
+	 * @return 属性值
+	 */
+	public Object getAttribute(String name) {
+		return attributesMap.get(name);
+	}
+	
+	/**
+	 * 设置AST结点的某属性
+	 * @param name 属性名称
+	 * @param value 属性值
+	 */
+	public void setAttribute(String name, Object value) {
+		attributesMap.put(name, value);
+	}
+	
 }
