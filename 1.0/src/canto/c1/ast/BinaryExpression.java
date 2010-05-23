@@ -1,13 +1,10 @@
 ﻿package canto.c1.ast;
 
 /**
- * 二元运算表达式结点
+ * 二元运算表达式结点的基类
  */
-public class BinaryExpression extends Expression {
+public abstract class BinaryExpression extends Expression {
 
-	/** 二元操作符 */
-	private final BinaryOperator operator;
-	
 	/** 操作符左侧的表达式 */
 	private final Expression leftOperand;
 	
@@ -20,33 +17,13 @@ public class BinaryExpression extends Expression {
 	 * @param leftOperand 左操作表达式
 	 * @param rightOperand 右操作表达式
 	 */
-	public BinaryExpression(BinaryOperator operator, Expression leftOperand, 
-			Expression rightOperand, int line, int column) {
+	public BinaryExpression(Expression leftOperand, Expression rightOperand, 
+			int line, int column) {
 		super(line, column);
-		this.operator = operator;
 		this.leftOperand = leftOperand;
 		this.rightOperand = rightOperand;
-		operator.setParent(this);
 		leftOperand.setParent(this);
 		rightOperand.setParent(this);
-	}
-
-	@Override
-	public void accept(ASTVisitor visitor) throws Exception {
-		visitor.visit(this);
-	}
-
-	@Override
-	public int getNodeType() {
-		return BINARY_EXPRESSION;
-	}
-
-	/**
-	 * 获取二元操作符
-	 * @return 二元操作符
-	 */
-	public BinaryOperator getOperator() {
-		return operator;
 	}
 
 	/**
@@ -64,4 +41,5 @@ public class BinaryExpression extends Expression {
 	public Expression getRightOperand() {
 		return rightOperand;
 	}
+	
 }

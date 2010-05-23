@@ -3,28 +3,39 @@ package canto.c1;
 import java.util.Iterator;
 import java.util.List;
 
+
 import canto.AbstractSyntaxTree;
 import canto.Parser;
 import canto.c1.token.Token;
 import canto.c1.ast.Access;
+import canto.c1.ast.AddExpression;
+import canto.c1.ast.AndExpression;
 import canto.c1.ast.AssignmentStatement;
-import canto.c1.ast.BinaryExpression;
-import canto.c1.ast.BinaryOperator;
 import canto.c1.ast.Block;
 import canto.c1.ast.BreakStatement;
 import canto.c1.ast.ContinueStatement;
+import canto.c1.ast.EqualExpression;
 import canto.c1.ast.Expression;
+import canto.c1.ast.GreaterEqualExpression;
+import canto.c1.ast.GreaterExpression;
 import canto.c1.ast.Identifier;
 import canto.c1.ast.IfStatement;
 import canto.c1.ast.InputStatement;
 import canto.c1.ast.IntegerLiteral;
+import canto.c1.ast.LessEqualExpression;
+import canto.c1.ast.LessExpression;
 import canto.c1.ast.Literal;
+import canto.c1.ast.MulExpression;
+import canto.c1.ast.NegExpression;
+import canto.c1.ast.NotEqualExpression;
+import canto.c1.ast.NotExpression;
+import canto.c1.ast.OrExpression;
 import canto.c1.ast.OutputStatement;
+import canto.c1.ast.PosExpression;
 import canto.c1.ast.Program;
 import canto.c1.ast.Statement;
 import canto.c1.ast.StatementList;
-import canto.c1.ast.UnaryExpression;
-import canto.c1.ast.UnaryOperator;
+import canto.c1.ast.SubExpression;
 import canto.c1.ast.WhileStatement;
 import canto.c1.exception.ParseException;
 
@@ -284,7 +295,8 @@ public class LLParser implements Parser {
 		Expression expr;
 		expr = expr_1();
 		while (tokenType == Token.OR_OR) {		
-			expr = new BinaryExpression(bi_op_1(), expr, expr_1(), line, column); 
+			move();
+			expr = new OrExpression(expr, expr_1(), line, column); 
 		}
 		return expr;
 	}
@@ -298,8 +310,9 @@ public class LLParser implements Parser {
 	private Expression expr_1() throws ParseException {
 		Expression expr;
 		expr = expr_2();
-		while (tokenType == Token.AND_AND) {		
-			expr = new BinaryExpression(bi_op_2(), expr, expr_2(), line, column); 
+		while (tokenType == Token.AND_AND) {	
+			move();
+			expr = new AndExpression(expr, expr_2(), line, column); 
 		}
 		return expr;
 	}
@@ -313,8 +326,21 @@ public class LLParser implements Parser {
 	private Expression expr_2() throws ParseException {
 		Expression expr;
 		expr = expr_3();
-		while (tokenType == Token.EQUAL_EQUAL || tokenType == Token.NOT_EQUAL) {		
-			expr = new BinaryExpression(bi_op_3(), expr, expr_3(), line, column); 
+		boolean flag = true;
+		while (flag) {
+			switch (tokenType) {
+			case Token.EQUAL_EQUAL :
+				move();
+				expr = new EqualExpression(expr, expr_3(), line, column); 
+				break;
+			case Token.NOT_EQUAL :
+				move();
+				expr = new NotEqualExpression(expr, expr_3(), line, column); 
+				break;
+			default :
+				flag = false;
+				break;	
+			}			
 		}
 		return expr;
 	}
@@ -328,9 +354,29 @@ public class LLParser implements Parser {
 	private Expression expr_3() throws ParseException {
 		Expression expr;
 		expr = expr_4();
-		while (tokenType == Token.LESS || tokenType == Token.LESS_EQUAL ||
-				tokenType == Token.GREATER || tokenType == Token.GREATER_EQUAL) {		
-			expr = new BinaryExpression(bi_op_4(), expr, expr_4(), line, column); 
+		boolean flag = true; 
+		while (flag) {
+			switch (tokenType) {
+			case Token.LESS :
+				move();
+				expr = new LessExpression(expr, expr_4(), line, column);
+				break;
+			case Token.LESS_EQUAL :
+				move();
+				expr = new LessEqualExpression(expr, expr_4(), line, column);
+				break;
+			case Token.GREATER :
+				move();
+				expr = new GreaterExpression(expr, expr_4(), line, column);
+				break;
+			case Token.GREATER_EQUAL :
+				move();
+				expr = new GreaterEqualExpression(expr, expr_4(), line, column);
+				break;
+			default :
+				flag = false;
+				break;
+			}			 
 		}
 		return expr;
 	}
@@ -344,8 +390,21 @@ public class LLParser implements Parser {
 	private Expression expr_4() throws ParseException {
 		Expression expr;
 		expr = expr_5();
-		while (tokenType == Token.PLUS || tokenType == Token.MINUS) {		
-			expr = new BinaryExpression(bi_op_5(), expr, expr_5(), line, column); 
+		boolean flag = true;
+		while (flag) {		
+			switch (tokenType) {
+			case Token.PLUS :
+				move();
+				expr = new AddExpression(expr, expr_5(), line, column); 
+				break;
+			case Token.MINUS :
+				move();
+				expr = new SubExpression(expr, expr_5(), line, column); 
+				break;
+			default :
+				flag = false;
+				break;
+			}			
 		}
 		return expr;
 	}
@@ -359,8 +418,9 @@ public class LLParser implements Parser {
 	private Expression expr_5() throws ParseException {
 		Expression expr;
 		expr = expr_6();
-		while (tokenType == Token.TIMES) {		
-			expr = new BinaryExpression(bi_op_6(), expr, expr_6(), line, column); 
+		while (tokenType == Token.TIMES) {
+			move();
+			expr = new MulExpression(expr, expr_6(), line, column); 
 		}
 		return expr;
 	}
@@ -374,8 +434,17 @@ public class LLParser implements Parser {
 	private Expression expr_6() throws ParseException {
 		Expression expr;
 		switch (tokenType) {
-		case Token.PLUS : case Token.MINUS : case Token.NOT :
-			expr = new UnaryExpression(un_op(),	expr_7(), line, column);
+		case Token.PLUS :
+			move();
+			expr = new PosExpression(expr_7(), line, column);
+			break;
+		case Token.MINUS : 
+			move();
+			expr = new NegExpression(expr_7(), line, column);
+			break;
+		case Token.NOT :
+			move();
+			expr = new NotExpression(expr_7(), line, column);
 			break;
 		case Token.L_PARENT : case Token.ID : case Token.INTEGER_LITERAL :
 			expr = expr_7();
@@ -410,159 +479,6 @@ public class LLParser implements Parser {
 			throw new ParseException();
 		}
 		return expr;
-	}
-	
-	/**
-	 * 向下推导非终极符un_op
-	 * <un_op> ::= "!" | "+" | "-"
-	 * @return 一元运算符的AST结点
-	 * @throws ParseException
-	 */	
-	private UnaryOperator un_op() throws ParseException {
-		UnaryOperator un_op;
-		switch (tokenType) {			
-		case Token.PLUS :
-			un_op = UnaryOperator.newPositive(line, column);
-			break;
-		case Token.MINUS :
-			un_op = UnaryOperator.newNegtive(line, column);
-			break;
-		case Token.NOT :
-			un_op = UnaryOperator.newNot(line, column);
-			break;
-		default :
-			throw new ParseException();
-		}
-		move();
-		return un_op;
-	}
-	
-	/**
-	 * 向下推导非终极符bi_op_1
-	 * <bi_op_1> ::= "||"
-	 * @return 二元运算符的AST结点
-	 * @throws ParseException
-	 */
-	private BinaryOperator bi_op_1() throws ParseException {
-		BinaryOperator bi_op;
-		switch (tokenType) {			
-		case Token.OR_OR :
-			bi_op = BinaryOperator.newAndAnd(line, column);
-			break;
-		default :
-			throw new ParseException();
-		}
-		move();
-		return bi_op;
-	}
-	
-	/**
-	 * 向下推导非终极符bi_op_2
-	 * <bi_op_2> ::= "&&"
-	 * @return 二元运算符的AST结点
-	 * @throws ParseException
-	 */
-	private BinaryOperator bi_op_2() throws ParseException {
-		BinaryOperator bi_op;
-		switch (tokenType) {			
-		case Token.AND_AND :
-			bi_op = BinaryOperator.newAndAnd(line, column);
-			break;
-		default :
-			throw new ParseException();
-		}
-		move();
-		return bi_op;
-	}
-	
-	/**
-	 * 向下推导非终极符bi_op_3
-	 * <bi_op_3> ::= "==" | "!="
-	 * @return 二元运算符的AST结点
-	 * @throws ParseException
-	 */
-	private BinaryOperator bi_op_3() throws ParseException {
-		BinaryOperator bi_op;
-		switch (tokenType) {			
-		case Token.EQUAL_EQUAL :
-			bi_op = BinaryOperator.newEqualEqual(line, column);
-			break;
-		case Token.NOT_EQUAL :
-			bi_op = BinaryOperator.newNotEqual(line, column);
-			break;
-		default :
-			throw new ParseException();
-		}
-		move();
-		return bi_op;
-	}
-	
-	/**
-	 * 向下推导非终极符bi_op_4
-	 * <bi_op_4> ::= "<" | "<=" | ">" | ">="
-	 * @return 二元运算符的AST结点
-	 * @throws ParseException
-	 */
-	private BinaryOperator bi_op_4() throws ParseException {
-		BinaryOperator bi_op;
-		switch (tokenType) {			
-		case Token.LESS :
-			bi_op = BinaryOperator.newLess(line, column);
-			break;
-		case Token.LESS_EQUAL :
-			bi_op = BinaryOperator.newLessEqual(line, column);
-		case Token.GREATER :
-			bi_op = BinaryOperator.newGreater(line, column);
-			break;
-		case Token.GREATER_EQUAL :
-			bi_op = BinaryOperator.newGreaterEqual(line, column);
-			break;
-		default :
-			throw new ParseException();
-		}
-		move();
-		return bi_op;
-	}
-	
-	/**
-	 * 向下推导非终极符bi_op_5
-	 * <bi_op_5> ::= "+" | "-"
-	 * @return 二元运算符的AST结点
-	 * @throws ParseException
-	 */
-	private BinaryOperator bi_op_5() throws ParseException {
-		BinaryOperator bi_op;
-		switch (tokenType) {			
-		case Token.PLUS :
-			bi_op = BinaryOperator.newPlus(line, column);
-			break;
-		case Token.MINUS :
-			bi_op = BinaryOperator.newMinus(line, column);
-			break;
-		default :
-			throw new ParseException();
-		}
-		move();
-		return bi_op;
-	}
-	
-	/**
-	 * 向下推导非终极符bi_op_6
-	 * <bi_op_6> ::= "*"
-	 * @return 二元运算符的AST结点
-	 * @throws ParseException
-	 */
-	private BinaryOperator bi_op_6() throws ParseException {
-		BinaryOperator bi_op;
-		switch (tokenType) {			
-		case Token.TIMES :
-			bi_op = BinaryOperator.newTimes(line, column);
-			break;
-		default :
-			throw new ParseException();
-		}
-		move();
-		return bi_op;
 	}
 	
 	/**

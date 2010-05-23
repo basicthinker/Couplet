@@ -102,23 +102,131 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(UnaryExpression node) throws Exception {
+	public void visit(PosExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
-		System.out.println("Unary Expression :");
+		System.out.println("Pos :");
 		depth++;
 		super.visit(node);
 		depth--;
 	}
 
 	@Override
-	public void visit(BinaryExpression node) throws Exception {
+	public void visit(NegExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
-		System.out.println("Binary Expression :");
+		System.out.println("Neg :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
+	
+	@Override
+	public void visit(NotExpression node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Not :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
+	
+	@Override
+	public void visit(AddExpression node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Add :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
+	
+	@Override
+	public void visit(SubExpression node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Sub :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
+	
+	@Override
+	public void visit(MulExpression node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Mul :");
 		depth++;
 		super.visit(node);
 		depth--;
 	}
 
+	@Override
+	public void visit(LessExpression node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Less :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
+	
+	@Override
+	public void visit(LessEqualExpression node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Less Equal :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
+
+	@Override
+	public void visit(GreaterExpression node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Greater :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
+
+	@Override
+	public void visit(GreaterEqualExpression node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Greater Equal :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
+
+	@Override
+	public void visit(EqualExpression node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Equal :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
+
+	@Override
+	public void visit(NotEqualExpression node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Not Equal :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
+
+	@Override
+	public void visit(AndExpression node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("And :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
+	
+	@Override
+	public void visit(OrExpression node) throws Exception {
+		for (int i = 0; i < depth; i++) System.out.print("\t");
+		System.out.println("Or :");
+		depth++;
+		super.visit(node);
+		depth--;
+	}
+	
 	@Override
 	public void visit(Identifier node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
@@ -137,21 +245,4 @@ public class ASTPrinter extends ASTScanner {
 		depth--;
 	}
 	
-	@Override
-	public void visit(UnaryOperator node) throws Exception {
-		for (int i = 0; i < depth; i++) System.out.print("\t");
-		System.out.println("Unary Operator : " + node.getOperatorCode());
-		depth++;
-		super.visit(node);
-		depth--;
-	}
-
-	@Override
-	public void visit(BinaryOperator node) throws Exception {
-		for (int i = 0; i < depth; i++) System.out.print("\t");
-		System.out.println("Binary Operator : " + node.getOperatorCode());
-		depth++;
-		super.visit(node);
-		depth--;
-	}
 }

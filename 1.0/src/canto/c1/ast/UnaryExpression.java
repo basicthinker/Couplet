@@ -1,13 +1,10 @@
 ﻿package canto.c1.ast;
 
 /**
- * 单元运算表达式结点
+ * 单元运算表达式结点的基类
  */
-public class UnaryExpression extends Expression {
+public abstract class UnaryExpression extends Expression {
 
-	/** 单元操作符 */
-	private final UnaryOperator operator;
-	
 	/** 参与运算的表达式 */
 	private final Expression operand;
 		
@@ -16,31 +13,10 @@ public class UnaryExpression extends Expression {
 	 * @param operator 单元运算符
 	 * @param operand 操作表达式
 	 */
-	public UnaryExpression(UnaryOperator operator, Expression operand, 
-			int line, int column) {
+	public UnaryExpression(Expression operand, int line, int column) {
 		super(line, column);
-		this.operator = operator;
 		this.operand = operand;
-		operator.setParent(this);
 		operand.setParent(this);
-	}
-
-	@Override
-	public void accept(ASTVisitor visitor) throws Exception {
-		visitor.visit(this);
-	}
-
-	@Override
-	public int getNodeType() {
-		return UNARY_EXPRESSION;
-	}
-
-	/**
-	 * 获取单元操作符
-	 * @return 单元操作符
-	 */
-	public UnaryOperator getOperator() {
-		return operator;
 	}
 
 	/**

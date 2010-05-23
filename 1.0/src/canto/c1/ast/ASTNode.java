@@ -22,12 +22,22 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	public static final int CONTINUE_STATEMENT = 9;
 	public static final int INPUT_STATEMENT = 10;
 	public static final int OUTPUT_STATEMENT = 11;
-	public static final int UNARY_EXPRESSION = 12;
-	public static final int BINARY_EXPRESSION = 13;
-	public static final int	IDENTIFIER = 14;	
-	public static final int INTEGER_LITERAL = 15;
-	public static final int UNARY_OPERATOR = 16;
-	public static final int BINARY_OPERATOR = 17;
+	public static final int POS_EXPRESSION = 12;
+	public static final int NEG_EXPRESSION = 13;
+	public static final int NOT_EXPRESSION = 14;
+	public static final int ADD_EXPRESSION = 15;
+	public static final int SUB_EXPRESSION = 16;
+	public static final int MUL_EXPRESSION = 17;
+	public static final int LESS_EXPRESSION = 18;
+	public static final int LESS_EQUAL_EXPRESSION = 19;
+	public static final int GREATER_EXPRESSION = 20;
+	public static final int GREATER_EQUAL_EXPRESSION = 21;
+	public static final int EQUAL_EXPRESSION = 22;
+	public static final int NOT_EQUAL_EXPRESSION = 23;
+	public static final int AND_EXPRESSION = 24;
+	public static final int OR_EXPRESSION = 25;
+	public static final int	IDENTIFIER = 26;	
+	public static final int INTEGER_LITERAL = 27;
 	
 	/** 存储该AST结点的父结点 */
 	private ASTNode parent;

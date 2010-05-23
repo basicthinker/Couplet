@@ -5,6 +5,7 @@
  *   每个具体的AST结点有一个对应的visit方法，将在该结点的accept方法中被调用
  */
 public interface ASTVisitor {
+	
 	public void visit(Program node) throws Exception;
 	public void visit(StatementList node) throws Exception;
 	public void visit(Block node) throws Exception;
@@ -16,10 +17,21 @@ public interface ASTVisitor {
 	public void visit(BreakStatement node) throws Exception;
 	public void visit(ContinueStatement node) throws Exception;
 	public void visit(OutputStatement node) throws Exception;
-	public void visit(UnaryExpression node) throws Exception;
-	public void visit(BinaryExpression node) throws Exception;
+	public void visit(PosExpression node) throws Exception;
+	public void visit(NegExpression node) throws Exception;
+	public void visit(NotExpression node) throws Exception;
+	public void visit(AddExpression node) throws Exception;
+	public void visit(SubExpression node) throws Exception;
+	public void visit(MulExpression node) throws Exception;
+	public void visit(LessExpression node) throws Exception;
+	public void visit(LessEqualExpression node) throws Exception;
+	public void visit(GreaterExpression node) throws Exception;
+	public void visit(GreaterEqualExpression node) throws Exception;
+	public void visit(EqualExpression node) throws Exception;
+	public void visit(NotEqualExpression node) throws Exception;
+	public void visit(AndExpression node) throws Exception;
+	public void visit(OrExpression node) throws Exception;
 	public void visit(Identifier node) throws Exception;
 	public void visit(IntegerLiteral node) throws Exception;
-	public void visit(UnaryOperator node) throws Exception;
-	public void visit(BinaryOperator node) throws Exception;
+	
 }

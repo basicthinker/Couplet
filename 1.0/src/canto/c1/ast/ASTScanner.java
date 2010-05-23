@@ -71,32 +71,92 @@ public class ASTScanner implements ASTVisitor {
 	}
 	
 	@Override
-	public void visit(UnaryExpression node) throws Exception {
-		node.getOperator().accept(this);
-		node.getOperand().accept(this);
+	public void visit(PosExpression node) throws Exception {
+		node.getOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(BinaryExpression node) throws Exception {
-		node.getLeftOperand().accept(this);
-		node.getOperator().accept(this);
-		node.getRightOperand().accept(this);
+	public void visit(NegExpression node) throws Exception {
+		node.getOperand().accept(this);		
 	}
 
+	@Override
+	public void visit(NotExpression node) throws Exception {
+		node.getOperand().accept(this);		
+	}
+
+	@Override
+	public void visit(AddExpression node) throws Exception {
+		node.getLeftOperand().accept(this);
+		node.getRightOperand().accept(this);		
+	}
+
+	@Override
+	public void visit(SubExpression node) throws Exception {
+		node.getLeftOperand().accept(this);
+		node.getRightOperand().accept(this);		
+	}
+
+	@Override
+	public void visit(MulExpression node) throws Exception {
+		node.getLeftOperand().accept(this);
+		node.getRightOperand().accept(this);		
+	}
+
+	@Override
+	public void visit(LessExpression node) throws Exception {
+		node.getLeftOperand().accept(this);
+		node.getRightOperand().accept(this);		
+	}
+
+	@Override
+	public void visit(LessEqualExpression node) throws Exception {
+		node.getLeftOperand().accept(this);
+		node.getRightOperand().accept(this);		
+	}
+
+	@Override
+	public void visit(GreaterExpression node) throws Exception {
+		node.getLeftOperand().accept(this);
+		node.getRightOperand().accept(this);		
+	}
+
+	@Override
+	public void visit(GreaterEqualExpression node) throws Exception {
+		node.getLeftOperand().accept(this);
+		node.getRightOperand().accept(this);		
+	}
+
+	@Override
+	public void visit(EqualExpression node) throws Exception {
+		node.getLeftOperand().accept(this);
+		node.getRightOperand().accept(this);		
+	}
+
+	@Override
+	public void visit(NotEqualExpression node) throws Exception {
+		node.getLeftOperand().accept(this);
+		node.getRightOperand().accept(this);		
+	}
+
+	@Override
+	public void visit(AndExpression node) throws Exception {
+		node.getLeftOperand().accept(this);
+		node.getRightOperand().accept(this);		
+	}
+
+	@Override
+	public void visit(OrExpression node) throws Exception {
+		node.getLeftOperand().accept(this);
+		node.getRightOperand().accept(this);		
+	}
+	
 	@Override
 	public void visit(Identifier node) throws Exception {
 	}
 
 	@Override
 	public void visit(IntegerLiteral node) throws Exception {
-	}
-	
-	@Override
-	public void visit(UnaryOperator node) throws Exception {
-	}
-
-	@Override
-	public void visit(BinaryOperator node) throws Exception {
 	}
 
 }
