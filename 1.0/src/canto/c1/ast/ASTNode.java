@@ -39,7 +39,7 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	private final int column;
 	
 	/** 存储该AST结点属性的Map  */
-	private Map<String, Object> attributesMap; 
+	private Map<String, Object> propertiesMap; 
 	
 	@Override
 	public AbstractSyntaxTree getParent() {
@@ -63,7 +63,7 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	public ASTNode(int line, int column) {
 		this.line = line;
 		this.column = column;
-		attributesMap = new HashMap<String, Object>();
+		propertiesMap = new HashMap<String, Object>();
 	}
 	
 	/**
@@ -77,8 +77,8 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	 * @param name 属性名称
 	 * @return 属性值
 	 */
-	public Object getAttribute(String name) {
-		return attributesMap.get(name);
+	public Object getProperty(String name) {
+		return propertiesMap.get(name);
 	}
 	
 	/**
@@ -86,8 +86,8 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	 * @param name 属性名称
 	 * @param value 属性值
 	 */
-	public void setAttribute(String name, Object value) {
-		attributesMap.put(name, value);
+	public void setProperty(String name, Object value) {
+		propertiesMap.put(name, value);
 	}
 	
 }
