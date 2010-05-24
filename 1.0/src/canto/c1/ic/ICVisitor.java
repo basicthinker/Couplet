@@ -7,6 +7,8 @@ public interface ICVisitor {
 	
 	public void visit(InstructionList ic) throws Exception;
 	public void visit(Label ic) throws Exception;
+	public void visit(In ic) throws Exception;
+	public void visit(Out ic) throws Exception;
 	public void visit(UncondJump ic) throws Exception;
 	public void visit(EQJump ic) throws Exception;
 	public void visit(NEJump ic) throws Exception;
