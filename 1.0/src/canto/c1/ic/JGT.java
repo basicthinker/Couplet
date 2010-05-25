@@ -1,9 +1,9 @@
 package canto.c1.ic;
 
-public class GTJump extends CondJump {
+public class JGT extends CJump {
 
-	public GTJump(int relation, Operand operand1, Operand operand2, Label target) {
-		super(relation, operand1, operand2, target);
+	public JGT(Operand operand1, Operand operand2, Label target) {
+		super(operand1, operand2, target);
 	}
 
 	@Override

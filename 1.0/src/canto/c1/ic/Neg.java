@@ -3,12 +3,10 @@ package canto.c1.ic;
 /**
  * 中间代码的取负数指令
  */
-public class Neg extends Arithmetic {
-
-	private final Operand operand;
+public class Neg extends UnaryArithmetic {
 	
-	public Neg(Operand operand) {
-		this.operand = operand;
+	public Neg(Operand operand, Location result) {
+		super(operand, result);
 	}
 
 	@Override
@@ -19,10 +17,6 @@ public class Neg extends Arithmetic {
 	@Override
 	public int getICType() {
 		return NEG;
-	}
-
-	public Operand getOperand() {
-		return operand;
 	}
 
 }

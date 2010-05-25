@@ -3,13 +3,13 @@ package canto.c1.ic;
 /**
  * 中间代码的赋值语句
  */
-public class Move extends Instruction {
+public class Mov extends Instruction {
 
 	private final Operand src;
 	
 	private final Operand dst;
 	
-	public Move(Operand src, Operand dst) {
+	public Mov(Operand src, Operand dst) {
 		this.src = src;
 		this.dst = dst;
 	}

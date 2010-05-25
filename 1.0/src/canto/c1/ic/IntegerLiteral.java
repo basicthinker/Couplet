@@ -3,7 +3,7 @@ package canto.c1.ic;
 /**
  * 中间代码的整形常量操作数
  */
-public class IntegerLiteral extends Operand {
+public class IntegerLiteral extends Literal {
 
 	private final Integer value; 
 	

@@ -1,12 +1,9 @@
 package canto.c1.ic;
 
-/**
- * 中间代码的无条件转移指令
- */
-public class UncondJump extends Jump {
+public class JNE extends CJump {
 
-	public UncondJump(Label target) {
-		super(target);
+	public JNE(Operand operand1, Operand operand2, Label target) {
+		super(operand1, operand2, target);
 	}
 
 	@Override
@@ -16,7 +13,7 @@ public class UncondJump extends Jump {
 
 	@Override
 	public int getICType() {
-		return UNCOND_JUMP;
+		return NE_JUMP;
 	}
 
 }

@@ -1,9 +1,13 @@
 package canto.c1.ic;
 
 /**
- * 中间代码的临时变量操作数
+ * 中间代码的无条件转移指令
  */
-public class Temp extends Location {
+public class Goto extends Jump {
+
+	public Goto(Label target) {
+		super(target);
+	}
 
 	@Override
 	public void accept(ICVisitor visitor) throws Exception {
@@ -12,7 +16,7 @@ public class Temp extends Location {
 
 	@Override
 	public int getICType() {
-		return TEMP;
+		return UNCOND_JUMP;
 	}
 
 }
