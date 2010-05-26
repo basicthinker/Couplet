@@ -1,19 +1,26 @@
 ﻿package canto.c1.exception;
 
+import canto.CantoException;
 import canto.exception.*;
 
 @SuppressWarnings("serial")
 public class ParseException extends CantoException {
 
 	public ParseException(int lineNumber, int columnNumber,
-			CantoExceptionType exceptionType, String exceptionMsg, CantoExceptionLevel exceptionLevel) {
+			int exceptionType,  int exceptionLevel) {
 		
-		super(lineNumber, columnNumber, exceptionType, exceptionMsg, exceptionLevel);
+		super(lineNumber, columnNumber, exceptionType, exceptionLevel);
 	}
 	
 	public ParseException(){
 		//TODO exceptionMsg需要从XML文件读取
-		super(0, 0, CantoExceptionType.TestType , "ReadFromXML", CantoExceptionLevel.error);
+		super(0, 0, 1 , 1);
+	}
+
+	@Override
+	public String getExceptionMsg() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

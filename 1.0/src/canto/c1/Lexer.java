@@ -7,8 +7,11 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import canto.CantoException;
 import canto.Token;
 import canto.c1.token.*;
+import canto.exception.*;
+import canto.c1.exception.*;
 
 /**
  * @author basicthinker
@@ -128,10 +131,22 @@ public class Lexer implements canto.Lexer {
 				
 			} else {
 				
-				intBufChar = recognizeOperator((char)intBufChar, lexBuf);
-				String lexeme = lexBuf.toString();
-				tokenList.add(new Operator(line, column, lexeme));
-				column += lexeme.length();
+				try{				
+					intBufChar = recognizeOperator((char)intBufChar, lexBuf);
+					if (intBufChar == -3)
+						//throw ExceptionFactory.newException(line, column, CantoExceptionClass.Lex, CantoExceptionType.TestType, CantoExceptionLevel.error);
+						throw new LexException(line, column, LexException.IllegleCharactor, CantoException.LevelError);
+					String lexeme = lexBuf.toString();
+					tokenList.add(new Operator(line, column, lexeme));
+					column += lexeme.length();
+				}
+				catch(LexException e){
+					System.out.println(e.getExceptionMsg());
+				}
+				finally{
+					intBufChar = inBuf.read();
+					column += 1;
+				}
 				
 			}
 			
@@ -177,6 +192,7 @@ public class Lexer implements canto.Lexer {
 				}
 				break;
 			default:
+				return -3;
 				
 		}
 		return -1;

@@ -1,20 +1,24 @@
 package canto.c1.exception;
 
-import canto.exception.CantoException;
-import canto.exception.CantoExceptionLevel;
-import canto.exception.CantoExceptionType;
+import canto.CantoException;
 
 @SuppressWarnings("serial")
 public class SemanticException extends CantoException {
 
 	public SemanticException(int lineNumber, int columnNumber,
-			CantoExceptionType exceptionType, String exceptionMsg, CantoExceptionLevel exceptionLevel) {
+			int exceptionType, int exceptionLevel) {
 		
-		super(lineNumber, columnNumber, exceptionType, exceptionMsg, exceptionLevel);
+		super(lineNumber, columnNumber, exceptionType, exceptionLevel);
 	}
 	
 	public SemanticException(){
-		super(0, 0, null, null, null);
+		super(0, 0, 1, 1);
+	}
+
+	@Override
+	public String getExceptionMsg() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
