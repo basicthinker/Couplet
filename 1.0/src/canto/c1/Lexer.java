@@ -10,7 +10,6 @@ import java.util.List;
 import canto.CantoException;
 import canto.Token;
 import canto.c1.token.*;
-import canto.exception.*;
 import canto.c1.exception.*;
 
 /**

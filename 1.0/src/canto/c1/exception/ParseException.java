@@ -1,7 +1,6 @@
 ﻿package canto.c1.exception;
 
 import canto.CantoException;
-import canto.exception.*;
 
 @SuppressWarnings("serial")
 public class ParseException extends CantoException {
