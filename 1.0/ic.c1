@@ -1,0 +1,22 @@
+In t1
+Mov t2, 1
+JLT t2, 0, L2
+JGE t2, 10, L2
+L1:
+Neg 5, t3
+Mul t2, t1, t4
+Add t3, t4, t2
+JGT t1, 0, L3
+L3:
+Goto L2
+L4:
+JLE t2, 0, L5
+L5:
+Mov t2, 1
+Goto L7
+L6:
+Mov t2, 0
+L7:
+Goto L1
+L2:
+Out t2
