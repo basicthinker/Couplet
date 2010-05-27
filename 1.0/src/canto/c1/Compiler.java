@@ -141,6 +141,9 @@ public class Compiler implements canto.Compiler {
 			ASTPrinter astPrinter = new ASTPrinter();
 			((ASTNode) ast).accept(astPrinter);
 			
+			System.out.println();
+			System.out.println("Output Intermediate Code");
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
