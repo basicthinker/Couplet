@@ -29,9 +29,13 @@ import canto.c1.ast.StatementList;
 import canto.c1.ast.SubExpression;
 import canto.c1.ast.WhileStatement;
 
-import canto.c1.ic.Mov;
-import canto.c1.ic.InstructionList;
-
+import canto.c1.ic.Add;
+import canto.c1.ic.Arithmetic;
+import canto.c1.ic.BinaryArithmetic;
+import canto.c1.ic.CJump;
+import canto.c1.ic.Goto;
+import canto.c1.ic.In;
+import canto.c1.ic.HashTable;
 
 /**
  * AST到中间代码的转化
@@ -41,7 +45,8 @@ import canto.c1.ic.InstructionList;
 public class ASTToIC extends ASTScanner {
 
 	/**产生的代码序列*/
-	private InstructionList instructionList;
+	private InstructionList instructionList=new InstructionList();
+	private HashTable hashTable=new HashTable();
 	
 	public InstructionList getInstructionList(){
 		return instructionList;
@@ -64,7 +69,6 @@ public class ASTToIC extends ASTScanner {
 
 	@Override
 	public void visit(AssignmentStatement node) throws Exception {
-		instructionList=new InstructionList();
 		super.visit(node);
 	}
 	
