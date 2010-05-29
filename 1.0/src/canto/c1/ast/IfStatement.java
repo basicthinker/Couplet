@@ -1,5 +1,7 @@
 ﻿package canto.c1.ast;
 
+import canto.CantoException;
+
 /**
  * IF语句结点
  */
@@ -42,7 +44,7 @@ public class IfStatement extends Statement {
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) throws Exception {
+	public void accept(ASTVisitor visitor) throws CantoException {
 		visitor.visit(this);
 	}
 

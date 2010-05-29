@@ -1,5 +1,7 @@
 package canto.c1.ast;
 
+import canto.CantoException;
+
 public class PosExpression extends UnaryExpression {
 
 	public PosExpression(Expression operand, int line, int column) {
@@ -7,7 +9,7 @@ public class PosExpression extends UnaryExpression {
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) throws Exception {
+	public void accept(ASTVisitor visitor) throws CantoException {
 		visitor.visit(this);
 	}
 

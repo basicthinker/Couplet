@@ -1,5 +1,7 @@
 ﻿package canto.c1.ast;
 
+import canto.CantoException;
+
 /**
  * BLOCK语句结点
  */
@@ -19,7 +21,7 @@ public class Block extends Statement {
 	}
 	
 	@Override
-	public void accept(ASTVisitor visitor) throws Exception {
+	public void accept(ASTVisitor visitor) throws CantoException {
 		visitor.visit(this);
 	}
 

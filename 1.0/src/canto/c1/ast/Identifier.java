@@ -1,5 +1,7 @@
 ﻿package canto.c1.ast;
 
+import canto.CantoException;
+
 /**
  * 标识符结点
  */
@@ -18,7 +20,7 @@ public class Identifier extends Access {
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) throws Exception {
+	public void accept(ASTVisitor visitor) throws CantoException {
 		visitor.visit(this);
 	}
 

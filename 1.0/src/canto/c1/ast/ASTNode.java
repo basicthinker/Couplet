@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import canto.AbstractSyntaxTree;
+import canto.CantoException;
 
 /**
  * C1语言AST结点的基类 
@@ -80,7 +81,7 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	 * 接受访问者访问该AST结点的方法
 	 * @param visitor 访问者
 	 */
-	public abstract void accept(ASTVisitor visitor) throws Exception;
+	public abstract void accept(ASTVisitor visitor) throws CantoException;
 	
 	/**
 	 * 获取AST结点的某属性

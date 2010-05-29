@@ -1,5 +1,7 @@
 package canto.c1.ast;
 
+import canto.CantoException;
+
 public class SubExpression extends BinaryExpression {
 
 	public SubExpression(Expression leftOperand, Expression rightOperand,
@@ -8,7 +10,7 @@ public class SubExpression extends BinaryExpression {
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) throws Exception {
+	public void accept(ASTVisitor visitor) throws CantoException {
 		visitor.visit(this);
 	}
 
