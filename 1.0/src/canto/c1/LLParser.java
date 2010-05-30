@@ -1,10 +1,11 @@
 package canto.c1;
 
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 
 import canto.AbstractSyntaxTree;
+import canto.CantoException;
 import canto.Parser;
 import canto.c1.token.Token;
 import canto.c1.ast.Access;
@@ -48,7 +49,7 @@ public class LLParser implements Parser {
 	private List<canto.Token> tokenList;
 	
 	/** 用于从前向后遍历Token链的迭代器 */
-	private Iterator<canto.Token> tokenIterator;
+	private ListIterator<canto.Token> tokenIterator;
 	
 	/** 存放待分析的下一个Token */
 	private canto.Token nextToken;
@@ -74,9 +75,16 @@ public class LLParser implements Parser {
 
 	@Override
 	public AbstractSyntaxTree parse() throws Exception {
-		tokenIterator = tokenList.iterator();
+		tokenIterator = tokenList.listIterator();
 		move();
-		treeRoot = program();
+		try
+		{
+			treeRoot = program();
+		}
+		catch(ParseException e)
+		{
+			System.out.println(e.getExceptionMsg());
+		}
 		return treeRoot;
 	}
 	
@@ -97,12 +105,15 @@ public class LLParser implements Parser {
 		}
 	}
 	
+	
 	/**
 	 * 匹配某一指定的Token，并且向后移动
 	 * @param tokenType 指定的Token类型代码
 	 * @throws ParseException
 	 */
 	private void match(int tokenType) throws ParseException {
+		if (nextToken == null)
+			throw new ParseException();
 		if (nextToken.getTokenType() == tokenType) {
 			move();
 		} else {
@@ -118,6 +129,7 @@ public class LLParser implements Parser {
 	 */
 	private Program program() throws ParseException {
 		Program program =  new Program(block(), line, column);
+
 		// 判断确实已经分析到Token链尾
 		if (nextToken == null) return program;
 		else throw new ParseException();
@@ -130,9 +142,25 @@ public class LLParser implements Parser {
 	 * @throws ParseException
 	 */
 	private Block block() throws ParseException {
-		match(Token.L_BRACE);
+		try
+		{
+			match(Token.L_BRACE);
+		}
+		catch(ParseException e)
+		{
+			ParseException pe = new ParseException(line, column, ParseException.MissingRightBrace, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
 		Block block = new Block(stmt_list(), line, column);
-		match(Token.R_BRACE);
+		try
+		{
+			match(Token.R_BRACE);
+		}
+		catch(ParseException e)
+		{
+			ParseException pe = new ParseException(line, column, ParseException.MissingLeftBrace, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
 		return block;
 	}
 	
@@ -148,7 +176,22 @@ public class LLParser implements Parser {
 				tokenType == Token.IF || tokenType == Token.WHILE || 
 				tokenType == Token.BREAK || tokenType == Token.CONTINUE || 
 				tokenType == Token.INPUT || tokenType == Token.OUTPUT) {
-			stmt_list.addStatement(stmt());
+			try{
+				stmt_list.addStatement(stmt());
+			}
+			catch(ParseException e){
+				ParseException pe = new ParseException(line, column, ParseException.MissingEQUAL, CantoException.LevelError);
+				System.out.println(pe.getExceptionMsg());
+				
+				/*TODO 错误处理*/
+				while(true){
+					move();
+					if(tokenType == Token.R_PARENT || tokenType == Token.R_BRACE || tokenType == Token.SEMI)
+						break;
+				}
+				move();
+			}
+			
 		}
 		return stmt_list;
 	}
@@ -178,7 +221,10 @@ public class LLParser implements Parser {
 		case Token.OUTPUT :
 			return output_stmt();
 		default:
-			throw new ParseException();
+			/*TODO 完成错误恢复代码 */
+
+			throw new ParseException(line, column, ParseException.IllegalStatement, CantoException.LevelError);
+			
 		}
 	}
 	
@@ -190,9 +236,24 @@ public class LLParser implements Parser {
 	 */
 	private AssignmentStatement assign_stmt() throws ParseException {
 		Access access = access();
-		match(Token.EQUAL);
+
+		try{
+			match(Token.EQUAL);
+		}
+		catch(ParseException e){
+			ParseException pe = new ParseException(line, column, ParseException.MissingEQUAL, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
+		
 		AssignmentStatement stmt = new AssignmentStatement(access, expr(), line, column);
-		match(Token.SEMI);
+	
+		try{
+			match(Token.SEMI);
+		}
+		catch(ParseException e){
+			ParseException pe = new ParseException(line, column, ParseException.MissingSemicolon, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
 		return stmt;
 	}
 	
@@ -204,9 +265,25 @@ public class LLParser implements Parser {
 	 */
 	private IfStatement if_stmt() throws ParseException {
 		match(Token.IF);
-		match(Token.L_PARENT);
+		try
+		{
+			match(Token.L_PARENT);
+		}
+		catch(ParseException e)
+		{
+			ParseException pe = new ParseException(line, column, ParseException.MissingLeftParenthesis, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
 		Expression expr = expr();
-		match(Token.R_PARENT);
+		try
+		{
+			match(Token.R_PARENT);
+		}
+		catch(ParseException e)
+		{
+			ParseException pe = new ParseException(line, column, ParseException.MissingRightParenthesis, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
 		Statement thenStmt = stmt();
 		Statement elseStmt = null;
 		if (tokenType == Token.ELSE) {
@@ -224,9 +301,27 @@ public class LLParser implements Parser {
 	 */
 	private WhileStatement while_stmt() throws ParseException {
 		match(Token.WHILE);
-		match(Token.L_PARENT);
+		try{
+			match(Token.L_PARENT);
+		}
+		catch(ParseException e){
+			ParseException pe = new ParseException(line, column, ParseException.MissingLeftParenthesis, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
+		
 		Expression expr = expr();
-		match(Token.R_PARENT);
+		
+		try{
+			match(Token.R_PARENT);
+		}
+		catch(ParseException e){
+			ParseException pe = new ParseException(line, column, ParseException.MissingRightParenthesis, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
+		
+		if(tokenType != Token.L_BRACE){
+			throw new ParseException(line, column, ParseException.MissingLeftBrace, CantoException.LevelError);
+		}
 		Statement body = stmt();
 		return new WhileStatement(expr, body, line, column);
 	}
@@ -239,7 +334,15 @@ public class LLParser implements Parser {
 	 */
 	private BreakStatement break_stmt() throws ParseException {
 		match(Token.BREAK);
-		match(Token.SEMI);
+		try
+		{
+			match(Token.SEMI);
+		}
+		catch(ParseException e)
+		{
+			ParseException pe = new ParseException(line, column, ParseException.MissingSemicolon, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
 		return new BreakStatement(line, column);
 	}
 	
@@ -251,7 +354,15 @@ public class LLParser implements Parser {
 	 */
 	private ContinueStatement continue_stmt() throws ParseException {
 		match(Token.CONTINUE);
-		match(Token.SEMI);
+		try
+		{
+			match(Token.SEMI);
+		}
+		catch(ParseException e)
+		{
+			ParseException pe = new ParseException(line, column, ParseException.MissingSemicolon, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
 		return new ContinueStatement(line, column);
 	}
 	
@@ -263,10 +374,31 @@ public class LLParser implements Parser {
 	 */
 	private InputStatement input_stmt() throws ParseException {
 		match(Token.INPUT);
-		match(Token.L_PARENT);
+		try{
+			match(Token.L_PARENT);
+		}
+		catch(ParseException e){
+			ParseException pe = new ParseException(line, column, ParseException.MissingLeftParenthesis, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
+		
 		Access access = access();
-		match(Token.R_PARENT);
-		match(Token.SEMI);
+		
+		try{
+			match(Token.R_PARENT);
+		}
+		catch(ParseException e){
+			ParseException pe = new ParseException(line, column, ParseException.MissingRightParenthesis, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
+		
+		try{
+			match(Token.SEMI);
+		}
+		catch(ParseException e){
+			ParseException pe = new ParseException(line, column, ParseException.MissingSemicolon, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
 		return new InputStatement(access, line, column);
 	}
 	
@@ -278,10 +410,31 @@ public class LLParser implements Parser {
 	 */
 	private OutputStatement output_stmt() throws ParseException {
 		match(Token.OUTPUT);
-		match(Token.L_PARENT);
+		try{
+			match(Token.L_PARENT);
+		}
+		catch(ParseException e){
+			ParseException pe = new ParseException(line, column, ParseException.MissingLeftParenthesis, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
+		
 		Expression expr = expr();
-		match(Token.R_PARENT);
-		match(Token.SEMI);
+		
+		try{
+			match(Token.R_PARENT);
+		}
+		catch(ParseException e){
+			ParseException pe = new ParseException(line, column, ParseException.MissingRightParenthesis, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
+		
+		try{
+			match(Token.SEMI);
+		}
+		catch(ParseException e){
+			ParseException pe = new ParseException(line, column, ParseException.MissingSemicolon, CantoException.LevelError);
+			System.out.println(pe.getExceptionMsg());
+		}
 		return new OutputStatement(expr, line, column);
 	}
 	
@@ -292,7 +445,7 @@ public class LLParser implements Parser {
 	 * @throws ParseException
 	 */
 	private Expression expr() throws ParseException {
-		Expression expr;
+		Expression expr = null;
 		expr = expr_1();
 		while (tokenType == Token.OR_OR) {		
 			move();
