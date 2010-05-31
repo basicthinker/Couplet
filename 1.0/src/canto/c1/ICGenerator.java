@@ -257,7 +257,6 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	@Override
 	public void visit(NotExpression node) throws CantoException {
 		Label wrongLabel= (Label)node.getParent().getProperty("wrongLabel");
-		canto.c1.ic.IntegerLiteral zero=new canto.c1.ic.IntegerLiteral(0);
 		//JNE jne=new JNE(0,0,new Label());
 		super.visit(node);
 	}
