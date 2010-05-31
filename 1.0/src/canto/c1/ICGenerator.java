@@ -2,9 +2,8 @@ package canto.c1;
 
 import canto.AbstractSyntaxTree;
 import canto.CantoException;
-import canto.IntermediateCode;
 import canto.c1.ast.ASTNode;
-import canto.c1.ast.ASTPrinter;
+import canto.c1.ast.Access;
 import canto.c1.ast.AddExpression;
 import canto.c1.ast.AndExpression;
 import canto.c1.ast.AssignmentStatement;
@@ -29,6 +28,7 @@ import canto.c1.ast.OrExpression;
 import canto.c1.ast.OutputStatement;
 import canto.c1.ast.PosExpression;
 import canto.c1.ast.Program;
+import canto.c1.ast.Statement;
 import canto.c1.ast.StatementList;
 import canto.c1.ast.SubExpression;
 import canto.c1.ast.WhileStatement;
@@ -131,43 +131,117 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 
 	@Override
 	public void visit(IfStatement node) throws CantoException {
-		node.setProperty("thenLabel", new Label());
-		node.setProperty("elseLabel", new Label());
-		super.visit(node);
+		
+		//新建条件正误时候跳转的Label
+		Label wrongLabel=new Label();
+		node.setProperty("wrongLabel", wrongLabel);
+		
+		node.getCondition().accept(this);
+
+		Statement elseStatement = node.getElseStatement();
+		//结尾Label
+		Label endLabel=new Label();
+		if (elseStatement != null){ //有else语句
+			node.getThenStatement().accept(this);
+			
+			//走完if后去end
+			Goto gotoEnd=new Goto(endLabel);
+			instructionList.addInstruction(gotoEnd);
+			
+			//else位置
+			instructionList.addInstruction(wrongLabel);	
+			elseStatement.accept(this);
+
+			instructionList.addInstruction(endLabel);
+
+		}
+		else{ //没有else的语句
+			
+			//符合条件时的走向
+			node.getThenStatement().accept(this);
+			instructionList.addInstruction(wrongLabel);
+		}
+		
+		//结尾Label放入语句序列
+				
 	}
 
 	@Override
 	public void visit(WhileStatement node) throws CantoException {
-		node.setProperty("bodyLabel", new Label());
-		node.setProperty("outLabel", new Label());
-		super.visit(node);
+		
+		//while循环开始处
+		Label startLabel=new Label();
+		node.setProperty("startLabel", startLabel);
+		instructionList.addInstruction(startLabel);
+		
+		//新建条件符合或不符合的Label
+		Label wrongLabel=new Label();
+		node.setProperty("wrongLabel", wrongLabel);		
+		
+		node.getCondition().accept(this);
+		
+		node.getBody().accept(this);
+		
+		Goto unCondJump=new Goto(startLabel);
+		instructionList.addInstruction(unCondJump);
+		
+		//条件不符合后跳出的Label
+		instructionList.addInstruction(wrongLabel);
 	}
 	
 	@Override
 	public void visit(BreakStatement node) throws CantoException {
-		
+		Statement whileLocator=node;
+		while(whileLocator.getNodeType()!=ASTNode.WHILE_STATEMENT)
+		{
+			whileLocator=(Statement)whileLocator.getParent();
+		}
+		Label label =(Label)whileLocator.getProperty("wrongLabel");
+		Goto unCondJump=new Goto(label);
+		instructionList.addInstruction(unCondJump);
 	}
 
 	@Override
 	public void visit(ContinueStatement node) throws CantoException {
-		System.out.println("Continue");
+		Statement whileLocator=node;
+		while(whileLocator.getNodeType()!=ASTNode.WHILE_STATEMENT)
+		{
+			whileLocator=(Statement)whileLocator.getParent();
+		}
+		Label label =(Label)whileLocator.getProperty("startLabel");
+		Goto unCondJump=new Goto(label);
+		instructionList.addInstruction(unCondJump);
 	}
 	
 	@Override
 	public void visit(InputStatement node) throws CantoException {
-		System.out.println("Input :");
 		super.visit(node);
+		Access access=node.getAccess();
+		Temp temp;
+		if(hashTable.isExist(access)){
+			temp=(Temp)hashTable.getLocation(access);
+		}
+		else{
+			temp=new Temp();
+			hashTable.insertSymbol(access, temp);
+		}
+		In in=new In(temp);
+		instructionList.addInstruction(in);
 	}
 
 	@Override
 	public void visit(OutputStatement node) throws CantoException {
-		System.out.println("Output :");
 		super.visit(node);
+		Operand operand=(Operand)node.getExpression().getProperty("result");
+		Out out=new Out(operand);
+		instructionList.addInstruction(out);
 	}
 	
 	@Override
 	public void visit(PosExpression node) throws CantoException {
 		super.visit(node);
+		Operand value=(Operand) node.getOperand().getProperty("result");
+		node.setProperty("result", value);
 	}
 
 	@Override
@@ -175,12 +249,16 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		super.visit(node);
 		Operand operand=(Operand)node.getOperand().getProperty("result");
 		Location result=new Temp();
-		Neg neg=new Neg(operand, result);		
+		Neg neg=new Neg(operand, result);
+		node.setProperty("result", result);
 		instructionList.addInstruction(neg);
 	}
 	
 	@Override
 	public void visit(NotExpression node) throws CantoException {
+		Label wrongLabel= (Label)node.getParent().getProperty("wrongLabel");
+		canto.c1.ic.IntegerLiteral zero=new canto.c1.ic.IntegerLiteral(0);
+		//JNE jne=new JNE(0,0,new Label());
 		super.visit(node);
 	}
 	

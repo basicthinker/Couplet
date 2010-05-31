@@ -25,6 +25,10 @@ public class HashTable extends SymbolTable {
 		symbolToTemp.put(access, location);
 	}
 	
+	public boolean isExist(Access access){
+		return symbolToTemp.containsKey(access);
+	}
+	
 	public Location getLocation(Access access){
 		return symbolToTemp.get(access);
 	}

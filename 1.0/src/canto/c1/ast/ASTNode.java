@@ -53,7 +53,7 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	private Map<String, Object> propertiesMap; 
 	
 	@Override
-	public AbstractSyntaxTree getParent() {
+	public ASTNode getParent() {
 		return parent;
 	}
 	
