@@ -18,8 +18,9 @@ public interface ICGenerator {
 	/**
 	 * 得到中间代码
 	 * @return 生成的中间代码
+	 * @throws Exception 
 	 */
-	public IntermediateCode generateIC();
+	public IntermediateCode generateIC() throws Exception;
 	
 	/**
 	 * 获取生成的中间代码
