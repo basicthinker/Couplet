@@ -67,12 +67,12 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	private InstructionList instructionList;
 	
 	/**C1的符号表，此处是个名值对照表*/
-	private SymbolTable hashTable;
+	private SymbolTable symbolTable;
 
 	public ICGenerator(AbstractSyntaxTree abstractSyntaxTree){
 		this.ast=abstractSyntaxTree;
 		instructionList=new InstructionList();
-		hashTable=new SymbolTable();
+		symbolTable=new SymbolTable();
 	}
 	
 	@Override
@@ -111,12 +111,12 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		super.visit(node);
 		Operand src=(Operand)node.getExpression().getProperty("result");
 		Location dst;
-		if(hashTable.isExist(node.getAccess().getName())){
-			dst=hashTable.getLocation(node.getAccess().getName());
+		if(symbolTable.isExist(node.getAccess().getName())){
+			dst=symbolTable.getLocation(node.getAccess().getName());
 		}
 		else{
 			dst=new Temp();
-			hashTable.insertSymbol(node.getAccess().getName(), dst);
+			symbolTable.insertSymbol(node.getAccess().getName(), dst);
 		}
 		Mov mov = new Mov(src, dst);
 		instructionList.addInstruction(mov);
@@ -229,12 +229,12 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		super.visit(node);
 		Access access=node.getAccess();
 		Temp temp;
-		if(hashTable.isExist(access.getName())){
-			temp=(Temp)hashTable.getLocation(access.getName());
+		if(symbolTable.isExist(access.getName())){
+			temp=(Temp)symbolTable.getLocation(access.getName());
 		}
 		else{
 			temp=new Temp();
-			hashTable.insertSymbol(access.getName(), temp);
+			symbolTable.insertSymbol(access.getName(), temp);
 		}
 		In in=new In(temp);
 		instructionList.addInstruction(in);
@@ -326,7 +326,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 			instructionList.addInstruction(jlt);
 		}
 		else if(falseLabel!=null){
-			JGE jge=new JGE(leftOperand, rightOperand, trueLabel);
+			JGE jge=new JGE(leftOperand, rightOperand, falseLabel);
 			instructionList.addInstruction(jge);			
 		}
 	}
@@ -352,7 +352,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 			instructionList.addInstruction(jle);
 		}
 		else if(falseLabel!=null){
-			JGT jgt=new JGT(leftOperand, rightOperand, trueLabel);
+			JGT jgt=new JGT(leftOperand, rightOperand, falseLabel);
 			instructionList.addInstruction(jgt);			
 		}
 
@@ -379,7 +379,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 			instructionList.addInstruction(jgt);
 		}
 		else if(falseLabel!=null){
-			JLE jle=new JLE(leftOperand, rightOperand, trueLabel);
+			JLE jle=new JLE(leftOperand, rightOperand, falseLabel);
 			instructionList.addInstruction(jle);			
 		}
 	}
@@ -405,7 +405,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 			instructionList.addInstruction(jge);
 		}
 		else if(falseLabel!=null){
-			JLT jlt=new JLT(leftOperand, rightOperand, trueLabel);
+			JLT jlt=new JLT(leftOperand, rightOperand, falseLabel);
 			instructionList.addInstruction(jlt);			
 		}
 
@@ -433,7 +433,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 			instructionList.addInstruction(jeq);
 		}
 		else if(falseLabel!=null){
-			JNE jne=new JNE(leftOperand, rightOperand, trueLabel);
+			JNE jne=new JNE(leftOperand, rightOperand, falseLabel);
 			instructionList.addInstruction(jne);			
 		}
 
@@ -460,7 +460,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 			instructionList.addInstruction(jne);
 		}
 		else if(falseLabel!=null){
-			JEQ jeq=new JEQ(leftOperand, rightOperand, trueLabel);
+			JEQ jeq=new JEQ(leftOperand, rightOperand, falseLabel);
 			instructionList.addInstruction(jeq);			
 		}
 
@@ -474,7 +474,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		if(falseLabel==null){
 			falseLabel=new Label();
 		}
-		node.getLeftOperand().setProperty("falseLabel", node.getProperty("falseLabel"));
+		node.getLeftOperand().setProperty("falseLabel", falseLabel);
 		node.getLeftOperand().accept(this);
 
 		//左节点的true是右结点的入口
@@ -496,12 +496,13 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		if(trueLabel==null){
 			trueLabel=new Label();
 		}
+		node.setProperty("trueLabel", trueLabel);
 		node.getLeftOperand().setProperty("trueLabel", node.getProperty("trueLabel"));
 		node.getLeftOperand().accept(this);
 
 		//左节点的false是右结点的入口
 		Label leftFalse=new Label();
-		node.getLeftOperand().setProperty("trueLabel", leftFalse);
+		node.getLeftOperand().setProperty("falseLabel", leftFalse);
 
 		//进入右结点，又结点的True、False的Label和整个的相同
 		instructionList.addInstruction(leftFalse);
@@ -512,13 +513,13 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	
 	@Override
 	public void visit(Identifier node) throws CantoException {
-		if(hashTable.isExist(node.getName())){
-			Temp temp=(Temp)hashTable.getLocation(node.getName());
+		if(symbolTable.isExist(node.getName())){
+			Temp temp=(Temp)symbolTable.getLocation(node.getName());
 			node.setProperty("result", temp);
 		}
 		else{
 			Temp temp=new Temp();
-			hashTable.insertSymbol(node.getName(), temp);
+			symbolTable.insertSymbol(node.getName(), temp);
 			node.setProperty("result", temp);
 		}
 	}
