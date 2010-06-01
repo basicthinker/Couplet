@@ -35,4 +35,9 @@ public class Temp extends Location {
 		return id;
 	}
 
+	@Override
+	public String getName() {
+		return "t"+id;
+	}
+
 }

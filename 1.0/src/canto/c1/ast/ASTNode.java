@@ -2,8 +2,6 @@
 
 import java.util.HashMap;
 import java.util.Map;
-
-import canto.AbstractSyntaxTree;
 import canto.CantoException;
 
 /**

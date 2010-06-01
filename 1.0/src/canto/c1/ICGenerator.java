@@ -34,13 +34,9 @@ import canto.c1.ast.SubExpression;
 import canto.c1.ast.WhileStatement;
 
 import canto.c1.ic.Add;
-import canto.c1.ic.Arithmetic;
-import canto.c1.ic.BinaryArithmetic;
-import canto.c1.ic.CJump;
 import canto.c1.ic.Goto;
 import canto.c1.ic.HashTable;
 import canto.c1.ic.In;
-import canto.c1.ic.Instruction;
 import canto.c1.ic.InstructionList;
 import canto.c1.ic.JEQ;
 import canto.c1.ic.JGE;
@@ -48,9 +44,7 @@ import canto.c1.ic.JGT;
 import canto.c1.ic.JLE;
 import canto.c1.ic.JLT;
 import canto.c1.ic.JNE;
-import canto.c1.ic.Jump;
 import canto.c1.ic.Label;
-import canto.c1.ic.Literal;
 import canto.c1.ic.Location;
 import canto.c1.ic.Mov;
 import canto.c1.ic.Mul;
@@ -59,7 +53,6 @@ import canto.c1.ic.Operand;
 import canto.c1.ic.Out;
 import canto.c1.ic.Sub;
 import canto.c1.ic.Temp;
-import canto.c1.ic.UnaryArithmetic;
 
 /**
  * c1中生成中间代码的类
@@ -118,7 +111,14 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	public void visit(AssignmentStatement node) throws CantoException {
 		super.visit(node);
 		Operand src=(Operand)node.getExpression().getProperty("result");
-		Operand dst=hashTable.getLocation(node.getAccess());
+		Location dst;
+		if(hashTable.isExist(node.getAccess())){
+			dst=hashTable.getLocation(node.getAccess());
+		}
+		else{
+			dst=new Temp();
+			hashTable.insertSymbol(node.getAccess(), dst);
+		}
 		Mov mov = new Mov(src, dst);
 		instructionList.addInstruction(mov);
 	}
@@ -311,69 +311,137 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		node.setProperty("falseLabel", falseLabel);
 		Operand leftOperand=(Operand)node.getLeftOperand().getProperty("result");
 		Operand rightOperand=(Operand)node.getRightOperand().getProperty("result");
-		if(node.getParent().getNodeType()==ASTNode.NOT_EXPRESSION){
-			JLT jle=new JLT(leftOperand, rightOperand, trueLabel);
-			instructionList.addInstruction(jle);
-		}
-		else{
-			JGE jge=new JGE(leftOperand, rightOperand, falseLabel);
-			instructionList.addInstruction(jge);
-		}
+		
+		JLT jlt=new JLT(leftOperand, rightOperand, trueLabel);
+		instructionList.addInstruction(jlt);
+		Goto jmp=new Goto(falseLabel);
+		instructionList.addInstruction(jmp);
 	}
 	
 	@Override
 	public void visit(LessEqualExpression node) throws CantoException {
-		System.out.println("Less Equal :");
 		super.visit(node);
+		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
+		node.setProperty("trueLabel", trueLabel);
+		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
+		node.setProperty("falseLabel", falseLabel);
+		Operand leftOperand=(Operand)node.getLeftOperand().getProperty("result");
+		Operand rightOperand=(Operand)node.getRightOperand().getProperty("result");
+		
+		JLE jle=new JLE(leftOperand, rightOperand, trueLabel);
+		instructionList.addInstruction(jle);
+		Goto jmp=new Goto(falseLabel);
+		instructionList.addInstruction(jmp);
 	}
 
 	@Override
 	public void visit(GreaterExpression node) throws CantoException {
-		System.out.println("Greater :");
 		super.visit(node);
+		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
+		node.setProperty("trueLabel", trueLabel);
+		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
+		node.setProperty("falseLabel", falseLabel);
+		Operand leftOperand=(Operand)node.getLeftOperand().getProperty("result");
+		Operand rightOperand=(Operand)node.getRightOperand().getProperty("result");
+		
+		JGT jgt=new JGT(leftOperand, rightOperand, trueLabel);
+		instructionList.addInstruction(jgt);
+		Goto jmp=new Goto(falseLabel);
+		instructionList.addInstruction(jmp);
 	}
 
 	@Override
 	public void visit(GreaterEqualExpression node) throws CantoException {
-		System.out.println("Greater Equal :");
 		super.visit(node);
+		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
+		node.setProperty("trueLabel", trueLabel);
+		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
+		node.setProperty("falseLabel", falseLabel);
+		Operand leftOperand=(Operand)node.getLeftOperand().getProperty("result");
+		Operand rightOperand=(Operand)node.getRightOperand().getProperty("result");
+		
+		JGE jge=new JGE(leftOperand, rightOperand, trueLabel);
+		instructionList.addInstruction(jge);
+		Goto jmp=new Goto(falseLabel);
+		instructionList.addInstruction(jmp);
+
 	}
 
 	@Override
 	public void visit(EqualExpression node) throws CantoException {
-		System.out.println("Equal :");
 		super.visit(node);
+		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
+		node.setProperty("trueLabel", trueLabel);
+		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
+		node.setProperty("falseLabel", falseLabel);
+		Operand leftOperand=(Operand)node.getLeftOperand().getProperty("result");
+		Operand rightOperand=(Operand)node.getRightOperand().getProperty("result");
+		
+		JEQ jeq=new JEQ(leftOperand, rightOperand, trueLabel);
+		instructionList.addInstruction(jeq);
+		Goto jmp=new Goto(falseLabel);
+		instructionList.addInstruction(jmp);
 	}
 
 	@Override
 	public void visit(NotEqualExpression node) throws CantoException {
-		System.out.println("Not Equal :");
 		super.visit(node);
+		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
+		node.setProperty("trueLabel", trueLabel);
+		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
+		node.setProperty("falseLabel", falseLabel);
+		Operand leftOperand=(Operand)node.getLeftOperand().getProperty("result");
+		Operand rightOperand=(Operand)node.getRightOperand().getProperty("result");
+		
+		JNE jne=new JNE(leftOperand, rightOperand, trueLabel);
+		instructionList.addInstruction(jne);
+		Goto jmp=new Goto(falseLabel);
+		instructionList.addInstruction(jmp);
 	}
 
 	@Override
 	public void visit(AndExpression node) throws CantoException {
-		System.out.println("And :");
-		super.visit(node);
+		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
+		node.setProperty("falseLabel", falseLabel);
+		Label leftTrue=new Label();
+		node.setProperty("trueLabel", leftTrue);
+		node.getLeftOperand().accept(this);
+		
+		instructionList.addInstruction(leftTrue);
+		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
+		node.setProperty("trueLabel", trueLabel);
+		node.getRightOperand().accept(this);
 	}
 	
 	@Override
 	public void visit(OrExpression node) throws CantoException {
-		System.out.println("Or :");
-		super.visit(node);
+		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
+		node.setProperty("trueLabel", trueLabel);
+		Label leftFalse=new Label();
+		node.setProperty("falseLabel", leftFalse);
+		node.getLeftOperand().accept(this);
+		
+		instructionList.addInstruction(leftFalse);
+		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
+		node.setProperty("falseLabel", falseLabel);
+		node.getRightOperand().accept(this);
 	}
 	
 	@Override
 	public void visit(Identifier node) throws CantoException {
-		System.out.println("Identifier : " + node.getName() + "");
-		super.visit(node);
+		if(hashTable.isExist(node)){
+			Temp temp=(Temp)hashTable.getLocation(node);
+			node.setProperty("resutl", temp);
+		}
+		else{
+			Temp temp=new Temp();
+			hashTable.insertSymbol(node, temp);
+			node.setProperty("result", temp);
+		}
 	}
 
 	@Override
 	public void visit(IntegerLiteral node) throws CantoException {
-		System.out.println("Literal : " + node.getValue() + "");
-		super.visit(node);
+		node.setProperty("result", node);
 		}
-	
-
 }

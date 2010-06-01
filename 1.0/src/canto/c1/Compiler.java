@@ -19,6 +19,7 @@ import canto.Parser;
 import canto.Token;
 import canto.c1.ast.ASTNode;
 import canto.c1.ast.ASTPrinter;
+import canto.c1.ic.ICPrinter;
 
 /**
  * @author basicthinker
@@ -123,6 +124,8 @@ public class Compiler implements canto.Compiler {
 			compiler.compile();
 			List<Token> tokenList = compiler.getTokenList();
 			AbstractSyntaxTree ast = compiler.getAbstractSyntaxTree();
+			ICGenerator icGenerator=new ICGenerator(ast);
+			icGenerator.generateIC();
 			
 			System.out.println("Output Token List");
 			for (Token token : tokenList) {
@@ -140,9 +143,12 @@ public class Compiler implements canto.Compiler {
 			System.out.println("Output AST");
 			ASTPrinter astPrinter = new ASTPrinter();
 			((ASTNode) ast).accept(astPrinter);
-			
 			System.out.println();
+			
 			System.out.println("Output Intermediate Code");
+			ICPrinter icPrinter = new ICPrinter();
+			icGenerator.getIC().accept(icPrinter);
+			System.out.println();
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

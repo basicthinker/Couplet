@@ -25,4 +25,9 @@ public class IntegerLiteral extends Literal {
 		return value;
 	}
 
+	@Override
+	public String getName() {
+		return value.toString();
+	}
+
 }

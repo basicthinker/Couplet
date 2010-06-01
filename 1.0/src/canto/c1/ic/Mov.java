@@ -7,9 +7,9 @@ public class Mov extends Instruction {
 
 	private final Operand src;
 	
-	private final Operand dst;
+	private final Location dst;
 	
-	public Mov(Operand src, Operand dst) {
+	public Mov(Operand src, Location dst) {
 		this.src = src;
 		this.dst = dst;
 	}
@@ -28,7 +28,7 @@ public class Mov extends Instruction {
 		return src;
 	}
 
-	public Operand getDst() {
+	public Location getDst() {
 		return dst;
 	}
 
