@@ -5,7 +5,7 @@
 		x = - 5 + x * t;
 		if (t <= 0) break;
 		else {
-			t = x > 5;
+			t = x + 5;
 		}
 	}
 	output(x);

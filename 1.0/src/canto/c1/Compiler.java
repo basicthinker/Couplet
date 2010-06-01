@@ -148,7 +148,6 @@ public class Compiler implements canto.Compiler {
 			System.out.println("Output Intermediate Code");
 			ICPrinter icPrinter = new ICPrinter();
 			icGenerator.getIC().accept(icPrinter);
-			System.out.println();
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

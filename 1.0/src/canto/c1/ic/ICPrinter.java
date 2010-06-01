@@ -31,7 +31,7 @@ public class ICPrinter implements ICVisitor {
 
 	@Override
 	public void visit(Out ic) throws Exception {
-		System.out.println("Out t"+ic.getOperand().getName());
+		System.out.println("Out "+ic.getOperand().getName());
 	}
 
 	@Override

@@ -35,7 +35,6 @@ import canto.c1.ast.WhileStatement;
 
 import canto.c1.ic.Add;
 import canto.c1.ic.Goto;
-import canto.c1.ic.HashTable;
 import canto.c1.ic.In;
 import canto.c1.ic.InstructionList;
 import canto.c1.ic.JEQ;
@@ -68,12 +67,12 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	private InstructionList instructionList;
 	
 	/**C1的符号表，此处是个名值对照表*/
-	private HashTable hashTable;
+	private SymbolTable hashTable;
 
 	public ICGenerator(AbstractSyntaxTree abstractSyntaxTree){
 		this.ast=abstractSyntaxTree;
 		instructionList=new InstructionList();
-		hashTable=new HashTable();
+		hashTable=new SymbolTable();
 	}
 	
 	@Override
@@ -112,12 +111,12 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		super.visit(node);
 		Operand src=(Operand)node.getExpression().getProperty("result");
 		Location dst;
-		if(hashTable.isExist(node.getAccess())){
-			dst=hashTable.getLocation(node.getAccess());
+		if(hashTable.isExist(node.getAccess().getName())){
+			dst=hashTable.getLocation(node.getAccess().getName());
 		}
 		else{
 			dst=new Temp();
-			hashTable.insertSymbol(node.getAccess(), dst);
+			hashTable.insertSymbol(node.getAccess().getName(), dst);
 		}
 		Mov mov = new Mov(src, dst);
 		instructionList.addInstruction(mov);
@@ -132,15 +131,16 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	@Override
 	public void visit(IfStatement node) throws CantoException {
 		
-		//新建条件正误时候跳转的Label
+		//新建条件正误时候跳转的Label,先设置子节点的falseLabel
 		Label falseLabel=new Label();
-		node.setProperty("falseLabel", falseLabel);
-		Label trueLabel=new Label();
-		node.setProperty("trueLabel", trueLabel);
-		
+		node.getCondition().setProperty("falseLabel", falseLabel);		
 		node.getCondition().accept(this);
-
-		instructionList.addInstruction(trueLabel);
+		
+		//如果子节点需要trueLabel由子节点自己进行设置
+		Label trueLabel=(Label) node.getCondition().getProperty("trueLabel");
+		if(trueLabel!=null){
+			instructionList.addInstruction(trueLabel);
+		}
 		Statement elseStatement = node.getElseStatement();
 		//结尾Label
 		if (elseStatement != null){ //有else语句
@@ -174,18 +174,21 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		
 		//while循环开始处
 		Label startLabel=new Label();
-		node.setProperty("startLabel", startLabel);
+		node.getCondition().setProperty("startLabel", startLabel);
 		instructionList.addInstruction(startLabel);
 		
 		//新建条件符合或不符合的Label
 		Label falseLabel=new Label();
-		node.setProperty("falseLabel", falseLabel);
-		Label trueLabel=new Label();
-		node.setProperty("trueLabel", trueLabel);
+		node.getCondition().setProperty("falseLabel", falseLabel);
+		
 		
 		node.getCondition().accept(this);
 		
-		instructionList.addInstruction(trueLabel);
+		//同if
+		Label trueLabel=(Label) node.getCondition().getProperty("trueLabel");
+		if(trueLabel!=null){
+			instructionList.addInstruction(trueLabel);
+		}
 		node.getBody().accept(this);
 		
 		Goto unCondJump=new Goto(startLabel);
@@ -197,12 +200,14 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	
 	@Override
 	public void visit(BreakStatement node) throws CantoException {
-		Statement whileLocator=node;
+		ASTNode whileLocator=node;
+		//找到上层While语句
 		while(whileLocator.getNodeType()!=ASTNode.WHILE_STATEMENT)
 		{
-			whileLocator=(Statement)whileLocator.getParent();
+			whileLocator=whileLocator.getParent();
 		}
-		Label label =(Label)whileLocator.getProperty("falseLabel");
+		//转化成一个WhileStatement
+		Label label =(Label)((WhileStatement)whileLocator).getCondition().getProperty("falseLabel");
 		Goto unCondJump=new Goto(label);
 		instructionList.addInstruction(unCondJump);
 	}
@@ -214,7 +219,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		{
 			whileLocator=(Statement)whileLocator.getParent();
 		}
-		Label label =(Label)whileLocator.getProperty("startLabel");
+		Label label =(Label)((WhileStatement)whileLocator).getCondition().getProperty("startLabel");
 		Goto unCondJump=new Goto(label);
 		instructionList.addInstruction(unCondJump);
 	}
@@ -224,12 +229,12 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		super.visit(node);
 		Access access=node.getAccess();
 		Temp temp;
-		if(hashTable.isExist(access)){
-			temp=(Temp)hashTable.getLocation(access);
+		if(hashTable.isExist(access.getName())){
+			temp=(Temp)hashTable.getLocation(access.getName());
 		}
 		else{
 			temp=new Temp();
-			hashTable.insertSymbol(access, temp);
+			hashTable.insertSymbol(access.getName(), temp);
 		}
 		In in=new In(temp);
 		instructionList.addInstruction(in);
@@ -262,10 +267,8 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	
 	@Override
 	public void visit(NotExpression node) throws CantoException {
-		Label trueLabel=(Label)node.getParent().getProperty("falseLabel");
-		node.setProperty("trueLabel", trueLabel);
-		Label falseLabel=(Label)node.getParent().getProperty("trueLabel");
-		node.setProperty("falseLabel", falseLabel);
+		node.getOperand().setProperty("trueLabel", (Label)node.getProperty("falseLabel"));
+		node.getOperand().setProperty("falseLabel", (Label)node.getProperty("trueLabel"));
 		super.visit(node);
 	}
 	
@@ -305,143 +308,224 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	@Override
 	public void visit(LessExpression node) throws CantoException {
 		super.visit(node);
-		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
-		node.setProperty("trueLabel", trueLabel);
-		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
-		node.setProperty("falseLabel", falseLabel);
 		Operand leftOperand=(Operand)node.getLeftOperand().getProperty("result");
 		Operand rightOperand=(Operand)node.getRightOperand().getProperty("result");
 		
-		JLT jlt=new JLT(leftOperand, rightOperand, trueLabel);
-		instructionList.addInstruction(jlt);
-		Goto jmp=new Goto(falseLabel);
-		instructionList.addInstruction(jmp);
+		Label trueLabel=(Label)node.getProperty("trueLabel");
+		Label falseLabel=(Label)node.getProperty("falseLabel");
+		
+		//判断是否都有必要跳转
+		if(trueLabel!=null&&falseLabel!=null){
+			JLT jlt=new JLT(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jlt);
+			Goto jmp=new Goto(falseLabel);
+			instructionList.addInstruction(jmp);
+		}
+		else if(trueLabel!=null){
+			JLT jlt=new JLT(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jlt);
+		}
+		else if(falseLabel!=null){
+			JGE jge=new JGE(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jge);			
+		}
 	}
 	
 	@Override
 	public void visit(LessEqualExpression node) throws CantoException {
 		super.visit(node);
-		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
-		node.setProperty("trueLabel", trueLabel);
-		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
-		node.setProperty("falseLabel", falseLabel);
 		Operand leftOperand=(Operand)node.getLeftOperand().getProperty("result");
 		Operand rightOperand=(Operand)node.getRightOperand().getProperty("result");
 		
-		JLE jle=new JLE(leftOperand, rightOperand, trueLabel);
-		instructionList.addInstruction(jle);
-		Goto jmp=new Goto(falseLabel);
-		instructionList.addInstruction(jmp);
+		Label trueLabel=(Label)node.getProperty("trueLabel");
+		Label falseLabel=(Label)node.getProperty("falseLabel");
+		
+		//判断是否都有必要跳转
+		if(trueLabel!=null&&falseLabel!=null){
+			JLE jle=new JLE(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jle);
+			Goto jmp=new Goto(falseLabel);
+			instructionList.addInstruction(jmp);
+		}
+		else if(trueLabel!=null){
+			JLE jle=new JLE(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jle);
+		}
+		else if(falseLabel!=null){
+			JGT jgt=new JGT(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jgt);			
+		}
+
 	}
 
 	@Override
 	public void visit(GreaterExpression node) throws CantoException {
 		super.visit(node);
-		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
-		node.setProperty("trueLabel", trueLabel);
-		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
-		node.setProperty("falseLabel", falseLabel);
 		Operand leftOperand=(Operand)node.getLeftOperand().getProperty("result");
 		Operand rightOperand=(Operand)node.getRightOperand().getProperty("result");
 		
-		JGT jgt=new JGT(leftOperand, rightOperand, trueLabel);
-		instructionList.addInstruction(jgt);
-		Goto jmp=new Goto(falseLabel);
-		instructionList.addInstruction(jmp);
+		Label trueLabel=(Label)node.getProperty("trueLabel");
+		Label falseLabel=(Label)node.getProperty("falseLabel");
+		
+		//判断是否都有必要跳转
+		if(trueLabel!=null&&falseLabel!=null){
+			JGT jgt=new JGT(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jgt);
+			Goto jmp=new Goto(falseLabel);
+			instructionList.addInstruction(jmp);
+		}
+		else if(trueLabel!=null){
+			JGT jgt=new JGT(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jgt);
+		}
+		else if(falseLabel!=null){
+			JLE jle=new JLE(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jle);			
+		}
 	}
 
 	@Override
 	public void visit(GreaterEqualExpression node) throws CantoException {
 		super.visit(node);
-		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
-		node.setProperty("trueLabel", trueLabel);
-		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
-		node.setProperty("falseLabel", falseLabel);
 		Operand leftOperand=(Operand)node.getLeftOperand().getProperty("result");
 		Operand rightOperand=(Operand)node.getRightOperand().getProperty("result");
 		
-		JGE jge=new JGE(leftOperand, rightOperand, trueLabel);
-		instructionList.addInstruction(jge);
-		Goto jmp=new Goto(falseLabel);
-		instructionList.addInstruction(jmp);
+		Label trueLabel=(Label)node.getProperty("trueLabel");
+		Label falseLabel=(Label)node.getProperty("falseLabel");
+		
+		//判断是否都有必要跳转
+		if(trueLabel!=null&&falseLabel!=null){
+			JGE jge=new JGE(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jge);
+			Goto jmp=new Goto(falseLabel);
+			instructionList.addInstruction(jmp);
+		}
+		else if(trueLabel!=null){
+			JGE jge=new JGE(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jge);
+		}
+		else if(falseLabel!=null){
+			JLT jlt=new JLT(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jlt);			
+		}
+
 
 	}
 
 	@Override
 	public void visit(EqualExpression node) throws CantoException {
 		super.visit(node);
-		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
-		node.setProperty("trueLabel", trueLabel);
-		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
-		node.setProperty("falseLabel", falseLabel);
 		Operand leftOperand=(Operand)node.getLeftOperand().getProperty("result");
 		Operand rightOperand=(Operand)node.getRightOperand().getProperty("result");
 		
-		JEQ jeq=new JEQ(leftOperand, rightOperand, trueLabel);
-		instructionList.addInstruction(jeq);
-		Goto jmp=new Goto(falseLabel);
-		instructionList.addInstruction(jmp);
+		Label trueLabel=(Label)node.getProperty("trueLabel");
+		Label falseLabel=(Label)node.getProperty("falseLabel");
+		
+		//判断是否都有必要跳转
+		if(trueLabel!=null&&falseLabel!=null){
+			JEQ jeq=new JEQ(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jeq);
+			Goto jmp=new Goto(falseLabel);
+			instructionList.addInstruction(jmp);
+		}
+		else if(trueLabel!=null){
+			JEQ jeq=new JEQ(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jeq);
+		}
+		else if(falseLabel!=null){
+			JNE jne=new JNE(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jne);			
+		}
+
 	}
 
 	@Override
 	public void visit(NotEqualExpression node) throws CantoException {
 		super.visit(node);
-		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
-		node.setProperty("trueLabel", trueLabel);
-		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
-		node.setProperty("falseLabel", falseLabel);
 		Operand leftOperand=(Operand)node.getLeftOperand().getProperty("result");
 		Operand rightOperand=(Operand)node.getRightOperand().getProperty("result");
 		
-		JNE jne=new JNE(leftOperand, rightOperand, trueLabel);
-		instructionList.addInstruction(jne);
-		Goto jmp=new Goto(falseLabel);
-		instructionList.addInstruction(jmp);
+		Label trueLabel=(Label)node.getProperty("trueLabel");
+		Label falseLabel=(Label)node.getProperty("falseLabel");
+		
+		//判断是否都有必要跳转
+		if(trueLabel!=null&&falseLabel!=null){
+			JNE jne=new JNE(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jne);
+			Goto jmp=new Goto(falseLabel);
+			instructionList.addInstruction(jmp);
+		}
+		else if(trueLabel!=null){
+			JNE jne=new JNE(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jne);
+		}
+		else if(falseLabel!=null){
+			JEQ jeq=new JEQ(leftOperand, rightOperand, trueLabel);
+			instructionList.addInstruction(jeq);			
+		}
+
 	}
 
 	@Override
 	public void visit(AndExpression node) throws CantoException {
-		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
-		node.setProperty("falseLabel", falseLabel);
-		Label leftTrue=new Label();
-		node.setProperty("trueLabel", leftTrue);
+		//左结点的false就是结果的false
+		Label falseLabel=(Label)node.getProperty("falseLabel");
+		//如果结果的false是空，就是可穿越，需要新建
+		if(falseLabel==null){
+			falseLabel=new Label();
+		}
+		node.getLeftOperand().setProperty("falseLabel", node.getProperty("falseLabel"));
 		node.getLeftOperand().accept(this);
-		
+
+		//左节点的true是右结点的入口
+		Label leftTrue=new Label();
+		node.getLeftOperand().setProperty("trueLabel", leftTrue);
+
+		//进入右结点，又结点的True、False的Label和整个的相同
 		instructionList.addInstruction(leftTrue);
-		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
-		node.setProperty("trueLabel", trueLabel);
+		node.getRightOperand().setProperty("trueLabel", node.getProperty("trueLabel"));
+		node.getRightOperand().setProperty("falseLabel", node.getProperty("falseLabel"));
 		node.getRightOperand().accept(this);
 	}
 	
 	@Override
 	public void visit(OrExpression node) throws CantoException {
-		Label trueLabel=(Label)node.getParent().getProperty("trueLabel");
-		node.setProperty("trueLabel", trueLabel);
-		Label leftFalse=new Label();
-		node.setProperty("falseLabel", leftFalse);
+		//左结点的true就是结果的true
+		Label trueLabel=(Label)node.getProperty("trueLabel");
+		//如果结果的false是空，就是可穿越，需要新建
+		if(trueLabel==null){
+			trueLabel=new Label();
+		}
+		node.getLeftOperand().setProperty("trueLabel", node.getProperty("trueLabel"));
 		node.getLeftOperand().accept(this);
-		
+
+		//左节点的false是右结点的入口
+		Label leftFalse=new Label();
+		node.getLeftOperand().setProperty("trueLabel", leftFalse);
+
+		//进入右结点，又结点的True、False的Label和整个的相同
 		instructionList.addInstruction(leftFalse);
-		Label falseLabel=(Label)node.getParent().getProperty("falseLabel");
-		node.setProperty("falseLabel", falseLabel);
+		node.getRightOperand().setProperty("trueLabel", node.getProperty("trueLabel"));
+		node.getRightOperand().setProperty("falseLabel", node.getProperty("falseLabel"));
 		node.getRightOperand().accept(this);
 	}
 	
 	@Override
 	public void visit(Identifier node) throws CantoException {
-		if(hashTable.isExist(node)){
-			Temp temp=(Temp)hashTable.getLocation(node);
-			node.setProperty("resutl", temp);
+		if(hashTable.isExist(node.getName())){
+			Temp temp=(Temp)hashTable.getLocation(node.getName());
+			node.setProperty("result", temp);
 		}
 		else{
 			Temp temp=new Temp();
-			hashTable.insertSymbol(node, temp);
+			hashTable.insertSymbol(node.getName(), temp);
 			node.setProperty("result", temp);
 		}
 	}
 
 	@Override
 	public void visit(IntegerLiteral node) throws CantoException {
-		node.setProperty("result", node);
+		canto.c1.ic.IntegerLiteral integerLiteral=new canto.c1.ic.IntegerLiteral(node.getValue());		
+		node.setProperty("result", integerLiteral);
 		}
 }
