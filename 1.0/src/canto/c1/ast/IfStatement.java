@@ -28,6 +28,9 @@ public class IfStatement extends Statement {
 		this.condition = condition;
 		this.thenStatement = thenStatement;
 		this.elseStatement = elseStatement;
+		condition.setParent(this);
+		thenStatement.setParent(this);
+		elseStatement.setParent(this);
 	}
 	
 	/**

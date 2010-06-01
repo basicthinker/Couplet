@@ -18,6 +18,7 @@ public class ExpressionStatement extends Statement {
 	public ExpressionStatement(Expression expression, int line, int column) {
 		super(line, column);
 		this.expression = expression;
+		expression.setParent(this);
 	}
 
 	@Override
