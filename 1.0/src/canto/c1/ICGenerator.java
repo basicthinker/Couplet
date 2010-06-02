@@ -133,7 +133,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		
 		//新建条件正误时候跳转的Label,先设置子节点的falseLabel
 		Label falseLabel=new Label();
-		node.getCondition().setProperty("falseLabel", falseLabel);		
+		node.getCondition().setProperty("falseLabel", falseLabel);
 		node.getCondition().accept(this);
 		
 		//如果子节点需要trueLabel由子节点自己进行设置
@@ -314,6 +314,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		Label trueLabel=(Label)node.getProperty("trueLabel");
 		Label falseLabel=(Label)node.getProperty("falseLabel");
 		
+		
 		//判断是否都有必要跳转
 		if(trueLabel!=null&&falseLabel!=null){
 			JLT jlt=new JLT(leftOperand, rightOperand, trueLabel);
@@ -339,6 +340,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		
 		Label trueLabel=(Label)node.getProperty("trueLabel");
 		Label falseLabel=(Label)node.getProperty("falseLabel");
+		
 		
 		//判断是否都有必要跳转
 		if(trueLabel!=null&&falseLabel!=null){
@@ -367,6 +369,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		Label trueLabel=(Label)node.getProperty("trueLabel");
 		Label falseLabel=(Label)node.getProperty("falseLabel");
 		
+		
 		//判断是否都有必要跳转
 		if(trueLabel!=null&&falseLabel!=null){
 			JGT jgt=new JGT(leftOperand, rightOperand, trueLabel);
@@ -392,6 +395,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		
 		Label trueLabel=(Label)node.getProperty("trueLabel");
 		Label falseLabel=(Label)node.getProperty("falseLabel");
+		
 		
 		//判断是否都有必要跳转
 		if(trueLabel!=null&&falseLabel!=null){
@@ -421,6 +425,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		Label trueLabel=(Label)node.getProperty("trueLabel");
 		Label falseLabel=(Label)node.getProperty("falseLabel");
 		
+		
 		//判断是否都有必要跳转
 		if(trueLabel!=null&&falseLabel!=null){
 			JEQ jeq=new JEQ(leftOperand, rightOperand, trueLabel);
@@ -448,6 +453,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		Label trueLabel=(Label)node.getProperty("trueLabel");
 		Label falseLabel=(Label)node.getProperty("falseLabel");
 		
+		
 		//判断是否都有必要跳转
 		if(trueLabel!=null&&falseLabel!=null){
 			JNE jne=new JNE(leftOperand, rightOperand, trueLabel);
@@ -474,17 +480,27 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		if(falseLabel==null){
 			falseLabel=new Label();
 		}
+		node.setProperty("falseLabel", falseLabel);
 		node.getLeftOperand().setProperty("falseLabel", falseLabel);
 		node.getLeftOperand().accept(this);
 
-		//左节点的true是右结点的入口
-		Label leftTrue=new Label();
-		node.getLeftOperand().setProperty("trueLabel", leftTrue);
-
-		//进入右结点，又结点的True、False的Label和整个的相同
-		instructionList.addInstruction(leftTrue);
+		Label leftTrue=(Label)node.getLeftOperand().getProperty("trueLabel");
+		node.getLeftOperand().setProperty("Label", leftTrue);
+		
 		node.getRightOperand().setProperty("trueLabel", node.getProperty("trueLabel"));
 		node.getRightOperand().setProperty("falseLabel", node.getProperty("falseLabel"));
+		
+		//设置下层需要此层设置过Label，如果此层的上层是if语句或者while语句，说明没设置过，则进行设置
+		if(node.getParent().getNodeType()==ASTNode.IF_STATEMENT
+				||node.getParent().getNodeType()==ASTNode.WHILE_STATEMENT){
+			node.setProperty("Label", node.getProperty("trueLabel"));
+		}
+		node.getRightOperand().setProperty("Label",node.getProperty("Label"));
+
+		//不一定自然可进入右结点，得看右结点是否需要Label
+		if(leftTrue!=null){
+			instructionList.addInstruction(leftTrue);
+		}
 		node.getRightOperand().accept(this);
 	}
 	
@@ -492,22 +508,31 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	public void visit(OrExpression node) throws CantoException {
 		//左结点的true就是结果的true
 		Label trueLabel=(Label)node.getProperty("trueLabel");
-		//如果结果的false是空，就是可穿越，需要新建
+		//如果结果的true是空，就是可穿越，需要新建
 		if(trueLabel==null){
 			trueLabel=new Label();
 		}
 		node.setProperty("trueLabel", trueLabel);
-		node.getLeftOperand().setProperty("trueLabel", node.getProperty("trueLabel"));
+		node.getLeftOperand().setProperty("trueLabel", trueLabel);
 		node.getLeftOperand().accept(this);
 
-		//左节点的false是右结点的入口
-		Label leftFalse=new Label();
-		node.getLeftOperand().setProperty("falseLabel", leftFalse);
+		Label leftFalse=(Label)node.getLeftOperand().getProperty("falseLabel");
+		node.getLeftOperand().setProperty("Label", leftFalse);
 
-		//进入右结点，又结点的True、False的Label和整个的相同
-		instructionList.addInstruction(leftFalse);
 		node.getRightOperand().setProperty("trueLabel", node.getProperty("trueLabel"));
 		node.getRightOperand().setProperty("falseLabel", node.getProperty("falseLabel"));
+		
+		//设置下层需要此层设置过Label，如果此层的上层是if语句或者while语句，说明没设置过，则进行设置
+		if(node.getParent().getNodeType()==ASTNode.IF_STATEMENT
+				||node.getParent().getNodeType()==ASTNode.WHILE_STATEMENT){
+			node.setProperty("Label", node.getProperty("trueLabel"));
+		}
+		node.getRightOperand().setProperty("Label", node.getProperty("Label"));
+
+		//不一定自然进入右结点，要看左节点是否需要相应的Label，需要的话就加上
+		if(leftFalse!=null){
+			instructionList.addInstruction(leftFalse);
+		}
 		node.getRightOperand().accept(this);
 	}
 	

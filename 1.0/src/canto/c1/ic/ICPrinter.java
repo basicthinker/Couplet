@@ -88,17 +88,23 @@ public class ICPrinter implements ICVisitor {
 
 	@Override
 	public void visit(Add ic) throws Exception {
-		System.out.println("Add "+ic.getOperand1().getName()+", "+ic.getOperand2().getName());
+		System.out.println("Add "+ic.getOperand1().getName()+", "
+				+ic.getOperand2().getName()+", "
+				+ic.getResult().getName());
 	}
 
 	@Override
 	public void visit(Sub ic) throws Exception {
-		System.out.println("Sub "+ic.getOperand1().getName()+", "+ic.getOperand2().getName());
+		System.out.println("Sub "+ic.getOperand1().getName()+", "
+				+ic.getOperand2().getName()+", "
+				+ic.getResult().getName());
 	}
 
 	@Override
 	public void visit(Mul ic) throws Exception {
-		System.out.println("Mul "+ic.getOperand1().getName()+", "+ic.getOperand2().getName());
+		System.out.println("Mul "+ic.getOperand1().getName()+", "
+				+ic.getOperand2().getName()+", "
+				+ic.getResult().getName());
 	}
 
 	@Override
