@@ -77,7 +77,7 @@ public class ICPrinter implements ICVisitor {
 
 	@Override
 	public void visit(Mov ic) throws Exception {
-		System.out.println("Mov "+ic.getDst()+", "+ic.getSrc());
+		System.out.println("Mov "+ic.getSrc()+", "+ic.getDst());
 	}
 
 	@Override
