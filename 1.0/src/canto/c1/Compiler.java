@@ -118,7 +118,7 @@ public class Compiler implements canto.Compiler {
 	 */
 	public static void main(String[] args) throws Exception {
 		try {
-			FileInputStream inFile = new FileInputStream("source.c1");
+			FileInputStream inFile = new FileInputStream("C1-Sample.canto");
 			Compiler compiler = new Compiler();
 			compiler.setSource(inFile);
 			compiler.compile();

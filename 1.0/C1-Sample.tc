@@ -1,0 +1,43 @@
+.586
+.MODEL FLAT, STDCALL
+
+INCLUDE msvcrt.inc
+INCLUDELIB msvcrt.lib
+
+.DATA
+	INT_FMT BYTE "%d", 0
+	v1 DWORD ?
+	v2 DWORD ?
+	
+.CODE
+
+START:
+    INVOKE crt_scanf, ADDR INT_FMT, ADDR v1
+    MOV v2, 1
+L1:
+    CMP v2, 0
+    JLE L2
+    CMP v2, 10
+    JGE L2
+    CMP v2, 5
+    JE L2
+    MOV EAX, -5
+    MOV EBX, v1
+    IMUL EBX, v2
+    ADD EAX, EBX
+    MOV v2, EAX
+    CMP v1, 0
+    JG L3
+    JMP L2
+    JMP L4
+L3:
+    MOV EAX, v2
+    ADD EAX, 5
+    MOV v1, EAX
+L4:
+    JMP L1
+L2:
+    INVOKE crt_printf, ADDR INT_FMT, v2
+	ret
+
+END START

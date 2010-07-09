@@ -1,0 +1,20 @@
+In v1
+Mov 1, v2
+L1:
+JLE v2, 0, L2
+JGE v2, 10, L2
+JEQ v2, 5, L2
+Neg 5, t1
+Mul v2, v1, t2
+Add t1, t2, t3
+Mov t3, v2
+JGT v1, 0, L3
+Goto L2
+Goto L4
+L3:
+Add v2, 5, t4
+Mov t4, v1
+L4:
+Goto L1
+L2:
+Out v2
