@@ -26,12 +26,12 @@ public class ICPrinter implements ICVisitor {
 
 	@Override
 	public void visit(In ic) throws Exception {
-		System.out.println("In "+ic.getOperand());
+		System.out.println("In "+ic.getDst());
 	}
 
 	@Override
 	public void visit(Out ic) throws Exception {
-		System.out.println("Out "+ic.getOperand());
+		System.out.println("Out "+ic.getSrc());
 	}
 
 	@Override
@@ -82,28 +82,28 @@ public class ICPrinter implements ICVisitor {
 
 	@Override
 	public void visit(Add ic) throws Exception {
-		System.out.println("Add "+ic.getOperand1()+", "
-				+ic.getOperand2()+", "
-				+ic.getResult());
+		System.out.println("Add "+ic.getSrc1()+", "
+				+ic.getSrc2()+", "
+				+ic.getDst());
 	}
 
 	@Override
 	public void visit(Sub ic) throws Exception {
-		System.out.println("Sub "+ic.getOperand1()+", "
-				+ic.getOperand2()+", "
-				+ic.getResult());
+		System.out.println("Sub "+ic.getSrc1()+", "
+				+ic.getSrc2()+", "
+				+ic.getDst());
 	}
 
 	@Override
 	public void visit(Mul ic) throws Exception {
-		System.out.println("Mul "+ic.getOperand1()+", "
-				+ic.getOperand2()+", "
-				+ic.getResult());
+		System.out.println("Mul "+ic.getSrc1()+", "
+				+ic.getSrc2()+", "
+				+ic.getDst());
 	}
 
 	@Override
 	public void visit(Neg ic) throws Exception {
-		System.out.println("Neg "+ic.getOperand()+", "+ic.getResult());
+		System.out.println("Neg "+ic.getSrc()+", "+ic.getDst());
 	}
 
 	@Override

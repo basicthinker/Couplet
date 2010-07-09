@@ -2,10 +2,10 @@ package canto.c1.ic;
 
 public class In extends Instruction {
 
-	private final Location location;
+	private final Location dst;
 	
-	public In(Location location) {
-		this.location = location;
+	public In(Location dst) {
+		this.dst = dst;
 	}
 
 	@Override
@@ -18,8 +18,8 @@ public class In extends Instruction {
 		return IN;
 	}
 
-	public Operand getOperand() {
-		return location;
+	public Operand getDst() {
+		return dst;
 	}
 
 }

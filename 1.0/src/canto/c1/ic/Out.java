@@ -2,10 +2,10 @@ package canto.c1.ic;
 
 public class Out extends Instruction {
 
-	private final Operand operand;
+	private final Operand src;
 	
-	public Out(Operand operand) {
-		this.operand = operand;
+	public Out(Operand src) {
+		this.src = src;
 	}
 
 	@Override
@@ -18,8 +18,8 @@ public class Out extends Instruction {
 		return OUT;
 	}
 
-	public Operand getOperand() {
-		return operand;
+	public Operand getSrc() {
+		return src;
 	}
 
 }

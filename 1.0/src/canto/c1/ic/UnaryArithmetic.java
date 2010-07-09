@@ -2,15 +2,15 @@ package canto.c1.ic;
 
 public abstract class UnaryArithmetic extends Arithmetic {
 
-	private final Operand operand;
+	private final Operand src;
 
-	public UnaryArithmetic(Operand operand, Location result) {
-		super(result);
-		this.operand = operand;
+	public UnaryArithmetic(Operand src, Location dst) {
+		super(dst);
+		this.src = src;
 	}
 
-	public Operand getOperand() {
-		return operand;
+	public Operand getSrc() {
+		return src;
 	}
 	
 }

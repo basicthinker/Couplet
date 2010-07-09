@@ -5,14 +5,14 @@ package canto.c1.ic;
  */
 public abstract class Arithmetic extends Instruction {
 
-	private final Location result;
+	private final Location dst;
 
-	public Arithmetic(Location result) {
-		this.result = result;
+	public Arithmetic(Location dst) {
+		this.dst = dst;
 	}
 
-	public Operand getResult() {
-		return result;
+	public Operand getDst() {
+		return dst;
 	}
 	
 }
