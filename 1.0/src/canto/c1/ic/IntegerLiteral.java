@@ -26,7 +26,7 @@ public class IntegerLiteral extends Literal {
 	}
 
 	@Override
-	public String getName() {
+	public String toString() {
 		return value.toString();
 	}
 

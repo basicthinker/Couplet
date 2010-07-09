@@ -21,6 +21,7 @@ public interface ICVisitor {
 	public void visit(Sub ic) throws Exception;
 	public void visit(Mul ic) throws Exception;
 	public void visit(Neg ic) throws Exception;
+	public void visit(Variable ic) throws Exception;
 	public void visit(Temp ic) throws Exception;
 	public void visit(IntegerLiteral ic) throws Exception;
 	

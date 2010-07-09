@@ -52,6 +52,7 @@ import canto.c1.ic.Operand;
 import canto.c1.ic.Out;
 import canto.c1.ic.Sub;
 import canto.c1.ic.Temp;
+import canto.c1.ic.Variable;
 
 /**
  * c1中生成中间代码的类
@@ -67,12 +68,12 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	private InstructionList instructionList;
 	
 	/**C1的符号表，此处是个名值对照表*/
-	private SymbolTable symbolTable;
+	private SymbolTable<Location> symbolTable;
 
 	public ICGenerator(AbstractSyntaxTree abstractSyntaxTree){
 		this.ast=abstractSyntaxTree;
 		instructionList=new InstructionList();
-		symbolTable=new SymbolTable();
+		symbolTable=new SymbolTable<Location>();
 	}
 	
 	@Override
@@ -112,11 +113,11 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		Operand src=(Operand)node.getExpression().getProperty("result");
 		Location dst;
 		if(symbolTable.isExist(node.getAccess().getName())){
-			dst=symbolTable.getLocation(node.getAccess().getName());
+			dst=symbolTable.get(node.getAccess().getName());
 		}
 		else{
 			dst=new Temp();
-			symbolTable.insertSymbol(node.getAccess().getName(), dst);
+			symbolTable.put(node.getAccess().getName(), dst);
 		}
 		Mov mov = new Mov(src, dst);
 		instructionList.addInstruction(mov);
@@ -228,15 +229,8 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	public void visit(InputStatement node) throws CantoException {
 		super.visit(node);
 		Access access=node.getAccess();
-		Temp temp;
-		if(symbolTable.isExist(access.getName())){
-			temp=(Temp)symbolTable.getLocation(access.getName());
-		}
-		else{
-			temp=new Temp();
-			symbolTable.insertSymbol(access.getName(), temp);
-		}
-		In in=new In(temp);
+		Location location=symbolTable.get(access.getName());
+		In in=new In(location);
 		instructionList.addInstruction(in);
 	}
 
@@ -539,13 +533,13 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	@Override
 	public void visit(Identifier node) throws CantoException {
 		if(symbolTable.isExist(node.getName())){
-			Temp temp=(Temp)symbolTable.getLocation(node.getName());
-			node.setProperty("result", temp);
+			Location location=symbolTable.get(node.getName());
+			node.setProperty("result", location);
 		}
 		else{
-			Temp temp=new Temp();
-			symbolTable.insertSymbol(node.getName(), temp);
-			node.setProperty("result", temp);
+			Variable variable=new Variable();
+			symbolTable.put(node.getName(), variable);
+			node.setProperty("result", variable);
 		}
 	}
 

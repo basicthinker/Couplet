@@ -22,8 +22,9 @@ public abstract class IntermediateCode implements canto.IntermediateCode {
 	public static final int SUB = 14;
 	public static final int MUL = 15;
 	public static final int NEG = 16;
-	public static final int TEMP = 17;
-	public static final int INTEGER_LITERAL = 18;
+	public static final int VARIABLE = 17;
+	public static final int TEMP = 18;
+	public static final int INTEGER_LITERAL = 19;
 	
 	/**
 	 * 接受访问者访问IC的方法

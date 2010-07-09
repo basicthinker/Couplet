@@ -3,35 +3,36 @@ package canto.c1;
 import java.util.HashMap;
 import java.util.Map;
 
-import canto.c1.ic.Location;
-
 /**
  * @author Goodness
  * 继承自符号表的C1的名值对照表
  */
-public class SymbolTable implements canto.SymbolTable {
+public class SymbolTable<INFO_TYPE> implements canto.SymbolTable<INFO_TYPE> {
 	
 	/**变量名和临时变量的对照表*/
-	
-	private Map<String, Location> symbolToTemp;
+
+	private Map<String, INFO_TYPE> table;
 	
 	/**
 	 * 符号表的构造函数，初始化一个对照表
 	 */
 	public SymbolTable(){
-		symbolToTemp=new HashMap<String, Location>();
+		table=new HashMap<String, INFO_TYPE>();
 	}
 	
-	public void insertSymbol(String name,Location location){
-		symbolToTemp.put(name, location);
+	@Override
+	public void put(String symbol, INFO_TYPE info){
+		table.put(symbol, info);
 	}
 	
-	public boolean isExist(String name){
-		return symbolToTemp.containsKey(name);
+	@Override
+	public INFO_TYPE get(String symbol){
+		return table.get(symbol);
 	}
 	
-	public Location getLocation(String name){
-		return symbolToTemp.get(name);
+	@Override
+	public boolean isExist(String symbol){
+		return table.containsKey(symbol);
 	}
 
 }

@@ -5,12 +5,8 @@ package canto.c1.ic;
  */
 public class Temp extends Location {
 	
-	private static int count = 0;
-	
-	private final int id;
-	
 	public Temp() {
-		this.id = ++count;
+		super();
 	}
 	
 	@Override
@@ -31,12 +27,8 @@ public class Temp extends Location {
 		return true;
 	}
 	
-	public int getID() {
-		return id;
-	}
-
 	@Override
-	public String getName() {
+	public String toString() {
 		return "t"+id;
 	}
 

@@ -34,5 +34,10 @@ public class Label extends Instruction {
 	public int getID() {
 		return id;
 	}
+	
+	@Override
+	public String toString() {
+		return "L" + id;
+	}
 
 }
