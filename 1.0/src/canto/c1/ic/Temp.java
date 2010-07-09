@@ -5,8 +5,12 @@ package canto.c1.ic;
  */
 public class Temp extends Location {
 	
+	private static int count = 0;
+	
+	private final int id;
+	
 	public Temp() {
-		super();
+		this.id = ++count;
 	}
 	
 	@Override
@@ -17,6 +21,10 @@ public class Temp extends Location {
 	@Override
 	public int getICType() {
 		return TEMP;
+	}
+	
+	public int getID() {
+		return id;
 	}
 	
 	@Override
@@ -31,5 +39,5 @@ public class Temp extends Location {
 	public String toString() {
 		return "t"+id;
 	}
-
+	
 }

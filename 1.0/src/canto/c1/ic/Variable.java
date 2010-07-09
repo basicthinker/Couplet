@@ -1,16 +1,24 @@
 package canto.c1.ic;
 
 public class Variable extends Location {
-
+	
+	private static int count = 0;
+	
+	private final int id;
+	
 	public Variable() {
-		super();
+		this.id = ++count;
 	}
 	
 	@Override
 	public int getICType() {
 		return VARIABLE;
 	}
-
+	
+	public int getID() {
+		return id;
+	}
+	
 	@Override
 	public void accept(ICVisitor visitor) throws Exception {
 		visitor.visit(this);
