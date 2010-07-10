@@ -4,13 +4,16 @@ public class JMP extends Jump {
 
 	public JMP(LABEL target) {
 		super(target);
-		// TODO Auto-generated constructor stub
 	}
-
+	
+	@Override
+	public void accept(X86Visitor visitor) {
+		visitor.visit(this);
+	}
+	
 	@Override
 	public int getTCType() {
-		// TODO Auto-generated method stub
-		return 0;
+		return JMP;
 	}
 
 }
