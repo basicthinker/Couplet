@@ -22,6 +22,8 @@ public interface X86Visitor {
 	public void visit(JGE tc);
 	public void visit(JL tc);
 	public void visit(JLE tc);
+	public void visit(InInteger tc);
+	public void visit(OutInteger tc);
 	public void visit(Immediate tc);
 	public void visit(Symbol tc);
 	public void visit(Register tc);

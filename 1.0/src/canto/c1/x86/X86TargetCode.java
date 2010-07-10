@@ -26,10 +26,12 @@ public abstract class X86TargetCode implements canto.TargetCode {
 	public static final int JGE = 18;
 	public static final int JL = 19;
 	public static final int JLE = 20;
-	public static final int IMMEDIATE = 21;
-	public static final int SYMBOL = 22;
-	public static final int REGISTER = 23;
-	public static final int PSEUDO = 24;
+	public static final int IN_INTEGER = 21;
+	public static final int OUT_INTEGER = 22;
+	public static final int IMMEDIATE = 23;
+	public static final int SYMBOL = 24;
+	public static final int REGISTER = 25;
+	public static final int PSEUDO = 26;
 	
 	/**
 	 * 接受访问者访问TC的方法
