@@ -7,8 +7,8 @@ public class Program extends X86TargetCode {
 	private CodeSegment codeSegment;
 
 	@Override
-	public void accept(X86Visitor visitor) {
-		visitor.visit(this);
+	public Object accept(X86Visitor visitor) {
+		return visitor.visit(this);
 	}
 
 	@Override

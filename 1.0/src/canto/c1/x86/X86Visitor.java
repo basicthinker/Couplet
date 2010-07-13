@@ -2,31 +2,33 @@ package canto.c1.x86;
 
 public interface X86Visitor {
 	
-	public void visit(Program tc);
-	public void visit(DataSegment tc);
-	public void visit(CodeSegment tc);
-	public void visit(DataDefine tc);
-	public void visit(LABEL tc);
-	public void visit(MOV tc);
-	public void visit(PUSH tc);
-	public void visit(POP tc);
-	public void visit(ADD tc);
-	public void visit(SUB tc);
-	public void visit(IMUL tc);
-	public void visit(NEG tc);
-	public void visit(CMP tc);
-	public void visit(JMP tc);
-	public void visit(JE tc);
-	public void visit(JNE tc);
-	public void visit(JG tc);
-	public void visit(JGE tc);
-	public void visit(JL tc);
-	public void visit(JLE tc);
-	public void visit(InInteger tc);
-	public void visit(OutInteger tc);
-	public void visit(Immediate tc);
-	public void visit(Symbol tc);
-	public void visit(Register tc);
-	public void visit(Pseudo tc);
+	public Object visit(Program tc);
+	public Object visit(DataSegment tc);
+	public Object visit(CodeSegment tc);
+	public Object visit(DataDefine tc);
+	public Object visit(Label tc);
+	public Object visit(MOV tc);
+	public Object visit(PUSH tc);
+	public Object visit(POP tc);
+	public Object visit(ADD tc);
+	public Object visit(SUB tc);
+	public Object visit(IMUL tc);
+	public Object visit(NEG tc);
+	public Object visit(CMP tc);
+	public Object visit(JMP tc);
+	public Object visit(JE tc);
+	public Object visit(JNE tc);
+	public Object visit(JG tc);
+	public Object visit(JGE tc);
+	public Object visit(JL tc);
+	public Object visit(JLE tc);
+	public Object visit(InInteger tc);
+	public Object visit(OutInteger tc);
+	public Object visit(Immediate tc);
+	public Object visit(Symbol tc);
+	public Object visit(Register tc);
+	public Object visit(Pseudo tc);
+	public Object visit(DataType tc);
+
 		
 }

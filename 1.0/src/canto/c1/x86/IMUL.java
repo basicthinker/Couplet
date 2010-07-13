@@ -7,8 +7,8 @@ public class IMUL extends BinaryArithmetic {
 	}
 	
 	@Override
-	public void accept(X86Visitor visitor) {
-		visitor.visit(this);
+	public Object accept(X86Visitor visitor) {
+		return visitor.visit(this);
 	}
 	
 	@Override

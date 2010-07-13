@@ -12,8 +12,8 @@ public class DataSegment extends X86TargetCode {
 	}
 
 	@Override
-	public void accept(X86Visitor visitor) {
-		visitor.visit(this);		
+	public Object accept(X86Visitor visitor) {
+		return visitor.visit(this);		
 	}
 	
 	@Override

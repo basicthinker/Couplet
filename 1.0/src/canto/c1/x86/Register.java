@@ -2,14 +2,14 @@ package canto.c1.x86;
 
 public class Register extends Location {
 
-	public static int EAX = 0;
-	public static int EBX = 1;
-	public static int ECX = 2;
-	public static int EDX = 3;
-	public static int EBP = 4;
-	public static int ESP = 5;
-	public static int EDI = 6;
-	public static int ESI = 7;
+	public static final int EAX = 0;
+	public static final int EBX = 1;
+	public static final int ECX = 2;
+	public static final int EDX = 3;
+	public static final int EBP = 4;
+	public static final int ESP = 5;
+	public static final int EDI = 6;
+	public static final int ESI = 7;
 	
 	private final int regNum;
 	
@@ -24,8 +24,8 @@ public class Register extends Location {
 	}
 
 	@Override
-	public void accept(X86Visitor visitor) {
-		visitor.visit(this);
+	public Object accept(X86Visitor visitor) {
+		return visitor.visit(this);
 	}
 
 	@Override

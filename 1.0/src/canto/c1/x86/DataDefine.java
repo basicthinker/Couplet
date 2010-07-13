@@ -4,13 +4,6 @@ import java.util.List;
 
 public class DataDefine extends X86TargetCode {
 
-	enum DataType {
-		BYTE,
-		WORD,
-		DOUBLE_WORD,
-		QUADRUPLE_WORD
-	}
-	
 	private final String name;
 	
 	private final DataType type;
@@ -24,8 +17,8 @@ public class DataDefine extends X86TargetCode {
 	}
 	
 	@Override
-	public void accept(X86Visitor visitor) {
-		visitor.visit(this);
+	public Object accept(X86Visitor visitor) {
+		return visitor.visit(this);
 	}
 	
 	@Override

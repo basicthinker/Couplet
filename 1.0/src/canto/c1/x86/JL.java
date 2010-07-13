@@ -2,13 +2,13 @@ package canto.c1.x86;
 
 public class JL extends Jump {
 
-	public JL(LABEL target) {
+	public JL(Label target) {
 		super(target);
 	}
 	
 	@Override
-	public void accept(X86Visitor visitor) {
-		visitor.visit(this);
+	public Object accept(X86Visitor visitor) {
+		return visitor.visit(this);
 	}
 	
 	@Override

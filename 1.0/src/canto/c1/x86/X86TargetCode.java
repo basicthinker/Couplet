@@ -32,11 +32,12 @@ public abstract class X86TargetCode implements canto.TargetCode {
 	public static final int SYMBOL = 24;
 	public static final int REGISTER = 25;
 	public static final int PSEUDO = 26;
+	public static final int DATA_TYPE = 27;
 	
 	/**
 	 * 接受访问者访问TC的方法
 	 * @param visitor 访问者
 	 */
-	public abstract void accept(X86Visitor visitor);
+	public abstract Object accept(X86Visitor visitor);
 	
 }
