@@ -52,7 +52,7 @@ public class IfStatement extends Statement {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return IF_STATEMENT;
 	}
 

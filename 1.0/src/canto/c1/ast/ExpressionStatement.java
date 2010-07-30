@@ -27,7 +27,7 @@ public class ExpressionStatement extends Statement {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return EXPRESSION_STATEMENT;
 	}
 

@@ -33,7 +33,7 @@ public class WhileStatement extends Statement {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return WHILE_STATEMENT;
 	}
 

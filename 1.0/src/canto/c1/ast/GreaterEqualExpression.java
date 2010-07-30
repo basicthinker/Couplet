@@ -15,7 +15,7 @@ public class GreaterEqualExpression extends BinaryExpression {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return GREATER_EQUAL_EXPRESSION;
 	}
 

@@ -27,7 +27,7 @@ public class StatementList extends ASTNode {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return STATEMENT_LIST;
 	}
 	

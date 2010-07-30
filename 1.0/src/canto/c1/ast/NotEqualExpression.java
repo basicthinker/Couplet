@@ -15,7 +15,7 @@ public class NotEqualExpression extends BinaryExpression {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return NOT_EQUAL_EXPRESSION;
 	}
 

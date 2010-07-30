@@ -14,7 +14,7 @@ public class NotExpression extends UnaryExpression {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return NOT_EXPRESSION;
 	}
 

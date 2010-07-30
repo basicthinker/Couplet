@@ -14,7 +14,7 @@ public class PosExpression extends UnaryExpression {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return POS_EXPRESSION;
 	}
 

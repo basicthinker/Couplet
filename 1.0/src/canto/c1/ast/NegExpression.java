@@ -14,7 +14,7 @@ public class NegExpression extends UnaryExpression {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return NEG_EXPRESSION;
 	}
 

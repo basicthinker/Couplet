@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import canto.CantoException;
-import canto.Token;
 import canto.c1.token.*;
 import canto.c1.exception.*;
 
@@ -21,7 +20,7 @@ public class Lexer implements canto.Lexer {
 
 	private LineNumberReader inBuf;
 	private static HashSet<String> reserved;
-	private List<Token> tokenList;
+	private List<canto.Token> tokenList;
 	private static int tabWith;
 	
 	static {
@@ -36,7 +35,7 @@ public class Lexer implements canto.Lexer {
 	}
 	
 	public Lexer() {
-		tokenList = new LinkedList<Token>();
+		tokenList = new LinkedList<canto.Token>();
 		tabWith = 4;
 	}
 	
@@ -54,7 +53,7 @@ public class Lexer implements canto.Lexer {
 	 * @see canto.Lexer#scan()
 	 */
 	@Override
-	public List<Token> scan() throws IOException {
+	public List<canto.Token> scan() throws IOException {
 		int intBufChar = inBuf.read();
 		
 		//设置初始列号
@@ -233,7 +232,7 @@ public class Lexer implements canto.Lexer {
 	}
 
 	@Override
-	public List<Token> getTokenList() {
+	public List<canto.Token> getTokenList() {
 		return tokenList;
 	}
 

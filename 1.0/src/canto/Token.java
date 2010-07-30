@@ -1,11 +1,7 @@
-﻿/**
- * 单词Token的通用接口，独立于语言版本
- */
-package canto;
+﻿package canto;
 
 /**
- * @author basicthinker
- *
+ * 单词Token的通用接口，独立于语言版本
  */
 public interface Token {
 

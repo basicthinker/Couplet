@@ -22,7 +22,7 @@ public class ContinueStatement extends Statement {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return CONTINUE_STATEMENT;
 	}
 

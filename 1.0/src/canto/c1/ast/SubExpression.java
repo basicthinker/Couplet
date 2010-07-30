@@ -15,7 +15,7 @@ public class SubExpression extends BinaryExpression {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return SUB_EXPRESSION;
 	}
 

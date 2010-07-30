@@ -15,7 +15,7 @@ public class MulExpression extends BinaryExpression {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return MUL_EXPRESSION;
 	}
 

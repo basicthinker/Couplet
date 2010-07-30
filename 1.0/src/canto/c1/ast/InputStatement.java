@@ -26,7 +26,7 @@ public class InputStatement extends Statement {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return INPUT_STATEMENT;
 	}
 

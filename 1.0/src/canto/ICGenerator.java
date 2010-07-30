@@ -1,6 +1,3 @@
-/**
- * 
- */
 package canto;
 
 /**
@@ -11,9 +8,9 @@ public interface ICGenerator {
 
 	/**
 	 * 设置待分析的抽象语法树
-	 * @param AST 待分析的抽象语法树
+	 * @param ast 待分析的抽象语法树
 	 */
-	public void setAST(AbstractSyntaxTree AST);
+	public void setAST(AbstractSyntaxTree ast);
 	
 	/**
 	 * 得到中间代码

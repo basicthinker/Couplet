@@ -15,7 +15,7 @@ public class AddExpression extends BinaryExpression {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return ADD_EXPRESSION;
 	}
 

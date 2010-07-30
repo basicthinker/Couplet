@@ -21,7 +21,7 @@ public class Identifier extends Access {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return IDENTIFIER;
 	}
 

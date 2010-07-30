@@ -1,7 +1,4 @@
-﻿/**
- * 
- */
-package canto;
+﻿package canto;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,8 +20,10 @@ public interface Compiler {
 	
 	public List<Token> getTokenList(); 
 	
-	public AbstractSyntaxTree getAbstractSyntaxTree();
+	public AbstractSyntaxTree getAST();
 	
-	public IntermediateCode getIntermediateCode();
+	public IntermediateCode getIC();
+	
+	public TargetCode getTC();
 	
 }

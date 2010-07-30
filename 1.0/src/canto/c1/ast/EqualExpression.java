@@ -15,7 +15,7 @@ public class EqualExpression extends BinaryExpression {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return EQUAL_EXPRESSION;
 	}
 

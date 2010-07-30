@@ -25,7 +25,7 @@ public class IntegerLiteral extends Literal {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return INTEGER_LITERAL;
 	}
 

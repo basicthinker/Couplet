@@ -26,7 +26,7 @@ public class Block extends Statement {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return BLOCK;
 	}
 

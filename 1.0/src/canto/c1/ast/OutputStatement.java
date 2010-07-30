@@ -26,7 +26,7 @@ public class OutputStatement extends Statement {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return OUTPUT_STATEMENT;
 	}
 

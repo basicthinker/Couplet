@@ -1,8 +1,4 @@
-﻿
-/**
- * 
- */
-package canto.c1;
+﻿package canto.c1;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,13 +9,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
-import canto.IntermediateCode;
-import canto.AbstractSyntaxTree;
-import canto.Parser;
-import canto.Token;
+import canto.TargetCode;
 import canto.c1.ast.ASTNode;
 import canto.c1.ast.ASTPrinter;
 import canto.c1.ic.ICPrinter;
+import canto.c1.ic.IntermediateCode;
 
 /**
  * @author basicthinker
@@ -29,71 +23,21 @@ public class Compiler implements canto.Compiler {
 
 	private InputStreamReader sourceReader;
 	private OutputStreamWriter targetWriter;
-	private Lexer lexer;
-	private Parser parser;
-
+	private canto.Lexer lexer;
+	private canto.Parser parser;
+	private canto.ICGenerator icGenerator;
+	private canto.TCGenerator tcGenerator;
+	
 	/**
-	 * 
+	 * 构造一个编译器
 	 */
 	public Compiler() {
 		sourceReader = null;
 		targetWriter = null;
 		lexer = new Lexer();
 		parser = new LLParser();
-
-	}
-
-	/* (non-Javadoc)
-	 * @see canto.Compiler#compile()
-	 */
-	@Override
-	public void compile() throws Exception {
-		// TODO Auto-generated method stub
-		if (sourceReader == null) return;
-		
-		try {
-			lexer.open(sourceReader);
-			lexer.scan();
-			parser.setTokenList(lexer.getTokenList());
-			parser.parse();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see canto.Compiler#getIntermediateCode()
-	 */
-	@Override
-	public IntermediateCode getIntermediateCode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see canto.Compiler#getSyntaxTree()
-	 */
-	@Override
-	public AbstractSyntaxTree getAbstractSyntaxTree() {
-		return parser.getAST();
-	}
-
-	/* (non-Javadoc)
-	 * @see canto.Compiler#getTokenList()
-	 */
-	@Override
-	public List<Token> getTokenList() {
-		return lexer.getTokenList();
-	}
-
-	/* (non-Javadoc)
-	 * @see canto.Compiler#outputErrors(java.io.OutputStream)
-	 */
-	@Override
-	public void outputErrors(OutputStream outStrm) {
-		// TODO Auto-generated method stub
-
+		icGenerator = new ICGenerator();
+		tcGenerator = new TCGenerator();
 	}
 
 	/* (non-Javadoc)
@@ -111,6 +55,65 @@ public class Compiler implements canto.Compiler {
 	public void setTarget(OutputStream outStrm) {
 		targetWriter = new OutputStreamWriter(outStrm);
 	}
+	
+	/* (non-Javadoc)
+	 * @see canto.Compiler#compile()
+	 */
+	@Override
+	public void compile() throws Exception {
+		// TODO Auto-generated method stub
+		if (sourceReader == null) return;		
+		try {
+			lexer.open(sourceReader);
+			lexer.scan();
+			parser.setTokenList(lexer.getTokenList());
+			parser.parse();
+			icGenerator.setAST(parser.getAST());
+			icGenerator.generateIC();
+			tcGenerator.setIC(icGenerator.getIC());
+			tcGenerator.generateTC();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see canto.Compiler#outputErrors(java.io.OutputStream)
+	 */
+	@Override
+	public void outputErrors(OutputStream outStrm) {
+		// TODO 输出错误
+	}
+
+	/* (non-Javadoc)
+	 * @see canto.Compiler#getTokenList()
+	 */
+	@Override
+	public List<canto.Token> getTokenList() {
+		return lexer.getTokenList();
+	}
+
+	/* (non-Javadoc)
+	 * @see canto.Compiler#getSyntaxTree()
+	 */
+	@Override
+	public canto.AbstractSyntaxTree getAST() {
+		return parser.getAST();
+	}
+	
+	/* (non-Javadoc)
+	 * @see canto.Compiler#getIntermediateCode()
+	 */
+	@Override
+	public canto.IntermediateCode getIC() {
+		return null;
+	}
+	
+	@Override
+	public canto.TargetCode getTC() {
+		return null;
+	}
 
 	/**
 	 * @param args
@@ -118,36 +121,37 @@ public class Compiler implements canto.Compiler {
 	 */
 	public static void main(String[] args) throws Exception {
 		try {
+			
+			// 读入源代码文件
 			FileInputStream inFile = new FileInputStream("C1-Sample.canto");
 			Compiler compiler = new Compiler();
 			compiler.setSource(inFile);
+
+			// 编译
 			compiler.compile();
-			List<Token> tokenList = compiler.getTokenList();
-			AbstractSyntaxTree ast = compiler.getAbstractSyntaxTree();
-			ICGenerator icGenerator=new ICGenerator(ast);
-			icGenerator.generateIC();
 			
+			// 输出Token链
+			List<canto.Token> tokenList = compiler.getTokenList();
 			System.out.println("Output Token List");
-			for (Token token : tokenList) {
-				
+			for (canto.Token token : tokenList) {
 				System.out.print("Line " + token.getLine() + " Column " + token.getColumn() + ": ");
-						
 				System.out.print(token.getLexeme() + "\twith ");
 				if (token.getAttribute() == null) System.out.println("null");
 				else System.out.println(token.getAttribute().toString());
 				
-			} // for
-			
+			}
 			System.out.println();
 			
+			// 输出AST
+			canto.AbstractSyntaxTree ast = compiler.getAST();
 			System.out.println("Output AST");
-			ASTPrinter astPrinter = new ASTPrinter();
-			((ASTNode) ast).accept(astPrinter);
+			((ASTNode)ast).accept(new ASTPrinter());
 			System.out.println();
 			
+			// 输出TC
 			System.out.println("Output Intermediate Code");
-			ICPrinter icPrinter = new ICPrinter();
-			icGenerator.getIC().accept(icPrinter);
+			canto.IntermediateCode ic = compiler.getIC();
+			((IntermediateCode)ic).accept(new ICPrinter());
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

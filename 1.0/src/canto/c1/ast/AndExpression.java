@@ -15,7 +15,7 @@ public class AndExpression extends BinaryExpression {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return AND_EXPRESSION;
 	}
 

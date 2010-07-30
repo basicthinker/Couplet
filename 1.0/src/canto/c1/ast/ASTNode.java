@@ -47,16 +47,23 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	/** 存储该AST结点所在的列号 */
 	private final int column;
 	
-	/** 存储该AST结点属性的Map  */
+	/** 存储该AST结点属性的映射表 */
 	private Map<String, Object> propertiesMap; 
+	
+	/**
+	 * 构造一个AST结点
+	 * @param line 该AST结点所在的行号
+	 * @param column 该AST结点所在的列号
+	 */
+	public ASTNode(int line, int column) {
+		this.line = line;
+		this.column = column;
+		propertiesMap = new HashMap<String, Object>();
+	}
 	
 	@Override
 	public ASTNode getParent() {
 		return parent;
-	}
-	
-	public void setParent(ASTNode parent) {
-		this.parent = parent;
 	}
 	
 	@Override
@@ -69,17 +76,13 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 		return column;
 	}
 	
-	public ASTNode(int line, int column) {
-		this.line = line;
-		this.column = column;
-		propertiesMap = new HashMap<String, Object>();
-	}
-	
 	/**
-	 * 接受访问者访问该AST结点的方法
-	 * @param visitor 访问者
+	 * 设置该AST结点的父结点
+	 * @param parent 父结点 
 	 */
-	public abstract void accept(ASTVisitor visitor) throws CantoException;
+	public void setParent(ASTNode parent) {
+		this.parent = parent;
+	}
 	
 	/**
 	 * 获取AST结点的某属性
@@ -98,5 +101,11 @@ public abstract class ASTNode implements canto.AbstractSyntaxTree {
 	public void setProperty(String name, Object value) {
 		propertiesMap.put(name, value);
 	}
+
+	/**
+	 * 接受访问者访问该AST结点的方法
+	 * @param visitor 访问者
+	 */
+	public abstract void accept(ASTVisitor visitor) throws CantoException;
 	
 }

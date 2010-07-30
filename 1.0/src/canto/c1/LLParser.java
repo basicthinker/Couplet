@@ -3,10 +3,7 @@ package canto.c1;
 import java.util.List;
 import java.util.ListIterator;
 
-
-import canto.AbstractSyntaxTree;
 import canto.CantoException;
-import canto.Parser;
 import canto.c1.token.Token;
 import canto.c1.ast.Access;
 import canto.c1.ast.AddExpression;
@@ -40,10 +37,10 @@ import canto.c1.ast.SubExpression;
 import canto.c1.ast.WhileStatement;
 import canto.c1.exception.ParseException;
 
-public class LLParser implements Parser {
+public class LLParser implements canto.Parser {
 
 	/** 生成的AST根结点 */
-	private AbstractSyntaxTree treeRoot;
+	private canto.AbstractSyntaxTree treeRoot;
 	
 	/** 输入的Token链 */
 	private List<canto.Token> tokenList;
@@ -64,7 +61,7 @@ public class LLParser implements Parser {
 	private int tokenType;
 	
 	@Override
-	public AbstractSyntaxTree getAST() {
+	public canto.AbstractSyntaxTree getAST() {
 		return treeRoot;
 	}
 
@@ -74,15 +71,12 @@ public class LLParser implements Parser {
 	}
 
 	@Override
-	public AbstractSyntaxTree parse() throws Exception {
+	public canto.AbstractSyntaxTree parse() throws Exception {
 		tokenIterator = tokenList.listIterator();
 		move();
-		try
-		{
+		try	{
 			treeRoot = program();
-		}
-		catch(ParseException e)
-		{
+		} catch(ParseException e) {
 			System.out.println(e.getExceptionMsg());
 		}
 		return treeRoot;
@@ -675,5 +669,5 @@ public class LLParser implements Parser {
 			throw new ParseException();
 		}
 	}
-	
+
 }

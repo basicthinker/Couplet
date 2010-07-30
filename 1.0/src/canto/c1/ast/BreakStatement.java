@@ -22,7 +22,7 @@ public class BreakStatement extends Statement {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return BREAK_STATEMENT;
 	}
 

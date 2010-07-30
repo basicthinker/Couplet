@@ -15,7 +15,7 @@ public class OrExpression extends BinaryExpression {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return OR_EXPRESSION;
 	}
 

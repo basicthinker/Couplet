@@ -15,7 +15,7 @@ public class LessEqualExpression extends BinaryExpression {
 	}
 
 	@Override
-	public int getNodeType() {
+	public int getASTType() {
 		return LESS_EQUAL_EXPRESSION;
 	}
 

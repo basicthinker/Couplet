@@ -1,8 +1,8 @@
 package canto.c1;
 
-import canto.AbstractSyntaxTree;
 import canto.CantoException;
 import canto.c1.ast.ASTNode;
+import canto.c1.ast.ASTScanner;
 import canto.c1.ast.Access;
 import canto.c1.ast.AddExpression;
 import canto.c1.ast.AndExpression;
@@ -59,10 +59,10 @@ import canto.c1.ic.Variable;
  * @author Goodness
  *
  */
-public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGenerator {
+public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 
 	/**输入的抽象语法树*/
-	private AbstractSyntaxTree ast;
+	private canto.AbstractSyntaxTree ast;
 	
 	/**产生的代码序列*/
 	private InstructionList instructionList;
@@ -70,8 +70,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	/**C1的符号表，此处是个名值对照表*/
 	private SymbolTable<Location> symbolTable;
 
-	public ICGenerator(AbstractSyntaxTree abstractSyntaxTree){
-		this.ast=abstractSyntaxTree;
+	public ICGenerator(){
 		instructionList=new InstructionList();
 		symbolTable=new SymbolTable<Location>();
 	}
@@ -88,7 +87,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	}
 
 	@Override
-	public void setAST(AbstractSyntaxTree AST) {
+	public void setAST(canto.AbstractSyntaxTree AST) {
 		this.ast=AST;
 	}
 	
@@ -203,7 +202,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	public void visit(BreakStatement node) throws CantoException {
 		ASTNode whileLocator=node;
 		//找到上层While语句
-		while(whileLocator.getNodeType()!=ASTNode.WHILE_STATEMENT)
+		while(whileLocator.getASTType()!=ASTNode.WHILE_STATEMENT)
 		{
 			whileLocator=whileLocator.getParent();
 		}
@@ -216,7 +215,7 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 	@Override
 	public void visit(ContinueStatement node) throws CantoException {
 		Statement whileLocator=node;
-		while(whileLocator.getNodeType()!=ASTNode.WHILE_STATEMENT)
+		while(whileLocator.getASTType()!=ASTNode.WHILE_STATEMENT)
 		{
 			whileLocator=(Statement)whileLocator.getParent();
 		}
@@ -485,8 +484,8 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		node.getRightOperand().setProperty("falseLabel", node.getProperty("falseLabel"));
 		
 		//设置下层需要此层设置过Label，如果此层的上层是if语句或者while语句，说明没设置过，则进行设置
-		if(node.getParent().getNodeType()==ASTNode.IF_STATEMENT
-				||node.getParent().getNodeType()==ASTNode.WHILE_STATEMENT){
+		if(node.getParent().getASTType()==ASTNode.IF_STATEMENT
+				||node.getParent().getASTType()==ASTNode.WHILE_STATEMENT){
 			node.setProperty("Label", node.getProperty("trueLabel"));
 		}
 		node.getRightOperand().setProperty("Label",node.getProperty("Label"));
@@ -517,8 +516,8 @@ public class ICGenerator extends canto.c1.ast.ASTScanner implements canto.ICGene
 		node.getRightOperand().setProperty("falseLabel", node.getProperty("falseLabel"));
 		
 		//设置下层需要此层设置过Label，如果此层的上层是if语句或者while语句，说明没设置过，则进行设置
-		if(node.getParent().getNodeType()==ASTNode.IF_STATEMENT
-				||node.getParent().getNodeType()==ASTNode.WHILE_STATEMENT){
+		if(node.getParent().getASTType()==ASTNode.IF_STATEMENT
+				||node.getParent().getASTType()==ASTNode.WHILE_STATEMENT){
 			node.setProperty("Label", node.getProperty("trueLabel"));
 		}
 		node.getRightOperand().setProperty("Label", node.getProperty("Label"));
