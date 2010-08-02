@@ -107,12 +107,12 @@ public class Compiler implements canto.Compiler {
 	 */
 	@Override
 	public canto.IntermediateCode getIC() {
-		return null;
+		return icGenerator.getIC();
 	}
 	
 	@Override
 	public canto.TargetCode getTC() {
-		return null;
+		return tcGenerator.getTC();
 	}
 
 	/**
