@@ -47,11 +47,12 @@ public class IntelEmitter implements X86Visitor {
 		codeString += tc.getName() + " " + tc.getType().accept(this);
 		boolean isFirst = true;
 		for (Immediate imme : tc.getImmeList()) {
+			String immeStr = (imme == null) ? "?" : (String) imme.accept(this);
 			if (isFirst) {
-				codeString += " " + imme.accept(this);
+				codeString += " " + immeStr;
 				isFirst = false;
 			} else {
-				codeString += "," + imme.accept(this);
+				codeString += "," + immeStr;
 			}
 		}
 		return codeString;
