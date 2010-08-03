@@ -13,12 +13,6 @@ public class Register extends Location {
 	
 	private final int regNum;
 	
-	static String[] regMap;
-	
-	static {
-		regMap = new String[8];
-	}
-	
 	public Register(int regNum) {
 		this.regNum = regNum;
 	}
@@ -35,21 +29,6 @@ public class Register extends Location {
 
 	public int getRegNum() {
 		return regNum;
-	}
-	
-	public static Register assign(Symbol symbol) {
-		// TODO 为一个符号分配寄存器
-		return null;
-	}
-	
-	public static Register assign(Immediate imme) {
-		// TODO 为一个立即数分配寄存器
-		return null;
-	}
-	
-	private static Register assign() {
-		// TODO 寄存器分配算法
-		return null;
 	}
 
 }
