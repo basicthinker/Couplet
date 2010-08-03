@@ -23,6 +23,12 @@ import canto.c1.ic.Out;
 import canto.c1.ic.Sub;
 import canto.c1.ic.Temp;
 import canto.c1.ic.Variable;
+import canto.c1.x86.CodeSegment;
+import canto.c1.x86.DataSegment;
+import canto.c1.x86.Immediate;
+import canto.c1.x86.Memory;
+import canto.c1.x86.Register;
+import canto.c1.x86.Symbol;
 
 public class TCGenerator implements canto.TCGenerator,ICVisitor  {
 
@@ -30,15 +36,17 @@ public class TCGenerator implements canto.TCGenerator,ICVisitor  {
 	/**输入的中间代码序列*/
 	private canto.IntermediateCode ic;
 	
-	/**产生的代码序列*/
-	private InstructionList instructionList;
+	/**数据段*/
+	private DataSegment dataSegment;
 	
-	/**C1的符号表，此处是个名值对照表*/
-	private SymbolTable<Location> symbolTable;
+	/**代码段*/
+	private CodeSegment codeSegment;
+	
+	static String[] regMap;
 
-	public ICGenerator(){
-		instructionList=new InstructionList();
-		symbolTable=new SymbolTable<Location>();
+	public TCGenerator(){
+		dataSegment=new DataSegment();
+		codeSegment=new CodeSegment();
 	}
 	
 	@Override
@@ -172,5 +180,20 @@ public class TCGenerator implements canto.TCGenerator,ICVisitor  {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	public static Register assign(Memory memory) {
+		// TODO 为一个符号分配寄存器
+		return null;
+	}
+	
+	public static Register assign(Immediate imme) {
+		// TODO 为一个立即数分配寄存器
+		return null;
+	}
+	
+	private static Register assign() {
+		// TODO 寄存器分配算法
+		return null;
+	}
+	
 }
