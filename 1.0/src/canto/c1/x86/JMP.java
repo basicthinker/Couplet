@@ -1,7 +1,14 @@
 package canto.c1.x86;
 
+/**
+ * X86目标码的JMP指令
+ */
 public class JMP extends Jump {
 
+	/**
+	 * 构造一条JMP指令
+	 * @param target 跳转目的地
+	 */
 	public JMP(Label target) {
 		super(target);
 	}

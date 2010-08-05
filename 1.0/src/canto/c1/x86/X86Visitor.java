@@ -1,5 +1,8 @@
 package canto.c1.x86;
 
+/**
+ * X86目标码的访问者接口
+ */
 public interface X86Visitor {
 	
 	public Object visit(Program tc);
@@ -29,6 +32,5 @@ public interface X86Visitor {
 	public Object visit(Register tc);
 	public Object visit(Pseudo tc);
 	public Object visit(DataType tc);
-
 		
 }

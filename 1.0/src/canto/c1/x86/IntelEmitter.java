@@ -1,5 +1,10 @@
 package canto.c1.x86;
 
+/**
+ * X86目标码的Intel汇编格式的发射器
+ *   实现了X86目标码的访问者接口
+ *   用于将X86目标码的数据结构输出成字符串
+ */
 public class IntelEmitter implements X86Visitor {
 
 	private X86TargetCode tc;
@@ -188,7 +193,5 @@ public class IntelEmitter implements X86Visitor {
 		default: return null;
 		}
 	}
-
-
 
 }

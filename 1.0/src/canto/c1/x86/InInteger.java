@@ -1,9 +1,17 @@
 package canto.c1.x86;
 
+/**
+ * X86目标码的整数输入指令（一次输入一个整数）
+ */
 public class InInteger extends In {
 
+	/** 存储用于输入的目的操作数 */
 	private final Location dst;
 	
+	/**
+	 * 构造一条整数输入指令
+	 * @param dst 输入的目的操作数
+	 */
 	public InInteger(Location dst) {
 		this.dst = dst;
 	}
@@ -18,6 +26,10 @@ public class InInteger extends In {
 		return IN_INTEGER;
 	}
 
+	/**
+	 * 获取输入的目的操作数
+	 * @return 输入的目的操作数
+	 */
 	public Location getDst() {
 		return dst;
 	}

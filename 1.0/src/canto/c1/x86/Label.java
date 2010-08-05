@@ -1,9 +1,14 @@
 package canto.c1.x86;
 
+/**
+ * X86目标码的标号语句
+ */
 public class Label extends Instruction {
 
+	/** 存储标号名 */
 	private final String name;
 	
+	/** 构造一个标号 */
 	public Label(String name) {
 		this.name = name;
 	}
@@ -18,6 +23,10 @@ public class Label extends Instruction {
 		return LABEL;
 	}
 
+	/**
+	 * 获取标号名
+	 * @return 标号名
+	 */
 	public String getName() {
 		return name;
 	}

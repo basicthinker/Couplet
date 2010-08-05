@@ -1,11 +1,21 @@
 package canto.c1.x86;
 
+/**
+ * X86目标码的MOV指令
+ */
 public class MOV extends Instruction {
 
+	/** 存储目的操作数位置 */
 	private final Location dst;
 	
+	/** 存储源操作数 */
 	private final Operand src;
 
+	/**
+	 * 构造一条MOV指令
+	 * @param dst
+	 * @param src
+	 */
 	public MOV(Location dst, Operand src) {
 		this.dst = dst;
 		this.src = src;

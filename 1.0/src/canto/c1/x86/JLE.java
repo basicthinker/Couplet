@@ -1,7 +1,14 @@
 package canto.c1.x86;
 
+/**
+ * X86目标码的JLE指令
+ */
 public class JLE extends Jump {
 
+	/**
+	 * 构造一条JLE指令
+	 * @param target 跳转目的地
+	 */
 	public JLE(Label target) {
 		super(target);
 	}
