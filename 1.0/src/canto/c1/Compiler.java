@@ -148,7 +148,7 @@ public class Compiler implements canto.Compiler {
 			((ASTNode)ast).accept(new ASTPrinter());
 			System.out.println();
 			
-			// 输出TC
+			// 输出IC
 			System.out.println("Output Intermediate Code");
 			canto.IntermediateCode ic = compiler.getIC();
 			((IntermediateCode)ic).accept(new ICPrinter());

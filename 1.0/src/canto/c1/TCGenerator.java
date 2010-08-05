@@ -1,11 +1,14 @@
 package canto.c1;
 
+import java.util.List;
+
 import canto.IntermediateCode;
 import canto.TargetCode;
 import canto.c1.ic.Add;
 import canto.c1.ic.Goto;
 import canto.c1.ic.ICVisitor;
 import canto.c1.ic.In;
+import canto.c1.ic.Instruction;
 import canto.c1.ic.InstructionList;
 import canto.c1.ic.IntegerLiteral;
 import canto.c1.ic.JEQ;
@@ -23,72 +26,92 @@ import canto.c1.ic.Out;
 import canto.c1.ic.Sub;
 import canto.c1.ic.Temp;
 import canto.c1.ic.Variable;
+
 import canto.c1.x86.CodeSegment;
+import canto.c1.x86.DataDefine;
 import canto.c1.x86.DataSegment;
+import canto.c1.x86.DataType;
 import canto.c1.x86.Immediate;
+import canto.c1.x86.InInteger;
 import canto.c1.x86.Memory;
+import canto.c1.x86.OutInteger;
+import canto.c1.x86.Program;
 import canto.c1.x86.Register;
 import canto.c1.x86.Symbol;
+
+/**
+ * c1的目标代码生成器
+ * @author Goodness
+ */
 
 public class TCGenerator implements canto.TCGenerator,ICVisitor  {
 
 
 	/**输入的中间代码序列*/
-	private canto.IntermediateCode ic;
+	private InstructionList ic;
 	
-	/**数据段*/
+	/**返回的目标代码的数据段*/
 	private DataSegment dataSegment;
-	
-	/**代码段*/
+
+	/**返回的目标代码的代码段*/
 	private CodeSegment codeSegment;
+
+	
+	/**返回的目标代码*/
+	private Program program;
 	
 	static String[] regMap;
 
 	public TCGenerator(){
-		dataSegment=new DataSegment();
-		codeSegment=new CodeSegment();
+		program=new Program();
 	}
-	
+
 	@Override
 	public void setIC(IntermediateCode ic) {
-		// TODO Auto-generated method stub
-
+		this.ic=(InstructionList) ic;
 	}
 
 	@Override
 	public TargetCode generateTC() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		visit(ic);
+		program.setCodeSegment(codeSegment);
+		program.setDataSegment(dataSegment);
+		return program;
 	}
 
 	@Override
 	public TargetCode getTC() {
-		// TODO Auto-generated method stub
-		return null;
+		return program;
 	}
 
 	@Override
 	public void visit(InstructionList ic) throws Exception {
-		// TODO Auto-generated method stub
-		
+		List<Instruction> icList=ic.getList();
+		for(Instruction instruction: icList){
+			instruction.accept(this);
+		}
 	}
 
 	@Override
 	public void visit(Label ic) throws Exception {
-		// TODO Auto-generated method stub
-		
+		canto.c1.x86.Label label=new canto.c1.x86.Label(ic.toString());
+		codeSegment.add(label);
 	}
 
 	@Override
 	public void visit(In ic) throws Exception {
-		// TODO Auto-generated method stub
-		
+		Symbol dst=new Symbol(ic.getDst().toString());
+		DataDefine dataDefine=new DataDefine(dst.getName(), DataType.newDoubleWord(), null);
+		dataSegment.addDataDefine(dataDefine);
+		InInteger inInteger=new InInteger(dst);
+		codeSegment.add(inInteger);
 	}
 
 	@Override
-	public void visit(Out ic) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void visit(Out ic) throws Exception {		
+		Symbol src=new Symbol(ic.getSrc().toString());
+		OutInteger outInteger=new OutInteger(src);
+		codeSegment.add(outInteger);
 	}
 
 	@Override
