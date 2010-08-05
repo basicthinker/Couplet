@@ -2,8 +2,7 @@ package canto.c1;
 
 import java.util.List;
 
-import canto.IntermediateCode;
-import canto.TargetCode;
+import canto.c1.ic.IntermediateCode;
 import canto.c1.ic.Add;
 import canto.c1.ic.Goto;
 import canto.c1.ic.ICVisitor;
@@ -27,13 +26,17 @@ import canto.c1.ic.Sub;
 import canto.c1.ic.Temp;
 import canto.c1.ic.Variable;
 
+import canto.c1.x86.CMP;
 import canto.c1.x86.CodeSegment;
 import canto.c1.x86.DataDefine;
 import canto.c1.x86.DataSegment;
 import canto.c1.x86.DataType;
 import canto.c1.x86.Immediate;
 import canto.c1.x86.InInteger;
+import canto.c1.x86.JE;
+import canto.c1.x86.JMP;
 import canto.c1.x86.Memory;
+import canto.c1.x86.Operand;
 import canto.c1.x86.OutInteger;
 import canto.c1.x86.Program;
 import canto.c1.x86.Register;
@@ -61,18 +64,22 @@ public class TCGenerator implements canto.TCGenerator,ICVisitor  {
 	private Program program;
 	
 	static String[] regMap;
+	SymbolTable<List<canto.c1.x86.Location>> symbolTable;
 
 	public TCGenerator(){
 		program=new Program();
+		dataSegment=new DataSegment();
+		codeSegment=new CodeSegment();
+		symbolTable=new SymbolTable<List<canto.c1.x86.Location>>();
 	}
 
 	@Override
-	public void setIC(IntermediateCode ic) {
+	public void setIC(canto.IntermediateCode ic) {
 		this.ic=(InstructionList) ic;
 	}
 
 	@Override
-	public TargetCode generateTC() throws Exception {
+	public canto.TargetCode generateTC() throws Exception {
 		visit(ic);
 		program.setCodeSegment(codeSegment);
 		program.setDataSegment(dataSegment);
@@ -80,7 +87,7 @@ public class TCGenerator implements canto.TCGenerator,ICVisitor  {
 	}
 
 	@Override
-	public TargetCode getTC() {
+	public canto.TargetCode getTC() {
 		return program;
 	}
 
@@ -101,7 +108,7 @@ public class TCGenerator implements canto.TCGenerator,ICVisitor  {
 	@Override
 	public void visit(In ic) throws Exception {
 		Symbol dst=new Symbol(ic.getDst().toString());
-		DataDefine dataDefine=new DataDefine(dst.getName(), DataType.newDoubleWord(), null);
+		DataDefine dataDefine=new DataDefine(dst.getName(), DataType.newDoubleWord(), new Immediate[]{null});
 		dataSegment.addDataDefine(dataDefine);
 		InInteger inInteger=new InInteger(dst);
 		codeSegment.add(inInteger);
@@ -116,14 +123,34 @@ public class TCGenerator implements canto.TCGenerator,ICVisitor  {
 
 	@Override
 	public void visit(Goto ic) throws Exception {
-		// TODO Auto-generated method stub
-		
+		canto.c1.x86.Label target= new canto.c1.x86.Label(ic.getTarget().toString());
+		JMP jmp=new JMP(target);
+		codeSegment.add(jmp);
+	}
+	
+	/**
+	 * 
+	 * @param operand 中间代码的操作数
+	 * @return 中间代码
+	 */
+	private Operand getTCOperand(canto.c1.ic.Operand operand){
+		if(operand.getICType()==IntermediateCode.INTEGER_LITERAL){
+			return new Immediate(((IntegerLiteral)operand).getValue());
+		}
+		if(operand.getICType()==IntermediateCode.VARIABLE){
+			return new Symbol(operand.toString());
+		}
 	}
 
 	@Override
 	public void visit(JEQ ic) throws Exception {
-		// TODO Auto-generated method stub
-		
+		Operand operand1=getCurrentLocation(ic.getOperand1());
+		Operand operand2=getCurrentLocation(ic.getOperand2());
+		CMP cmp=new CMP(operand1, operand2);
+		codeSegment.add(cmp);
+		canto.c1.x86.Label target= new canto.c1.x86.Label(ic.getTarget().toString());
+		JE je=new JE(target);
+		codeSegment.add(je);
 	}
 
 	@Override
