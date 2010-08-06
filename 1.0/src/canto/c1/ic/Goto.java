@@ -5,6 +5,10 @@ package canto.c1.ic;
  */
 public class Goto extends Jump {
 
+	/**
+	 * 构造一条无条件中转的中间代码
+	 * @param target 跳转的目的地
+	 */
 	public Goto(Label target) {
 		super(target);
 	}

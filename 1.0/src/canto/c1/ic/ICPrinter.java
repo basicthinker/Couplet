@@ -84,26 +84,26 @@ public class ICPrinter implements ICVisitor {
 	public void visit(Add ic) throws Exception {
 		System.out.println("Add "+ic.getSrc1()+", "
 				+ic.getSrc2()+", "
-				+ic.getDst());
+				+ic.getResult());
 	}
 
 	@Override
 	public void visit(Sub ic) throws Exception {
 		System.out.println("Sub "+ic.getSrc1()+", "
 				+ic.getSrc2()+", "
-				+ic.getDst());
+				+ic.getResult());
 	}
 
 	@Override
 	public void visit(Mul ic) throws Exception {
 		System.out.println("Mul "+ic.getSrc1()+", "
 				+ic.getSrc2()+", "
-				+ic.getDst());
+				+ic.getResult());
 	}
 
 	@Override
 	public void visit(Neg ic) throws Exception {
-		System.out.println("Neg "+ic.getSrc()+", "+ic.getDst());
+		System.out.println("Neg "+ic.getSrc()+", "+ic.getResult());
 	}
 
 	@Override

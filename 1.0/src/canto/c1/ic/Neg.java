@@ -5,6 +5,10 @@ package canto.c1.ic;
  */
 public class Neg extends UnaryArithmetic {
 	
+	/**
+	 * 构造一条中间代码的取负数指令
+	 * @see canto.c1.ic.UnaryArithmetic#UnaryArithmetic(Operand, Location)
+	 */
 	public Neg(Operand operand, Location result) {
 		super(operand, result);
 	}

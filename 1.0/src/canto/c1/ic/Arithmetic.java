@@ -1,18 +1,27 @@
 package canto.c1.ic;
 
 /**
- * 中间代码算术运算指令的基类
+ * 中间代码的所有算术运算指令的基类
  */
 public abstract class Arithmetic extends Instruction {
 
-	private final Location dst;
+	/** 存储运算结果的位置 */
+	private final Location result;
 
-	public Arithmetic(Location dst) {
-		this.dst = dst;
+	/**
+	 * 构造一条算术运算的中间代码
+	 * @param result 运算结果的位置
+	 */
+	public Arithmetic(Location result) {
+		this.result = result;
 	}
 
-	public Operand getDst() {
-		return dst;
+	/**
+	 * 获取运算结果的位置
+	 * @return 获取运算结果的位置
+	 */
+	public Operand getResult() {
+		return result;
 	}
 	
 }

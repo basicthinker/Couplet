@@ -5,10 +5,15 @@ package canto.c1.ic;
  */
 public class Label extends Instruction {
 
+	/** 统计标号的数目 */
 	private static int count = 0;
 	
+	/** 存储标号的编号 */
 	private final int id;
 	
+	/**
+	 * 构造一个中间代码的标号
+	 */
 	public Label() {
 		this.id = ++count;
 	}
@@ -31,13 +36,17 @@ public class Label extends Instruction {
 		return true;
 	}
 
-	public int getID() {
-		return id;
-	}
-	
 	@Override
 	public String toString() {
 		return "L" + id;
 	}
 
+	/**
+	 * 获取标号的编号
+	 * @return 标号的编号
+	 */
+	public int getID() {
+		return id;
+	}
+	
 }

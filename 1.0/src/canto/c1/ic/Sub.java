@@ -5,6 +5,10 @@ package canto.c1.ic;
  */
 public class Sub extends BinaryArithmetic {
 	
+	/**
+	 * 构造一条中间代码的减法指令
+	 * @see canto.c1.ic.BinaryArithmetic#BinaryArithmetic(Operand, Operand, Location)
+	 */
 	public Sub(Operand operand1, Operand operand2, Location result) {
 		super(operand1, operand2, result);
 	}
