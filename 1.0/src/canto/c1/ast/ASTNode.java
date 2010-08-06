@@ -1,4 +1,4 @@
-﻿package canto.c1.ast;
+package canto.c1.ast;
 
 import java.util.HashMap;
 import java.util.Map;

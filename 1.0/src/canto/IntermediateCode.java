@@ -1,4 +1,4 @@
-﻿package canto;
+package canto;
 
 /**
  * 中间代码的顶层接口

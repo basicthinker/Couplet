@@ -1,4 +1,4 @@
-﻿package canto;
+package canto;
 
 /**
  * 单词Token的通用接口，独立于语言版本

@@ -1,4 +1,4 @@
-﻿package canto;
+package canto;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

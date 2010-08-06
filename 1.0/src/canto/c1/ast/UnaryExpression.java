@@ -1,4 +1,4 @@
-﻿package canto.c1.ast;
+package canto.c1.ast;
 
 /**
  * 单元运算表达式结点的基类

@@ -1,4 +1,4 @@
-﻿package canto;
+package canto;
 
 /**
  * 抽象语法树（AST）的顶层接口

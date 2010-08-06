@@ -1,4 +1,4 @@
-﻿package canto;
+package canto;
 
 import java.io.InputStream;
 import java.io.OutputStream;

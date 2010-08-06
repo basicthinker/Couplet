@@ -1,4 +1,4 @@
-﻿package canto.c1.ast;
+package canto.c1.ast;
 
 /**
  * 语句结点的基类

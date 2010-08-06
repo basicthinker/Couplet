@@ -1,4 +1,4 @@
-﻿package canto.c1;
+package canto.c1;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
