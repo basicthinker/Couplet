@@ -5,12 +5,12 @@ package canto.c1.x86;
  */
 public class InInteger extends In {
 
-	/** 存储用于输入的目的操作数 */
+	/** 存储用于输入的目的位置 */
 	private final Location dst;
 	
 	/**
 	 * 构造一条整数输入指令
-	 * @param dst 输入的目的操作数
+	 * @param dst 输入的目的位置
 	 */
 	public InInteger(Location dst) {
 		this.dst = dst;
@@ -27,8 +27,8 @@ public class InInteger extends In {
 	}
 
 	/**
-	 * 获取输入的目的操作数
-	 * @return 输入的目的操作数
+	 * 获取输入的目的位置
+	 * @return 输入的目的位置
 	 */
 	public Location getDst() {
 		return dst;
