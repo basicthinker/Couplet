@@ -18,7 +18,13 @@ public interface SymbolTable<INFO_TYPE> {
 	 * @return 符号相关信息
 	 */
 	public Object get(String symbol);
-	
+
+	/**
+	 * 删除表中的某个符号
+	 * @param symbol 要删除 的表中对应的符号名
+	 */
+	public void del(String symbol);
+
 	/**
 	 * 判断某个符号是否在符号表中
 	 * @param symbol 符号名

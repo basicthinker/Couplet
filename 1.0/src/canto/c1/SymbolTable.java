@@ -31,6 +31,11 @@ public class SymbolTable<INFO_TYPE> implements canto.SymbolTable<INFO_TYPE> {
 	}
 	
 	@Override
+	public void del(String symbol) {
+		table.remove(symbol);
+	}
+
+	@Override
 	public boolean isExist(String symbol){
 		return table.containsKey(symbol);
 	}
