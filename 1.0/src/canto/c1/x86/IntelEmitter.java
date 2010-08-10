@@ -20,8 +20,8 @@ public class IntelEmitter implements X86Visitor {
 		codeString += ".MODEL FLAT, STDCALL\n";
 		codeString += "INCLUDE msvcrt.inc\n";
 		codeString += "INCLUDELIB msvcrt.lib\n";
-		codeString += tc.getCodeSegment();
-		codeString += tc.getDataSegment();
+		codeString += tc.getDataSegment().accept(this);
+		codeString += tc.getCodeSegment().accept(this);		
 		return codeString;
 	}
 
@@ -29,7 +29,7 @@ public class IntelEmitter implements X86Visitor {
 	public String visit(DataSegment tc) {
 		String codeString = "";
 		codeString += ".DATA\n";
-		codeString += "INT_FMT BYTE \"%d\", 0";
+		codeString += "INT_FMT BYTE \"%d\", 0\n";
 		for (DataDefine dd : tc.getDataDefineList()) {
 			codeString += dd.accept(this) + "\n"; 
 		}
@@ -40,9 +40,11 @@ public class IntelEmitter implements X86Visitor {
 	public String visit(CodeSegment tc) {
 		String codeString = "";
 		codeString += ".CODE\n";
+		codeString += "START:\n";
 		for (Instruction instr : tc.getInstructionList()) {
 			codeString += instr.accept(this) + "\n";
 		}
+		codeString += "END START\n";
 		return codeString;
 	}
 
@@ -70,42 +72,42 @@ public class IntelEmitter implements X86Visitor {
 	
 	@Override
 	public String visit(MOV tc) {
-		return "MOV " + tc.getDst() + " " + tc.getSrc(); 
+		return "MOV " + tc.getDst().accept(this) + ", " + tc.getSrc().accept(this); 
 	}
 
 	@Override
 	public String visit(PUSH tc) {
-		return "PUSH " + tc.getSrc(); 
+		return "PUSH " + tc.getSrc().accept(this); 
 	}
 
 	@Override
 	public String visit(POP tc) {
-		return "POP " + tc.getDst(); 
+		return "POP " + tc.getDst().accept(this); 
 	}
 
 	@Override
 	public String visit(ADD tc) {
-		return "ADD " + tc.getDst() + " " + tc.getSrc(); 
+		return "ADD " + tc.getDst().accept(this) + ", " + tc.getSrc().accept(this); 
 	}
 
 	@Override
 	public String visit(SUB tc) {
-		return "SUB " + tc.getDst() + " " + tc.getSrc(); 
+		return "SUB " + tc.getDst().accept(this) + ", " + tc.getSrc().accept(this); 
 	}
 
 	@Override
 	public String visit(IMUL tc) {
-		return "IMUL " + tc.getDst() + " " + tc.getSrc(); 
+		return "IMUL " + tc.getDst().accept(this) + ", " + tc.getSrc().accept(this); 
 	}
 
 	@Override
 	public String visit(NEG tc) {
-		return "NEG " + tc.getDst(); 
+		return "NEG " + tc.getDst().accept(this); 
 	}
 
 	@Override
 	public String visit(CMP tc) {
-		return "CMP " + tc.getOperand1() + " " + tc.getOperand2(); 
+		return "CMP " + tc.getOperand1().accept(this) + ", " + tc.getOperand2().accept(this); 
 	}
 
 	@Override
