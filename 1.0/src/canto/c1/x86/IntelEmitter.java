@@ -44,6 +44,7 @@ public class IntelEmitter implements X86Visitor {
 		for (Instruction instr : tc.getInstructionList()) {
 			codeString += instr.accept(this) + "\n";
 		}
+		codeString += "RET\n";
 		codeString += "END START\n";
 		return codeString;
 	}
