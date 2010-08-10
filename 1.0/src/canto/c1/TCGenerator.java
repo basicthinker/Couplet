@@ -2,9 +2,10 @@ package canto.c1;
 
 import java.util.List;
 
+import canto.c1.ic.Add;
+import canto.c1.ic.BinaryArithmetic;
 import canto.c1.ic.CJump;
 import canto.c1.ic.IntermediateCode;
-import canto.c1.ic.Add;
 import canto.c1.ic.Goto;
 import canto.c1.ic.ICVisitor;
 import canto.c1.ic.In;
@@ -18,7 +19,6 @@ import canto.c1.ic.JLE;
 import canto.c1.ic.JLT;
 import canto.c1.ic.JNE;
 import canto.c1.ic.Label;
-import canto.c1.ic.Location;
 import canto.c1.ic.Mov;
 import canto.c1.ic.Mul;
 import canto.c1.ic.Neg;
@@ -41,11 +41,14 @@ import canto.c1.x86.JL;
 import canto.c1.x86.JMP;
 import canto.c1.x86.MOV;
 import canto.c1.x86.Memory;
+import canto.c1.x86.NEG;
 import canto.c1.x86.Operand;
 import canto.c1.x86.OutInteger;
 import canto.c1.x86.Program;
 import canto.c1.x86.Register;
+import canto.c1.x86.SUB;
 import canto.c1.x86.Symbol;
+import canto.c1.x86.X86TargetCode;
 
 /**
  * c1的目标代码生成器
@@ -84,6 +87,7 @@ public class TCGenerator implements canto.TCGenerator,ICVisitor  {
 		codeSegment=new CodeSegment();
 		symbolTable=new SymbolTable<Symbol>();
 		registerTable=new SymbolTable<Register>();
+		regMap=new String[4];
 	}
 
 	@Override
@@ -143,14 +147,17 @@ public class TCGenerator implements canto.TCGenerator,ICVisitor  {
 		//没有空位置的情况，循环拿出寄存器
 		Register register=new Register(regPointer);
 		String regContent=regMap[regPointer];
-		regMap[regPointer]=null;
-		registerTable.del(regContent);
 		if(!symbolTable.isExist(regContent)){
 			//在数据段加入需要挪入内存变量的定义
 			DataDefine dataDefine=new DataDefine(regContent, DataType.newDoubleWord(), new Immediate[]{new Immediate(0)});
 			dataSegment.addDataDefine(dataDefine);
-			symbolTable.put(regContent, new Symbol(regContent));
+			symbolTable.put(regContent, new Symbol(regContent));			
 		}
+		//代码段加入寄存器当前值挪入内存的代码
+		Symbol symbol=symbolTable.get(regContent);
+		codeSegment.add(new MOV(symbol, register));
+		regMap[regPointer]=null;
+		registerTable.del(regContent);
 		regPointer=(regPointer+1)%4;//只用前四个寄存器
 		return register;
 	}
@@ -289,27 +296,54 @@ public class TCGenerator implements canto.TCGenerator,ICVisitor  {
 		codeSegment.add(new MOV(dst, src));
 		freeReg(ic.getSrc());
 	}
+	
+	//加入二元运算
+	private void addBinaryArithmetic(BinaryArithmetic ic) {
+		canto.c1.x86.Location getDst=(canto.c1.x86.Location)getTCOperand(ic.getResult());
+		Register dst;
+		if (getDst.getTCType()==X86TargetCode.REGISTER) {
+			dst=(Register)getDst;
+		} else {
+			dst=assign((Symbol)getDst);
+		}
+		canto.c1.ic.Operand icSrc1=ic.getSrc1();
+		Operand src=getTCOperand(icSrc1);
+		codeSegment.add(new MOV(dst, src));
+		freeReg(icSrc1);
+		
+		canto.c1.ic.Operand icSrc2=ic.getSrc2();
+		src=getTCOperand(icSrc2);
+		if(ic.getICType()==IntermediateCode.ADD){
+			codeSegment.add(new ADD(dst, src));
+		}else if(ic.getICType()==IntermediateCode.SUB){
+			codeSegment.add(new SUB(dst, src));
+		}else{
+			codeSegment.add(new canto.c1.x86.IMUL(dst, src));
+		}
+		freeReg(icSrc2);
+	}
 
 	@Override
 	public void visit(Add ic) throws Exception {
+		addBinaryArithmetic(ic);
 	}
 
 	@Override
 	public void visit(Sub ic) throws Exception {
-		// TODO Auto-generated method stub
-		
+		addBinaryArithmetic(ic);
 	}
 
 	@Override
 	public void visit(Mul ic) throws Exception {
-		// TODO Auto-generated method stub
-		
+		addBinaryArithmetic(ic);
 	}
 
 	@Override
 	public void visit(Neg ic) throws Exception {
-		// TODO Auto-generated method stub
-		
+		canto.c1.x86.Location dst=(canto.c1.x86.Location) getTCOperand(ic.getResult());
+		Operand src=getTCOperand(ic.getSrc());
+		codeSegment.add(new MOV(dst, src));
+		codeSegment.add(new NEG(dst));
 	}
 
 	@Override

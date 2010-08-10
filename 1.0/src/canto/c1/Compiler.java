@@ -14,6 +14,8 @@ import canto.c1.ast.ASTNode;
 import canto.c1.ast.ASTPrinter;
 import canto.c1.ic.ICPrinter;
 import canto.c1.ic.IntermediateCode;
+import canto.c1.x86.IntelEmitter;
+import canto.c1.x86.X86TargetCode;
 
 /**
  * @author basicthinker
@@ -138,7 +140,6 @@ public class Compiler implements canto.Compiler {
 				System.out.print(token.getLexeme() + "\twith ");
 				if (token.getAttribute() == null) System.out.println("null");
 				else System.out.println(token.getAttribute().toString());
-				
 			}
 			System.out.println();
 			
@@ -152,7 +153,12 @@ public class Compiler implements canto.Compiler {
 			System.out.println("Output Intermediate Code");
 			canto.IntermediateCode ic = compiler.getIC();
 			((IntermediateCode)ic).accept(new ICPrinter());
+			System.out.println();
 			
+			// 输出TC
+			System.out.println("Output Target Code");
+			canto.TargetCode tc=compiler.getTC();
+			System.out.println(((X86TargetCode)tc).accept(new IntelEmitter()));			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
