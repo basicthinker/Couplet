@@ -5,4 +5,11 @@ package canto.c1.x86;
  */
 public abstract class Operand extends X86TargetCode {
 
+	/**
+	 * 获取目标代码操作数的字符串
+	 * @return 操作数的字符串
+	 */
+	public String toString() {
+		return null;
+	}
 }

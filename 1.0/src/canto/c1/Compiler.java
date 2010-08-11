@@ -9,12 +9,17 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import canto.TargetCode;
 import canto.c1.ast.ASTNode;
 import canto.c1.ast.ASTPrinter;
 import canto.c1.ic.ICPrinter;
 import canto.c1.ic.IntermediateCode;
+import canto.c1.ic.Operand;
+import canto.c1.ic.Temp;
 import canto.c1.x86.IntelEmitter;
+import canto.c1.x86.Symbol;
 import canto.c1.x86.X86TargetCode;
 
 /**
@@ -123,7 +128,6 @@ public class Compiler implements canto.Compiler {
 	 */
 	public static void main(String[] args) throws Exception {
 		try {
-			
 			// 读入源代码文件
 			FileInputStream inFile = new FileInputStream("C1-Sample.canto");
 			Compiler compiler = new Compiler();

@@ -26,11 +26,7 @@ public class Symbol extends Memory {
 		return SYMBOL;
 	}
 
-	/**
-	 * 获取符号名称
-	 * @return 符号名称
-	 */
-	public String getName() {
+	public String toString() {
 		return name;
 	}
 

@@ -33,5 +33,8 @@ public class Immediate extends Operand {
 	public Integer getValue() {
 		return value;
 	}
-
+	
+	public String toString(){
+		return value.toString();
+	}
 }

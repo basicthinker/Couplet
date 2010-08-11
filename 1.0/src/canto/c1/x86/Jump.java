@@ -23,5 +23,4 @@ public abstract class Jump extends Instruction {
 	public Label getTarget() {
 		return target;
 	} 
-	
 }

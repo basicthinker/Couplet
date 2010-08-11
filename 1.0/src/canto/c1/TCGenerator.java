@@ -125,6 +125,7 @@ public class TCGenerator implements canto.TCGenerator,ICVisitor  {
 	private Register assign(Memory memory) {
 		//为一个内存分配寄存器
 		Register register=assign();
+		regMap[register.getRegNum()]=memory.toString();
 		registerTable.put(memory.toString(), register);
 		return register;
 	}

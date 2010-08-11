@@ -43,5 +43,17 @@ public class Register extends Location {
 	public int getRegNum() {
 		return regNum;
 	}
-
+	
+	public String toString(){
+		switch (regNum){
+			case 0: return "EAX";
+			case 1: return "EBX";
+			case 2: return "ECX";
+			case 3: return "EDX";
+			case 4: return "EBP";
+			case 5: return "ESP";
+			case 6: return "EDI";
+			default: return "ESI";
+		}
+	}
 }

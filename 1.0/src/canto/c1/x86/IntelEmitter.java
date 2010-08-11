@@ -163,7 +163,7 @@ public class IntelEmitter implements X86Visitor {
 
 	@Override
 	public String visit(Symbol tc) {
-		return tc.getName();
+		return tc.toString();
 	}
 
 	@Override
