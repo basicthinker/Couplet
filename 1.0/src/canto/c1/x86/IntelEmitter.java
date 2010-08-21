@@ -29,7 +29,8 @@ public class IntelEmitter implements X86Visitor {
 	public String visit(DataSegment tc) {
 		String codeString = "";
 		codeString += ".DATA\n";
-		codeString += "INT_FMT BYTE \"%d\", 0\n";
+		codeString += "INT_IN_FMT BYTE \"%d\", 0\n";
+		codeString += "INT_OUT_FMT BYTE \"%d\", 13, 10, 0\n";
 		for (DataDefine dd : tc.getDataDefineList()) {
 			codeString += dd.accept(this) + "\n"; 
 		}
@@ -148,12 +149,12 @@ public class IntelEmitter implements X86Visitor {
 
 	@Override
 	public String visit(InInteger tc) {
-		return "INVOKE crt_scanf, ADDR INT_FMT, ADDR " + tc.getDst().accept(this); 
+		return "INVOKE crt_scanf, ADDR INT_IN_FMT, ADDR " + tc.getDst().accept(this); 
 	}
 
 	@Override
 	public String visit(OutInteger tc) {
-		return "INVOKE crt_printf, ADDR INT_FMT, " + tc.getSrc().accept(this);
+		return "INVOKE crt_printf, ADDR INT_OUT_FMT, " + tc.getSrc().accept(this);
 	}
 	
 	@Override
