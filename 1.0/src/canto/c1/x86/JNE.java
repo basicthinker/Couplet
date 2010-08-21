@@ -1,5 +1,7 @@
 package canto.c1.x86;
 
+import java.io.IOException;
+
 /**
  * X86目标码的JNE指令
  */
@@ -14,8 +16,8 @@ public class JNE extends Jump {
 	}
 	
 	@Override
-	public Object accept(X86Visitor visitor) {
-		return visitor.visit(this);
+	public void accept(X86Visitor visitor) throws IOException {
+		visitor.visit(this);
 	}
 	
 	@Override

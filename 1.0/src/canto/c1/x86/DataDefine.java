@@ -1,5 +1,7 @@
 package canto.c1.x86;
 
+import java.io.IOException;
+
 /**
  * X86目标码的数据定义
  */
@@ -28,8 +30,8 @@ public class DataDefine extends X86TargetCode {
 	}
 	
 	@Override
-	public Object accept(X86Visitor visitor) {
-		return visitor.visit(this);
+	public void accept(X86Visitor visitor) throws IOException {
+		visitor.visit(this);
 	}
 	
 	@Override

@@ -1,36 +1,38 @@
 package canto.c1.x86;
 
+import java.io.IOException;
+
 /**
  * X86目标码的访问者接口
  */
 public interface X86Visitor {
 	
-	public Object visit(Program tc);
-	public Object visit(DataSegment tc);
-	public Object visit(CodeSegment tc);
-	public Object visit(DataDefine tc);
-	public Object visit(Label tc);
-	public Object visit(MOV tc);
-	public Object visit(PUSH tc);
-	public Object visit(POP tc);
-	public Object visit(ADD tc);
-	public Object visit(SUB tc);
-	public Object visit(IMUL tc);
-	public Object visit(NEG tc);
-	public Object visit(CMP tc);
-	public Object visit(JMP tc);
-	public Object visit(JE tc);
-	public Object visit(JNE tc);
-	public Object visit(JG tc);
-	public Object visit(JGE tc);
-	public Object visit(JL tc);
-	public Object visit(JLE tc);
-	public Object visit(InInteger tc);
-	public Object visit(OutInteger tc);
-	public Object visit(Immediate tc);
-	public Object visit(Symbol tc);
-	public Object visit(Register tc);
-	public Object visit(Pseudo tc);
-	public Object visit(DataType tc);
+	public void visit(Program tc) throws IOException;
+	public void visit(DataSegment tc) throws IOException;
+	public void visit(CodeSegment tc) throws IOException;
+	public void visit(DataDefine tc) throws IOException;
+	public void visit(Label tc) throws IOException;
+	public void visit(MOV tc) throws IOException;
+	public void visit(PUSH tc) throws IOException;
+	public void visit(POP tc) throws IOException;
+	public void visit(ADD tc) throws IOException;
+	public void visit(SUB tc) throws IOException;
+	public void visit(IMUL tc) throws IOException;
+	public void visit(NEG tc) throws IOException;
+	public void visit(CMP tc) throws IOException;
+	public void visit(JMP tc) throws IOException;
+	public void visit(JE tc) throws IOException;
+	public void visit(JNE tc) throws IOException;
+	public void visit(JG tc) throws IOException;
+	public void visit(JGE tc) throws IOException;
+	public void visit(JL tc) throws IOException;
+	public void visit(JLE tc) throws IOException;
+	public void visit(InInteger tc) throws IOException;
+	public void visit(OutInteger tc) throws IOException;
+	public void visit(Immediate tc) throws IOException;
+	public void visit(Symbol tc) throws IOException;
+	public void visit(Register tc) throws IOException;
+	public void visit(Pseudo tc) throws IOException;
+	public void visit(DataType tc) throws IOException;
 		
 }

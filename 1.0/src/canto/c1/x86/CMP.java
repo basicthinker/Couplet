@@ -1,5 +1,7 @@
 package canto.c1.x86;
 
+import java.io.IOException;
+
 /**
  * X86目标码的CMP指令
  */
@@ -18,8 +20,8 @@ public class CMP extends Instruction {
 	}
 	
 	@Override
-	public Object accept(X86Visitor visitor) {
-		return visitor.visit(this);		
+	public void accept(X86Visitor visitor) throws IOException {
+		visitor.visit(this);		
 	}
 
 	@Override

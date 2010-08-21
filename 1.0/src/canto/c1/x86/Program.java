@@ -1,5 +1,7 @@
 package canto.c1.x86;
 
+import java.io.IOException;
+
 /**
  * 表示整个程序的X86目标码的数据结构
  */
@@ -12,8 +14,8 @@ public class Program extends X86TargetCode {
 	private CodeSegment codeSegment;
 
 	@Override
-	public Object accept(X86Visitor visitor) {
-		return visitor.visit(this);
+	public void accept(X86Visitor visitor) throws IOException {
+		visitor.visit(this);
 	}
 
 	@Override

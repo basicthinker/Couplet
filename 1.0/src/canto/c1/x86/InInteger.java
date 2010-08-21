@@ -1,5 +1,7 @@
 package canto.c1.x86;
 
+import java.io.IOException;
+
 /**
  * X86目标码的整数输入指令（一次输入一个整数）
  */
@@ -17,8 +19,8 @@ public class InInteger extends In {
 	}
 
 	@Override
-	public Object accept(X86Visitor visitor) {
-		return visitor.visit(this);
+	public void accept(X86Visitor visitor) throws IOException {
+		visitor.visit(this);
 	}
 
 	@Override

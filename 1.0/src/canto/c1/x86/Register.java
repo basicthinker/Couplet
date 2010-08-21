@@ -1,5 +1,7 @@
 package canto.c1.x86;
 
+import java.io.IOException;
+
 /**
  * X86目标码的寄存器操作数
  */
@@ -27,8 +29,8 @@ public class Register extends Location {
 	}
 
 	@Override
-	public Object accept(X86Visitor visitor) {
-		return visitor.visit(this);
+	public void accept(X86Visitor visitor) throws IOException {
+		visitor.visit(this);
 	}
 
 	@Override

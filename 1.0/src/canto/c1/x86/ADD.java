@@ -1,5 +1,7 @@
 package canto.c1.x86;
 
+import java.io.IOException;
+
 /**
  * X86目标码的ADD指令
  */
@@ -33,8 +35,8 @@ public class ADD extends BinaryArithmetic {
 	}
 	
 	@Override
-	public Object accept(X86Visitor visitor) {
-		return visitor.visit(this);
+	public void accept(X86Visitor visitor)  throws IOException{
+		visitor.visit(this);
 	}
 	
 	@Override

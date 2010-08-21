@@ -20,7 +20,7 @@ public abstract class Arithmetic extends Instruction {
 	 * 获取目的操作位置
 	 * @return 目的操作位置
 	 */
-	Location getDst() {
+	public Location getDst() {
 		return dst;
 	}
 	
