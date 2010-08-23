@@ -1,9 +1,6 @@
 package canto.c1;
 
 import java.util.List;
-
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import canto.c1.ic.Add;
 import canto.c1.ic.Arithmetic;
 import canto.c1.ic.BinaryArithmetic;
@@ -182,8 +179,12 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 		}
 	}
 
+	/**
+	 * 将中间代码的操作数转成目标代码的操作数
+	 * @param operand 输入的中间代码操作数
+	 * @return 相应的目标代码操作数
+	 */
 	private Operand getTCOperand(canto.c1.ic.Operand operand) {
-		// 将中间代码的操作数转成目标代码的操作数
 		if (operand.getICType() == IntermediateCode.INTEGER_LITERAL) {
 			return new Immediate(((IntegerLiteral) operand).getValue());
 		} else {
@@ -230,7 +231,7 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 
 	@Override
 	public void visit(Out ic) throws Exception {
-		Symbol src = new Symbol(ic.getSrc().toString());
+		Operand src = getTCOperand(ic.getSrc());
 		OutInteger outInteger = new OutInteger(src);
 		codeSegment.add(outInteger);
 	}
