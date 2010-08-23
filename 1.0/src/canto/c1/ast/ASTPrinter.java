@@ -1,5 +1,6 @@
 package canto.c1.ast;
 
+import canto.AbstractSyntaxTree;
 import canto.CantoException;
 
 /**
@@ -245,6 +246,10 @@ public class ASTPrinter extends ASTScanner {
 		depth++;
 		super.visit(node);
 		depth--;
+	}
+	
+	public void print(AbstractSyntaxTree ast) throws CantoException {
+		((ASTNode)ast).accept(this);
 	}
 	
 }

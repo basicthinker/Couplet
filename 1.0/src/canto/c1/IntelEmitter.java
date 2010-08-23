@@ -43,7 +43,8 @@ import canto.c1.x86.X86Visitor;
  */
 public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 
-	private BufferedWriter outBuf;
+	private BufferedWriter outBuf = 
+		new BufferedWriter(new OutputStreamWriter(System.out));
 	
 	@Override
 	public void setWriter(OutputStreamWriter outStr) {

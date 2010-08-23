@@ -112,14 +112,17 @@ public class ICPrinter implements ICVisitor {
 	}
 
 	@Override
-	public void visit(IntegerLiteral ic) throws Exception {
+	public void visit(Variable ic) throws Exception {
 		System.out.println(ic);
 	}
 
 	@Override
-	public void visit(Variable ic) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void visit(IntegerLiteral ic) throws Exception {
+		System.out.println(ic);
 	}
-
+	
+	public void print(canto.IntermediateCode ic) throws Exception {
+		((IntermediateCode)ic).accept(this);
+	}
+	
 }
