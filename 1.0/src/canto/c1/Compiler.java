@@ -7,6 +7,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
+import canto.c1.ast.ASTPrinter;
+import canto.c1.ic.ICPrinter;
+
 public class Compiler implements canto.Compiler {
 
 	private InputStreamReader sourceReader;
@@ -56,12 +59,37 @@ public class Compiler implements canto.Compiler {
 		try {
 			lexer.open(sourceReader);
 			lexer.scan();
+			// 输出Token链
+			List<canto.Token> tokenList = getTokenList();
+			System.out.println("Output Token List :");
+			for (canto.Token token : tokenList) {
+				System.out.print("Line " + token.getLine() + " Column " + token.getColumn() + ": ");
+				System.out.print(token.getLexeme() + "\twith ");
+				if (token.getAttribute() == null) System.out.println("null");
+				else System.out.println(token.getAttribute().toString());
+			}
+			System.out.println();			
 			parser.setTokenList(lexer.getTokenList());
 			parser.parse();
+			// 输出AST
+			System.out.println("Output AST :");
+			ASTPrinter astPrinter = new ASTPrinter();
+			astPrinter.print(getAST());
+			System.out.println();
 			icGenerator.setAST(parser.getAST());
 			icGenerator.generateIC();
+			// 输出IC
+			System.out.println("Output Intermediate Code :");
+			ICPrinter icPrinter = new ICPrinter();
+			icPrinter.print(getIC());
+			System.out.println();
 			tcGenerator.setIC(icGenerator.getIC());
 			tcGenerator.generateTC();
+			// 输出TC
+			System.out.println("Output Target Code : ");
+			IntelEmitter emmit = new IntelEmitter();
+			emmit.emmit(getTC());
+			System.out.println("\n");
 			emmiter.setWriter(targetWriter);
 			emmiter.emmit(tcGenerator.getTC());
 		} catch (IOException e) {

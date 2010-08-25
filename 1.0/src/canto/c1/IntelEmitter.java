@@ -74,6 +74,7 @@ public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 		outBuf.write(".DATA\n");
 		outBuf.write("INT_IN_FMT BYTE \"%d\", 0\n");
 		outBuf.write("INT_OUT_FMT BYTE \"%d\", 13, 10, 0\n");
+		outBuf.write("PAUSE_CMD BYTE \"PAUSE\", 0\n");
 		for (DataDefine dd : tc.getDataDefineList()) {
 			dd.accept(this);
 			outBuf.write("\n");
@@ -88,6 +89,7 @@ public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 			instr.accept(this);
 			outBuf.write("\n");
 		}
+		outBuf.write("INVOKE _imp__system, ADDR PAUSE_CMD\n");
 		outBuf.write("RET\n");
 		outBuf.write("END START\n");
 	}
