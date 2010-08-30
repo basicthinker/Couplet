@@ -134,8 +134,11 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 	}
 
 	private Register assign(Immediate imme) {
-		// TODO 为一个立即数分配寄存器
-		return null;
+		// 为一个立即数分配寄存器
+		Register register=assign();
+		regMap[register.getRegNum()]=imme.toString();
+		registerTable.put(imme.toString(), register);
+		return register;
 	}
 
 	private Register assign() {
@@ -248,13 +251,18 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 		// 加入一个比较的目标代码语句
 		Operand operand1 = getTCOperand(ic.getOperand1());
 		Operand operand2 = getTCOperand(ic.getOperand2());
-		if (operand1.getTCType() == X86TargetCode.REGISTER
-				|| operand2.getTCType() == X86TargetCode.REGISTER) {
-			codeSegment.add(new CMP(operand1, operand2));
-		} else {
+		if(operand1.getTCType()==X86TargetCode.REGISTER && operand2.getTCType()==X86TargetCode.REGISTER){
+			codeSegment.add(new CMP(operand1, operand2));			
+		}else if(operand1.getTCType()==X86TargetCode.SYMBOL && operand2.getTCType()==X86TargetCode.SYMBOL) {
 			Register register = assign((Memory) operand1);
 			codeSegment.add(new MOV(register, operand1));
 			codeSegment.add(new CMP(register, operand2));
+		}else if(operand1.getTCType()==X86TargetCode.IMMEDIATE && operand2.getTCType()==X86TargetCode.IMMEDIATE){
+			Register register=assign((Immediate)operand1);
+			codeSegment.add(new MOV(register, operand1));
+			codeSegment.add(new CMP(register, operand2));
+		}else {
+			codeSegment.add(new CMP(operand1, operand2));
 		}
 	}
 

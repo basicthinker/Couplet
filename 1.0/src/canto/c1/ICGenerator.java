@@ -693,9 +693,12 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 		Label falseLabel = (Label) node.getProperty("falseLabel");
 		if (trueLabel == null && falseLabel == null) {
 			/*
-			 * 如果trueLabel和falseLabel都是null，说明是表达式的一部分 实现方式伪代码如下： result=1
-			 * if(leftOperand==true) goto label if(rightOperand==true) goto
-			 * labell result=0 label：
+			 * 如果trueLabel和falseLabel都是null，说明是表达式的一部分 实现方式伪代码如下
+			 *  result=1
+			 * if(leftOperand==true) goto label 
+			 * if(rightOperand==true) goto label
+			 * result=0
+			 * label：
 			 */
 			Temp result = new Temp();
 			instructionList.addInstruction(new Mov(
@@ -737,13 +740,47 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 
 	@Override
 	public void visit(Identifier node) throws CantoException {
-		if (symbolTable.isExist(node.getName())) {
-			Location location = symbolTable.get(node.getName());
-			node.setProperty("result", location);
-		} else {
-			Variable variable = new Variable();
-			symbolTable.put(node.getName(), variable);
-			node.setProperty("result", variable);
+		Label trueLabel=(Label)node.getProperty("trueLabel");
+		Label falseLabel=(Label)node.getProperty("falseLabel");
+		if(trueLabel!=null&&falseLabel!=null){
+			if (symbolTable.isExist(node.getName())) {
+				Location location = symbolTable.get(node.getName());
+				JNE jne = new JNE(location, new canto.c1.ic.IntegerLiteral(0), trueLabel);
+				instructionList.addInstruction(jne);
+				Goto jmp = new Goto(falseLabel);
+				instructionList.addInstruction(jmp);
+			} else {
+				Variable variable = new Variable();
+				symbolTable.put(node.getName(), variable);
+				Goto jmp = new Goto(falseLabel);
+				instructionList.addInstruction(jmp);
+			}			
+		}else if(trueLabel!=null){
+			if (symbolTable.isExist(node.getName())) {
+				Location location = symbolTable.get(node.getName());
+				JNE jne=new JNE(location, new canto.c1.ic.IntegerLiteral(0), trueLabel);
+				instructionList.addInstruction(jne);
+			}
+		}else if(falseLabel!=null){
+			if (symbolTable.isExist(node.getName())) {
+				Location location = symbolTable.get(node.getName());
+				JEQ jeq=new JEQ(location, new canto.c1.ic.IntegerLiteral(0), falseLabel);
+				instructionList.addInstruction(jeq);
+			} else {
+				Variable variable = new Variable();
+				symbolTable.put(node.getName(), variable);
+				Goto jmp = new Goto(falseLabel);
+				instructionList.addInstruction(jmp);
+			}
+		}else{
+			if (symbolTable.isExist(node.getName())) {
+				Location location = symbolTable.get(node.getName());
+				node.setProperty("result", location);
+			} else {
+				Variable variable = new Variable();
+				symbolTable.put(node.getName(), variable);
+				node.setProperty("result", variable);
+			}
 		}
 	}
 
