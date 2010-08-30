@@ -83,7 +83,7 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 
 	/** 当前该用的寄存器对应的数字 */
 	static int regPointer = 0;
-	
+
 	public TCGenerator() {
 		program = new Program();
 		dataSegment = new DataSegment();
@@ -92,7 +92,6 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 		registerTable = new SymbolTable<Register>();
 		regMap = new String[4];
 	}
-
 
 	@Override
 	public void setIC(canto.IntermediateCode ic) {
@@ -181,7 +180,9 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 
 	/**
 	 * 将中间代码的操作数转成目标代码的操作数
-	 * @param operand 输入的中间代码操作数
+	 * 
+	 * @param operand
+	 *            输入的中间代码操作数
 	 * @return 相应的目标代码操作数
 	 */
 	private Operand getTCOperand(canto.c1.ic.Operand operand) {
@@ -247,7 +248,14 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 		// 加入一个比较的目标代码语句
 		Operand operand1 = getTCOperand(ic.getOperand1());
 		Operand operand2 = getTCOperand(ic.getOperand2());
-		codeSegment.add(new CMP(operand1, operand2));
+		if (operand1.getTCType() == X86TargetCode.REGISTER
+				|| operand2.getTCType() == X86TargetCode.REGISTER) {
+			codeSegment.add(new CMP(operand1, operand2));
+		} else {
+			Register register = assign((Memory) operand1);
+			codeSegment.add(new MOV(register, operand1));
+			codeSegment.add(new CMP(register, operand2));
+		}
 	}
 
 	@Override
@@ -300,7 +308,9 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 
 	/**
 	 * 清除中间代码操作数和寄存器间的关系
-	 * @param icOperand 中间代码操作数
+	 * 
+	 * @param icOperand
+	 *            中间代码操作数
 	 */
 	private void freeReg(canto.c1.ic.Operand icOperand) {
 		String name = icOperand.toString();
@@ -320,60 +330,66 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 		codeSegment.add(new MOV(dst, src));
 		freeReg(ic.getSrc());
 	}
-	
-	
+
 	/**
 	 * 根据中间代码类型，加入不同的运算
-	 * @param ic 中间代码
-	 * @param dst 目的操作数
-	 * @param src 源操作数
+	 * 
+	 * @param ic
+	 *            中间代码
+	 * @param dst
+	 *            目的操作数
+	 * @param src
+	 *            源操作数
 	 */
-	private void caseAdd(Arithmetic ic,Location dst,Operand src){
+	private void caseAdd(Arithmetic ic, Location dst, Operand src) {
 		switch (ic.getICType()) {
 		case IntermediateCode.ADD:
-			codeSegment.add(new ADD((Register)dst,src));
+			codeSegment.add(new ADD((Register) dst, src));
 			break;
 		case IntermediateCode.SUB:
-			codeSegment.add(new SUB((Register)dst,src));
+			codeSegment.add(new SUB((Register) dst, src));
 			break;
 		case IntermediateCode.MUL:
-			codeSegment.add(new IMUL((Register)dst,src));
+			codeSegment.add(new IMUL((Register) dst, src));
 			break;
 		case IntermediateCode.NEG:
 			codeSegment.add(new NEG(dst));
 			break;
 		}
 	}
-	
+
 	/**
 	 * 目标代码加入一个二元运算
-	 * @param ic 输入的中间代码
-	 * @param flag 标志参数，0表示中间代码的两个源操作数均不是Temp类型，1表示第一个是，2表示第二个是
+	 * 
+	 * @param ic
+	 *            输入的中间代码
+	 * @param flag
+	 *            标志参数，0表示中间代码的两个源操作数均不是Temp类型，1表示第一个是，2表示第二个是
 	 */
-	private void addBinaryArithmetic(BinaryArithmetic ic,int flag){
+	private void addBinaryArithmetic(BinaryArithmetic ic, int flag) {
 		canto.c1.ic.Operand icSrc1 = ic.getSrc1();
 		canto.c1.ic.Operand icSrc2 = ic.getSrc2();
 		canto.c1.ic.Operand res = ic.getResult();
-		Register dst; //二元运算符的目的操作数
-		Operand src; //二元运算符的源操作数
-		if(flag==1){
-			dst=(Register)getTCOperand(icSrc1);
+		Register dst; // 二元运算符的目的操作数
+		Operand src; // 二元运算符的源操作数
+		if (flag == 1) {
+			dst = (Register) getTCOperand(icSrc1);
 			freeReg(icSrc1);// 将inSrc1和寄存器间的关系清除
-			//建立res和寄存器间的对应关系
-			regMap[dst.getRegNum()]=res.toString();
+			// 建立res和寄存器间的对应关系
+			regMap[dst.getRegNum()] = res.toString();
 			registerTable.put(res.toString(), dst);
-			src=getTCOperand(icSrc2);//取出源操作数
+			src = getTCOperand(icSrc2);// 取出源操作数
 			caseAdd(ic, dst, src);
-			freeReg(icSrc2);//加过之后源操作数如果是Temp就不会再被使用，所以清除寄存器与icSrc2间关系
-		}else if(flag==2){
-			dst=(Register)getTCOperand(icSrc2);
+			freeReg(icSrc2);// 加过之后源操作数如果是Temp就不会再被使用，所以清除寄存器与icSrc2间关系
+		} else if (flag == 2) {
+			dst = (Register) getTCOperand(icSrc2);
 			freeReg(icSrc2);
-			regMap[dst.getRegNum()]=res.toString();
+			regMap[dst.getRegNum()] = res.toString();
 			registerTable.put(res.toString(), dst);
-			src=getTCOperand(icSrc1);
+			src = getTCOperand(icSrc1);
 			caseAdd(ic, dst, src);
 			freeReg(icSrc1);
-		}else{
+		} else {
 			canto.c1.x86.Location getDst = (canto.c1.x86.Location) getTCOperand(ic
 					.getResult());
 			if (getDst.getTCType() == X86TargetCode.REGISTER) {
@@ -387,74 +403,77 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 			src = getTCOperand(icSrc2);
 			caseAdd(ic, dst, src);
 			freeReg(icSrc2);
-		}		
+		}
 	}
 
 	@Override
 	public void visit(Add ic) throws Exception {
-		if(ic.getSrc1().getICType()==IntermediateCode.TEMP){
+		if (ic.getSrc1().getICType() == IntermediateCode.TEMP) {
 			addBinaryArithmetic(ic, 1);
-		}else if(ic.getSrc2().getICType()==IntermediateCode.TEMP){
+		} else if (ic.getSrc2().getICType() == IntermediateCode.TEMP) {
 			addBinaryArithmetic(ic, 2);
-		}else{
+		} else {
 			addBinaryArithmetic(ic, 0);
 		}
 	}
 
 	@Override
 	public void visit(Sub ic) throws Exception {
-		if(ic.getSrc1().getICType()==IntermediateCode.TEMP){
+		if (ic.getSrc1().getICType() == IntermediateCode.TEMP) {
 			addBinaryArithmetic(ic, 1);
-		}else{
+		} else {
 			addBinaryArithmetic(ic, 0);
 		}
 	}
 
 	@Override
 	public void visit(Mul ic) throws Exception {
-		if(ic.getSrc1().getICType()==IntermediateCode.TEMP){
+		if (ic.getSrc1().getICType() == IntermediateCode.TEMP) {
 			addBinaryArithmetic(ic, 1);
-		}else if(ic.getSrc2().getICType()==IntermediateCode.TEMP){
+		} else if (ic.getSrc2().getICType() == IntermediateCode.TEMP) {
 			addBinaryArithmetic(ic, 2);
-		}else{
+		} else {
 			addBinaryArithmetic(ic, 0);
 		}
 	}
-	
+
 	/**
 	 * 加入一个一元运算符
-	 * @param ic 输入的中间代码
-	 * @param flag 标志参数，为1表示源操作数为Temp，2表示为Variable，0表示为常数
+	 * 
+	 * @param ic
+	 *            输入的中间代码
+	 * @param flag
+	 *            标志参数，为1表示源操作数为Temp，2表示为Variable，0表示为常数
 	 */
-	private void addUnaryArithmetic(UnaryArithmetic ic,int flag){
-		canto.c1.ic.Operand icSrc=ic.getSrc();
-		canto.c1.ic.Operand res=ic.getResult();
-		if(flag==1){
-			Register dst=(Register)getTCOperand(icSrc);
+	private void addUnaryArithmetic(UnaryArithmetic ic, int flag) {
+		canto.c1.ic.Operand icSrc = ic.getSrc();
+		canto.c1.ic.Operand res = ic.getResult();
+		if (flag == 1) {
+			Register dst = (Register) getTCOperand(icSrc);
 			freeReg(icSrc);// 将inSrc和寄存器间的关系清除
-			//建立res和寄存器间的对应关系
-			regMap[dst.getRegNum()]=res.toString();
+			// 建立res和寄存器间的对应关系
+			regMap[dst.getRegNum()] = res.toString();
 			registerTable.put(res.toString(), dst);
 			caseAdd(ic, dst, null);
-		}else if(flag==2){
-			Location dst=(Location)getTCOperand(res);
-			codeSegment.add(new MOV(dst,getTCOperand(icSrc)));
+		} else if (flag == 2) {
+			Location dst = (Location) getTCOperand(res);
+			codeSegment.add(new MOV(dst, getTCOperand(icSrc)));
 			codeSegment.add(new NEG(dst));
-		}else{
-			Location dst=(Location) getTCOperand(res);
-			Immediate src=new Immediate(-((IntegerLiteral)icSrc).getValue());
+		} else {
+			Location dst = (Location) getTCOperand(res);
+			Immediate src = new Immediate(-((IntegerLiteral) icSrc).getValue());
 			codeSegment.add(new MOV(dst, src));
 		}
 	}
 
 	@Override
 	public void visit(Neg ic) throws Exception {
-		if(ic.getSrc().getICType()==IntermediateCode.TEMP){
+		if (ic.getSrc().getICType() == IntermediateCode.TEMP) {
 			addUnaryArithmetic(ic, 1);
-		} else if(ic.getSrc().getICType()==IntermediateCode.VARIABLE){
-			addUnaryArithmetic(ic,2);
-		}else{
-			addUnaryArithmetic(ic,0);
+		} else if (ic.getSrc().getICType() == IntermediateCode.VARIABLE) {
+			addUnaryArithmetic(ic, 2);
+		} else {
+			addUnaryArithmetic(ic, 0);
 		}
 	}
 
