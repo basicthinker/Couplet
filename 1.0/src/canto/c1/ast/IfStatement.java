@@ -39,11 +39,13 @@ public class IfStatement extends Statement {
 	 * @param thenStatement THEN语句
 	 */
 	public IfStatement(Expression condition, Statement thenStatement, 
-			int lineNumber, int columnNumber) {
-		super(lineNumber, columnNumber);
+			int line, int column) {
+		super(line, column);
 		this.condition = condition;
 		this.thenStatement = thenStatement;
 		this.elseStatement = null;
+		condition.setParent(this);
+		thenStatement.setParent(this);
 	}
 
 	@Override

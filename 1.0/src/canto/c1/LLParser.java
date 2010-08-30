@@ -283,8 +283,11 @@ public class LLParser implements canto.Parser {
 		if (tokenType == Token.ELSE) {
 			match(Token.ELSE);
 			elseStmt = stmt();
+			return new IfStatement(expr, thenStmt, elseStmt, line, column);
+		} else {
+			return new IfStatement(expr, thenStmt, line, column);
 		}
-		return new IfStatement(expr, thenStmt, elseStmt, line, column);
+		
 	}
 	
 	/**
