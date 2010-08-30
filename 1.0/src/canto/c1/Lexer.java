@@ -95,10 +95,13 @@ public class Lexer implements canto.Lexer {
 			} else if (intBufChar == '\t') {
 				
 				//intBufChar = skipWhiteSpaces();
+				do {
+					column += 1;
+				} while (column % tabWith != 0);
 				intBufChar = inBuf.read();
-				column += tabWith;
+				column += 1;
 				
-			}else if (intBufChar == '\n'){
+			} else if (intBufChar == '\n'){
 
 				intBufChar = inBuf.read();
 				
@@ -140,8 +143,6 @@ public class Lexer implements canto.Lexer {
 				}
 				catch(LexException e){
 					System.out.println(e.getExceptionMsg());
-				}
-				finally{
 					intBufChar = inBuf.read();
 					column += 1;
 				}
