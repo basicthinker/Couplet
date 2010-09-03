@@ -160,7 +160,6 @@ public class LLParser implements canto.Parser {
 		StatementList stmt_list = new StatementList(line, column);
 		while (tokenType == Token.L_BRACE || tokenType == Token.ID || 
 				tokenType == Token.IF || tokenType == Token.WHILE || 
-				tokenType == Token.BREAK || tokenType == Token.CONTINUE || 
 				tokenType == Token.INPUT || tokenType == Token.OUTPUT) {
 			stmt_list.addStatement(stmt());
 		}
