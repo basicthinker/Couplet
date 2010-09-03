@@ -47,7 +47,7 @@
 
 <block> ::= "{" <stmt_list> "}"
 
-<assign_stmt> ::= <access> "=" <expr> ";"
+<assign_stmt> ::= <location> "=" <expr> ";"
 
 <expr_stmt> ::= <expr> ";"
 
@@ -60,7 +60,7 @@
 
 <continue_stmt> ::= "continue" ";"
 
-<input_stmt> ::= "input" "(" <access> ")" ";"
+<input_stmt> ::= "input" "(" <location> ")" ";"
 
 <output_stmt> ::= "output" "(" <expr> ")" ";"
 
@@ -91,7 +91,7 @@
            | <expr_7>
 
 <expr_7> ::= "(" <expr> ")"
-           | <access>
+           | <location>
            | <literal>
            | <call>
 
@@ -115,8 +115,8 @@
 
 <bi_op_6> ::= "*" | "/" | "%"
 
-<access> ::= id
-           | <access> "[" <expr> "]"
+<location> ::= id
+           | <location> "[" <expr> "]"
 
 <literal> ::= integer_literal
             | float_literal

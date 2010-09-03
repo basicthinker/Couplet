@@ -3,7 +3,7 @@ package canto.c1.ast;
 /**
  * 标识符结点
  */
-public class Identifier extends Access {
+public class Identifier extends Location {
 
 	/**
 	 * 构造一个标识符

@@ -14,8 +14,6 @@ public interface ASTVisitor {
 	public void visit(IfStatement node) throws Exception;
 	public void visit(WhileStatement node) throws Exception;
 	public void visit(InputStatement node) throws Exception;
-	public void visit(BreakStatement node) throws Exception;
-	public void visit(ContinueStatement node) throws Exception;
 	public void visit(OutputStatement node) throws Exception;
 	public void visit(PosExpression node) throws Exception;
 	public void visit(NegExpression node) throws Exception;

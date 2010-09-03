@@ -9,9 +9,9 @@
          | <input_stmt> 
          | <output_stmt>
 
-<assign_stmt> ::= <access> "=" <expr> ";"
+<assign_stmt> ::= <location> "=" <expr> ";"
 
-<input_stmt> ::= "input" "(" <access> ")" ";"
+<input_stmt> ::= "input" "(" <location> ")" ";"
 
 <output_stmt> ::= "output" "(" <expr> ")" ";"
 
@@ -21,13 +21,13 @@
 <expr_1> ::= <expr_1> <bi_op_2> <expr_2>
            | <expr_2>
 
-<expr_2> ::= <access>
+<expr_2> ::= <location>
            | <literal>
 
 <bi_op_1> ::= "+"
 
 <bi_op_2> ::= "*"
 
-<access> ::= id
+<location> ::= id
 
 <literal> ::= integer_literal

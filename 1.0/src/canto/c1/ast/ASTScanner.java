@@ -29,7 +29,7 @@ public class ASTScanner implements ASTVisitor {
 	
 	@Override
 	public void visit(AssignmentStatement node) throws Exception {
-		node.getAccess().accept(this);
+		node.getLocation().accept(this);
 		node.getExpression().accept(this);
 	}
 	
@@ -53,16 +53,8 @@ public class ASTScanner implements ASTVisitor {
 	}
 	
 	@Override
-	public void visit(BreakStatement node) throws Exception {
-	}
-
-	@Override
-	public void visit(ContinueStatement node) throws Exception {
-	}
-	
-	@Override
 	public void visit(InputStatement node) throws Exception {
-		node.getAccess().accept(this);
+		node.getLocation().accept(this);
 	}
 
 	@Override

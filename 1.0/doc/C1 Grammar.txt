@@ -8,14 +8,12 @@
          | <expr_stmt>
          | <if_stmt>
          | <while_stmt>
-         | <break_stmt> 
-         | <continue_stmt>
          | <input_stmt>
          | <output_stmt>
 
 <block> ::= "{" <stmt_list> "}"
 
-<assign_stmt> ::= <access> "=" <expr> ";"
+<assign_stmt> ::= <location> "=" <expr> ";"
 
 <expr_stmt> ::= <expr> ";"
 
@@ -24,11 +22,7 @@
 
 <while_stmt> ::= "while" "(" <expr> ")" <stmt>
 
-<break_stmt> ::= "break" ";"
-
-<continue_stmt> ::= "continue" ";"
-
-<input_stmt> ::= "input" "(" <access> ")" ";"
+<input_stmt> ::= "input" "(" <location> ")" ";"
 
 <output_stmt> ::= "output" "(" <expr> ")" ";"
 
@@ -46,7 +40,7 @@
 
 <expr_6> ::= <un_op> <expr7> | <expr_7>
 
-<expr_7> ::= "(" <expr> ")" | <access> | <literal>
+<expr_7> ::= "(" <expr> ")" | <location> | <literal>
 
 <un_op> ::= "!" | "+" | "-"
 
@@ -62,6 +56,6 @@
 
 <bi_op_6> ::= "*"
 
-<access> ::= id
+<location> ::= id
 
 <literal> ::= integer_literal

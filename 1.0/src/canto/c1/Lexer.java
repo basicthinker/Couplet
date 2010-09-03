@@ -23,8 +23,6 @@ public class Lexer implements canto.Lexer {
 		reserved.add("if");
 		reserved.add("else");
 		reserved.add("while");
-		reserved.add("break");
-		reserved.add("continue");
 		reserved.add("input");
 		reserved.add("output");
 	}

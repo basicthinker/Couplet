@@ -2,13 +2,10 @@ package canto.c1;
 
 import canto.c1.ast.ASTNode;
 import canto.c1.ast.ASTScanner;
-import canto.c1.ast.Access;
 import canto.c1.ast.AddExpression;
 import canto.c1.ast.AndExpression;
 import canto.c1.ast.AssignmentStatement;
 import canto.c1.ast.Block;
-import canto.c1.ast.BreakStatement;
-import canto.c1.ast.ContinueStatement;
 import canto.c1.ast.EqualExpression;
 import canto.c1.ast.ExpressionStatement;
 import canto.c1.ast.GreaterEqualExpression;
@@ -116,11 +113,11 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 		super.visit(node);
 		Operand src = (Operand) node.getExpression().getProperty("result");
 		Location dst;
-		if (symbolTable.isExist(node.getAccess().getName())) {
-			dst = symbolTable.get(node.getAccess().getName());
+		if (symbolTable.isExist(node.getLocation().getName())) {
+			dst = symbolTable.get(node.getLocation().getName());
 		} else {
 			dst = new Temp();
-			symbolTable.put(node.getAccess().getName(), dst);
+			symbolTable.put(node.getLocation().getName(), dst);
 		}
 		Mov mov = new Mov(src, dst);
 		instructionList.addInstruction(mov);
@@ -201,37 +198,11 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(BreakStatement node) throws Exception {
-		ASTNode whileLocator = node;
-		// 找到上层While语句
-		while (whileLocator.getASTType() != ASTNode.WHILE_STATEMENT) {
-			whileLocator = whileLocator.getParent();
-		}
-		// 转化成一个WhileStatement
-		Label label = (Label) ((WhileStatement) whileLocator).getCondition()
-				.getProperty("falseLabel");
-		Goto unCondJump = new Goto(label);
-		instructionList.addInstruction(unCondJump);
-	}
-
-	@Override
-	public void visit(ContinueStatement node) throws Exception {
-		Statement whileLocator = node;
-		while (whileLocator.getASTType() != ASTNode.WHILE_STATEMENT) {
-			whileLocator = (Statement) whileLocator.getParent();
-		}
-		Label label = (Label) ((WhileStatement) whileLocator).getCondition()
-				.getProperty("startLabel");
-		Goto unCondJump = new Goto(label);
-		instructionList.addInstruction(unCondJump);
-	}
-
-	@Override
 	public void visit(InputStatement node) throws Exception {
 		super.visit(node);
-		Access access = node.getAccess();
-		Location location = symbolTable.get(access.getName());
-		In in = new In(location);
+		canto.c1.ast.Location astLocation = node.getLocation();
+		Location icLocation = symbolTable.get(astLocation.getName());
+		In in = new In(icLocation);
 		instructionList.addInstruction(in);
 	}
 

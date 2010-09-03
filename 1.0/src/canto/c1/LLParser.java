@@ -4,13 +4,11 @@ import java.util.List;
 import java.util.ListIterator;
 
 import canto.c1.token.Token;
-import canto.c1.ast.Access;
+import canto.c1.ast.Location;
 import canto.c1.ast.AddExpression;
 import canto.c1.ast.AndExpression;
 import canto.c1.ast.AssignmentStatement;
 import canto.c1.ast.Block;
-import canto.c1.ast.BreakStatement;
-import canto.c1.ast.ContinueStatement;
 import canto.c1.ast.EqualExpression;
 import canto.c1.ast.Expression;
 import canto.c1.ast.GreaterEqualExpression;
@@ -185,10 +183,6 @@ public class LLParser implements canto.Parser {
 			return if_stmt();
 		case Token.WHILE :
 			return while_stmt();
-		case Token.BREAK :
-			return break_stmt();
-		case Token.CONTINUE :
-			return continue_stmt();
 		case Token.INPUT :			
 			return input_stmt();
 		case Token.OUTPUT :
@@ -201,14 +195,14 @@ public class LLParser implements canto.Parser {
 	
 	/**
 	 * 向下推导非终极符assign_stmt
-	 * <assign_stmt> ::= <access> "=" <expr> ";"
+	 * <assign_stmt> ::= <location> "=" <expr> ";"
 	 * @return 赋值语句的AST结点
 	 * @throws ErrorRecord
 	 */
 	private AssignmentStatement assign_stmt() {
-		Access access = access();
+		Location location = location();
 		match(Token.EQUAL);
-		AssignmentStatement stmt = new AssignmentStatement(access, expr(), line, column);
+		AssignmentStatement stmt = new AssignmentStatement(location, expr(), line, column);
 		match(Token.SEMI);
 		return stmt;
 	}
@@ -247,44 +241,20 @@ public class LLParser implements canto.Parser {
 		Statement body = stmt();
 		return new WhileStatement(expr, body, line, column);
 	}
-	
-	/**
-	 * 向下推导非终极符break_stmt
-	 * <break_stmt> ::= "break" ";"
-	 * @return BREAK语句的AST结点
-	 * @throws ErrorRecord
-	 */
-	private BreakStatement break_stmt() {
-		match(Token.BREAK);
-		match(Token.SEMI);
-		return new BreakStatement(line, column);
-	}
-	
-	/**
-	 * 向下推导非终极符continue_stmt
-	 * <continue_stmt> ::= "continue" ";"
-	 * @return CONTINUE语句的AST结点
-	 * @throws ErrorRecord
-	 */
-	private ContinueStatement continue_stmt() {
-		match(Token.CONTINUE);
-		match(Token.SEMI);
-		return new ContinueStatement(line, column);
-	}
-	
+
 	/**
 	 * 向下推导非终极符input_stmt
-	 * <input_stmt> ::= "input" "(" <access> ")" ";"
+	 * <input_stmt> ::= "input" "(" <location> ")" ";"
 	 * @return 输入语句的AST结点
 	 * @throws ErrorRecord
 	 */
 	private InputStatement input_stmt() {
 		match(Token.INPUT);
 		match(Token.L_PARENT);
-		Access access = access();
+		Location location = location();
 		match(Token.R_PARENT);
 		match(Token.SEMI);
-		return new InputStatement(access, line, column);
+		return new InputStatement(location, line, column);
 	}
 	
 	/**
@@ -475,7 +445,7 @@ public class LLParser implements canto.Parser {
 	
 	/**
 	 * 向下推导非终极符expr_7
-	 * <expr_7> ::= "(" <expr> ")" | <access> | <literal>
+	 * <expr_7> ::= "(" <expr> ")" | <location> | <literal>
 	 * @return 表达式的AST结点
 	 * @throws ErrorRecord
 	 */	
@@ -488,7 +458,7 @@ public class LLParser implements canto.Parser {
 			match(Token.R_PARENT);
 			break;
 		case Token.ID :
-			expr = access();
+			expr = location();
 			break;
 		case Token.INTEGER_LITERAL :
 			expr = literal();
@@ -501,12 +471,12 @@ public class LLParser implements canto.Parser {
 	}
 	
 	/**
-	 * 向下推导非终极符access
-	 * <access> ::= id
+	 * 向下推导非终极符location
+	 * <location> ::= id
 	 * @return 
 	 * @throws ErrorRecord
 	 */
-	private Access access() {
+	private Location location() {
 		if (tokenType == Token.ID) {
 			return id();
 		} else {

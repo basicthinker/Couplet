@@ -72,19 +72,7 @@ public class ASTPrinter extends ASTScanner {
 		super.visit(node);
 		depth--;
 	}
-	
-	@Override
-	public void visit(BreakStatement node) throws Exception {
-		for (int i = 0; i < depth; i++) System.out.print("\t");
-		System.out.println("Break");
-	}
 
-	@Override
-	public void visit(ContinueStatement node) throws Exception {
-		for (int i = 0; i < depth; i++) System.out.print("\t");
-		System.out.println("Continue");
-	}
-	
 	@Override
 	public void visit(InputStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");

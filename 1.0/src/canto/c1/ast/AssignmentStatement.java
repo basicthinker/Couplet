@@ -6,22 +6,22 @@ package canto.c1.ast;
 public class AssignmentStatement extends Statement {
 
 	/** 赋值语句左侧的符号 */
-	private final Access access;
+	private final Location location;
 	
 	/** 赋值语句右侧的表达式 */
 	private final Expression expression;
 	
 	/**
 	 * 构造一个赋值语句
-	 * @param access 左侧的符号
+	 * @param location 左侧的符号
 	 * @param expression 右侧的表达式
 	 */
-	public AssignmentStatement(Access access, Expression expression,
+	public AssignmentStatement(Location location, Expression expression,
 			int line, int column) {
 		super(line, column);
-		this.access = access;
+		this.location = location;
 		this.expression = expression;
-		if (access != null) access.setParent(this);
+		if (location != null) location.setParent(this);
 		if (expression != null) expression.setParent(this);
 	}
 	
@@ -39,8 +39,8 @@ public class AssignmentStatement extends Statement {
 	 * 获取赋值语句左侧的符号
 	 * @return 左侧的符号
 	 */
-	public Access getAccess() {
-		return access;
+	public Location getLocation() {
+		return location;
 	}
 
 	/**

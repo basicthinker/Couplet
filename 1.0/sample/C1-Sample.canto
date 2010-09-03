@@ -3,8 +3,7 @@
 	x = 1;
 	while (x > 0 && x < 10 && x!=5) {
 		x = - 5 + x * t;
-		if (t <= 0) break;
-		else {
+		if (t <= 0) {
 			t = x || 5;
 		}
 	}
