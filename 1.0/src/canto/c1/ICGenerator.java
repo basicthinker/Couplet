@@ -319,8 +319,8 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 			instructionList.addInstruction(lable);
 			node.setProperty("result", result);
 		} else {
-			node.getOperand().setProperty("trueLabel", trueLabel);
-			node.getOperand().setProperty("falseLabel", falseLabel);
+			node.getOperand().setProperty("trueLabel", falseLabel);
+			node.getOperand().setProperty("falseLabel", trueLabel);
 			super.visit(node);
 		}
 	}
@@ -682,6 +682,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 			if (leftTrue != null) {
 				instructionList.addInstruction(leftTrue);
 			}
+			node.getRightOperand().setProperty("trueLabel", trueLabel);
 			node.getRightOperand().setProperty("falseLabel", falseLabel);
 			node.getRightOperand().accept(this);
 		}
@@ -734,6 +735,8 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 			if (leftFalse != null) {
 				instructionList.addInstruction(leftFalse);
 			}
+			node.getRightOperand().setProperty("trueLabel", trueLabel);
+			node.getRightOperand().setProperty("falseLabel", falseLabel);
 			node.getRightOperand().accept(this);
 		}
 	}
