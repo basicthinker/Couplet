@@ -41,35 +41,66 @@ public abstract class Token implements canto.Token {
 	
 	protected int tokenType;
 	
-	protected static final HashMap<String, Integer> terminalMap;
+	protected static final HashMap<String, Integer> tokenCodeMap;
+	
+	protected static final String[] codeTokenMap;
 	
 	static {
-		terminalMap = new HashMap<String, Integer>();
-		terminalMap.put("if", IF);
-		terminalMap.put("else", ELSE);
-		terminalMap.put("while", WHILE);
-		terminalMap.put("break", BREAK);
-		terminalMap.put("continue", CONTINUE);
-		terminalMap.put("input", INPUT);
-		terminalMap.put("output", OUTPUT);
-		terminalMap.put("{", L_BRACE);
-		terminalMap.put("}", R_BRACE);
-		terminalMap.put("(", L_PARENT);
-		terminalMap.put(")", R_PARENT);
-		terminalMap.put(";", SEMI);
-		terminalMap.put("=", EQUAL);
-		terminalMap.put("!", NOT);
-		terminalMap.put("+", PLUS);
-		terminalMap.put("-", MINUS);
-		terminalMap.put("*", TIMES);
-		terminalMap.put("<", LESS);
-		terminalMap.put("<=", LESS_EQUAL);
-		terminalMap.put(">", GREATER);
-		terminalMap.put(">=", GREATER_EQUAL);
-		terminalMap.put("==", EQUAL_EQUAL);
-		terminalMap.put("!=", NOT_EQUAL);
-		terminalMap.put("&&", AND_AND);
-		terminalMap.put("||", OR_OR);
+		tokenCodeMap = new HashMap<String, Integer>();
+		tokenCodeMap.put("if", IF);
+		tokenCodeMap.put("else", ELSE);
+		tokenCodeMap.put("while", WHILE);
+		tokenCodeMap.put("break", BREAK);
+		tokenCodeMap.put("continue", CONTINUE);
+		tokenCodeMap.put("input", INPUT);
+		tokenCodeMap.put("output", OUTPUT);
+		tokenCodeMap.put("{", L_BRACE);
+		tokenCodeMap.put("}", R_BRACE);
+		tokenCodeMap.put("(", L_PARENT);
+		tokenCodeMap.put(")", R_PARENT);
+		tokenCodeMap.put(";", SEMI);
+		tokenCodeMap.put("=", EQUAL);
+		tokenCodeMap.put("!", NOT);
+		tokenCodeMap.put("+", PLUS);
+		tokenCodeMap.put("-", MINUS);
+		tokenCodeMap.put("*", TIMES);
+		tokenCodeMap.put("<", LESS);
+		tokenCodeMap.put("<=", LESS_EQUAL);
+		tokenCodeMap.put(">", GREATER);
+		tokenCodeMap.put(">=", GREATER_EQUAL);
+		tokenCodeMap.put("==", EQUAL_EQUAL);
+		tokenCodeMap.put("!=", NOT_EQUAL);
+		tokenCodeMap.put("&&", AND_AND);
+		tokenCodeMap.put("||", OR_OR);
+
+		codeTokenMap = new String[28];
+		codeTokenMap[ID] = "Identifier";
+		codeTokenMap[INTEGER_LITERAL] = "Integer Literal";
+		codeTokenMap[IF] = "if";
+		codeTokenMap[ELSE] = "else";
+		codeTokenMap[WHILE] = "while";
+		codeTokenMap[BREAK] = "break";
+		codeTokenMap[CONTINUE] = "continue";
+		codeTokenMap[INPUT] = "input";
+		codeTokenMap[OUTPUT] = "output";
+		codeTokenMap[L_BRACE] = "{";
+		codeTokenMap[R_BRACE] = "}";
+		codeTokenMap[L_PARENT] = "(";
+		codeTokenMap[R_PARENT] = ")";
+		codeTokenMap[SEMI] = ";";
+		codeTokenMap[EQUAL] = "=";
+		codeTokenMap[NOT] = "!";
+		codeTokenMap[PLUS] = "+";
+		codeTokenMap[MINUS] = "-";
+		codeTokenMap[TIMES] = "*";
+		codeTokenMap[LESS] = "<";
+		codeTokenMap[LESS_EQUAL] = "<=";
+		codeTokenMap[GREATER] = ">";
+		codeTokenMap[GREATER_EQUAL] = ">=";
+		codeTokenMap[EQUAL_EQUAL] = "==";
+		codeTokenMap[NOT_EQUAL] = "!=";
+		codeTokenMap[AND_AND] = "&&";
+		codeTokenMap[OR_OR] = "||";
 	}
 	
 	/**
@@ -108,6 +139,15 @@ public abstract class Token implements canto.Token {
 	@Override
 	public int getTokenType() {
 		return tokenType;
+	}
+	
+	/**
+	 * 由Token类型编号获取Token字符串
+	 * @param tokenCode Token类型编号
+	 * @return Token字符串
+	 */
+	public static String getCodeToken(int tokenCode) {
+		return codeTokenMap[tokenCode];
 	}
 
 }

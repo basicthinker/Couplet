@@ -16,7 +16,7 @@ public class Punctuation extends Token {
 	 * @param lexeme
 	 */
 	public Punctuation(int line, int column, String lexeme) {
-		super(line, column, lexeme, terminalMap.get(lexeme));
+		super(line, column, lexeme, tokenCodeMap.get(lexeme));
 	}
 
 	/* (non-Javadoc)

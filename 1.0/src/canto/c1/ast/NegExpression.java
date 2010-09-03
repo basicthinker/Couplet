@@ -1,7 +1,5 @@
 package canto.c1.ast;
 
-import canto.CantoException;
-
 public class NegExpression extends UnaryExpression {
 
 	public NegExpression(Expression operand, int line, int column) {
@@ -9,7 +7,7 @@ public class NegExpression extends UnaryExpression {
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) throws CantoException {
+	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

@@ -3,7 +3,6 @@ package canto.c1;
 import java.util.List;
 import java.util.ListIterator;
 
-import canto.CantoException;
 import canto.c1.token.Token;
 import canto.c1.ast.Access;
 import canto.c1.ast.AddExpression;
@@ -35,7 +34,8 @@ import canto.c1.ast.Statement;
 import canto.c1.ast.StatementList;
 import canto.c1.ast.SubExpression;
 import canto.c1.ast.WhileStatement;
-import canto.c1.exception.ParseException;
+import canto.c1.error.ErrorRecord;
+import canto.c1.error.CompileException;
 
 public class LLParser implements canto.Parser {
 
@@ -60,6 +60,13 @@ public class LLParser implements canto.Parser {
 	/** 存放nextToken的类型编码 */
 	private int tokenType;
 	
+	/** 语法分析中的异常，存储错误记录 */
+	private CompileException exception;
+
+	public LLParser() {
+		exception = new CompileException();
+	}
+	
 	@Override
 	public canto.AbstractSyntaxTree getAST() {
 		return treeRoot;
@@ -71,15 +78,17 @@ public class LLParser implements canto.Parser {
 	}
 
 	@Override
-	public canto.AbstractSyntaxTree parse() throws Exception {
-		tokenIterator = tokenList.listIterator();
-		move();
+	public void parse() throws CompileException {
 		try	{
+			tokenIterator = tokenList.listIterator();
+			move();		
 			treeRoot = program();
-		} catch(ParseException e) {
-			System.out.println(e.getExceptionMsg());
+		} catch(Exception e) {
+			e.printStackTrace();
+			exception.add(ErrorRecord.parseError());
+		} finally {
+			if (exception.containError()) throw exception;
 		}
-		return treeRoot;
 	}
 	
 	/**
@@ -103,15 +112,13 @@ public class LLParser implements canto.Parser {
 	/**
 	 * 匹配某一指定的Token，并且向后移动
 	 * @param tokenType 指定的Token类型代码
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private void match(int tokenType) throws ParseException {
-		if (nextToken == null)
-			throw new ParseException();
-		if (nextToken.getTokenType() == tokenType) {
+	private void match(int tokenType) {
+		if (nextToken != null && nextToken.getTokenType() == tokenType) {
 			move();
 		} else {
-			throw new ParseException();
+			exception.add(ErrorRecord.missingToken(line, column, tokenType));
 		}
 	}
 	
@@ -119,42 +126,29 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符program
 	 * <program> ::= <block>
 	 * @return 程序的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private Program program() throws ParseException {
+	private Program program() {
 		Program program =  new Program(block(), line, column);
-
 		// 判断确实已经分析到Token链尾
-		if (nextToken == null) return program;
-		else throw new ParseException();
+		if (nextToken == null) {
+			return program;
+		} else {
+			exception.add(ErrorRecord.redundantTokens(line, column));
+			return null;
+		}
 	}
 	
 	/**
 	 * 向下推导非终极符block
 	 * <block> ::= "{" <stmt_list> "}"
 	 * @return BLOCK语句的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private Block block() throws ParseException {
-		try
-		{
-			match(Token.L_BRACE);
-		}
-		catch(ParseException e)
-		{
-			ParseException pe = new ParseException(line, column, ParseException.MissingRightBrace, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
+	private Block block() {
+		match(Token.L_BRACE);
 		Block block = new Block(stmt_list(), line, column);
-		try
-		{
-			match(Token.R_BRACE);
-		}
-		catch(ParseException e)
-		{
-			ParseException pe = new ParseException(line, column, ParseException.MissingLeftBrace, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
+		match(Token.R_BRACE);
 		return block;
 	}
 	
@@ -162,30 +156,15 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符stmt_list
 	 * <stmt_list> ::= <stmt_list> <stmt> | ε
 	 * @return 语句列表的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private StatementList stmt_list() throws ParseException {
+	private StatementList stmt_list() {
 		StatementList stmt_list = new StatementList(line, column);
 		while (tokenType == Token.L_BRACE || tokenType == Token.ID || 
 				tokenType == Token.IF || tokenType == Token.WHILE || 
 				tokenType == Token.BREAK || tokenType == Token.CONTINUE || 
 				tokenType == Token.INPUT || tokenType == Token.OUTPUT) {
-			try{
-				stmt_list.addStatement(stmt());
-			}
-			catch(ParseException e){
-				ParseException pe = new ParseException(line, column, ParseException.MissingEQUAL, CantoException.LevelError);
-				System.out.println(pe.getExceptionMsg());
-				
-				/*TODO 错误处理*/
-				while(true){
-					move();
-					if(tokenType == Token.R_PARENT || tokenType == Token.R_BRACE || tokenType == Token.SEMI)
-						break;
-				}
-				move();
-			}
-			
+			stmt_list.addStatement(stmt());
 		}
 		return stmt_list;
 	}
@@ -194,9 +173,9 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符stmt
 	 * <stmt> ::= <block> | <assign_stmt> | <if_stmt> | <while_stmt> | <input_stmt> | <output_stmt>
 	 * @return 语句的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private Statement stmt() throws ParseException {
+	private Statement stmt() {
 		switch (tokenType) {
 		case Token.L_BRACE :
 			return block();
@@ -215,10 +194,8 @@ public class LLParser implements canto.Parser {
 		case Token.OUTPUT :
 			return output_stmt();
 		default:
-			/*TODO 完成错误恢复代码 */
-
-			throw new ParseException(line, column, ParseException.IllegalStatement, CantoException.LevelError);
-			
+			exception.add(ErrorRecord.wrongStatement(line, column));
+			return null;
 		}
 	}
 	
@@ -226,28 +203,13 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符assign_stmt
 	 * <assign_stmt> ::= <access> "=" <expr> ";"
 	 * @return 赋值语句的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private AssignmentStatement assign_stmt() throws ParseException {
+	private AssignmentStatement assign_stmt() {
 		Access access = access();
-
-		try{
-			match(Token.EQUAL);
-		}
-		catch(ParseException e){
-			ParseException pe = new ParseException(line, column, ParseException.MissingEQUAL, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
-		
+		match(Token.EQUAL);
 		AssignmentStatement stmt = new AssignmentStatement(access, expr(), line, column);
-	
-		try{
-			match(Token.SEMI);
-		}
-		catch(ParseException e){
-			ParseException pe = new ParseException(line, column, ParseException.MissingSemicolon, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
+		match(Token.SEMI);
 		return stmt;
 	}
 	
@@ -255,70 +217,33 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符if_stmt
 	 * "if" "(" <expr> ")" <stmt> | "if" "(" <expr> ")" <stmt> "else" <stmt>
 	 * @return IF语句的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private IfStatement if_stmt() throws ParseException {
+	private IfStatement if_stmt() {
 		match(Token.IF);
-		try
-		{
-			match(Token.L_PARENT);
-		}
-		catch(ParseException e)
-		{
-			ParseException pe = new ParseException(line, column, ParseException.MissingLeftParenthesis, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
+		match(Token.L_PARENT);
 		Expression expr = expr();
-		try
-		{
-			match(Token.R_PARENT);
-		}
-		catch(ParseException e)
-		{
-			ParseException pe = new ParseException(line, column, ParseException.MissingRightParenthesis, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
+		match(Token.R_PARENT);
 		Statement thenStmt = stmt();
 		Statement elseStmt = null;
 		if (tokenType == Token.ELSE) {
 			match(Token.ELSE);
 			elseStmt = stmt();
-			return new IfStatement(expr, thenStmt, elseStmt, line, column);
-		} else {
-			return new IfStatement(expr, thenStmt, line, column);
 		}
-		
+		return new IfStatement(expr, thenStmt, elseStmt, line, column);		
 	}
 	
 	/**
 	 * 向下推导非终极符while_stmt
 	 * <while_stmt> ::= "while" "(" <expr> ")" <stmt>
 	 * @return WHILE语句的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private WhileStatement while_stmt() throws ParseException {
+	private WhileStatement while_stmt() {
 		match(Token.WHILE);
-		try{
-			match(Token.L_PARENT);
-		}
-		catch(ParseException e){
-			ParseException pe = new ParseException(line, column, ParseException.MissingLeftParenthesis, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
-		
+		match(Token.L_PARENT);
 		Expression expr = expr();
-		
-		try{
-			match(Token.R_PARENT);
-		}
-		catch(ParseException e){
-			ParseException pe = new ParseException(line, column, ParseException.MissingRightParenthesis, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
-		
-		if(tokenType != Token.L_BRACE){
-			throw new ParseException(line, column, ParseException.MissingLeftBrace, CantoException.LevelError);
-		}
+		match(Token.R_PARENT);
 		Statement body = stmt();
 		return new WhileStatement(expr, body, line, column);
 	}
@@ -327,19 +252,11 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符break_stmt
 	 * <break_stmt> ::= "break" ";"
 	 * @return BREAK语句的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private BreakStatement break_stmt() throws ParseException {
+	private BreakStatement break_stmt() {
 		match(Token.BREAK);
-		try
-		{
-			match(Token.SEMI);
-		}
-		catch(ParseException e)
-		{
-			ParseException pe = new ParseException(line, column, ParseException.MissingSemicolon, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
+		match(Token.SEMI);
 		return new BreakStatement(line, column);
 	}
 	
@@ -347,19 +264,11 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符continue_stmt
 	 * <continue_stmt> ::= "continue" ";"
 	 * @return CONTINUE语句的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private ContinueStatement continue_stmt() throws ParseException {
+	private ContinueStatement continue_stmt() {
 		match(Token.CONTINUE);
-		try
-		{
-			match(Token.SEMI);
-		}
-		catch(ParseException e)
-		{
-			ParseException pe = new ParseException(line, column, ParseException.MissingSemicolon, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
+		match(Token.SEMI);
 		return new ContinueStatement(line, column);
 	}
 	
@@ -367,35 +276,14 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符input_stmt
 	 * <input_stmt> ::= "input" "(" <access> ")" ";"
 	 * @return 输入语句的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private InputStatement input_stmt() throws ParseException {
+	private InputStatement input_stmt() {
 		match(Token.INPUT);
-		try{
-			match(Token.L_PARENT);
-		}
-		catch(ParseException e){
-			ParseException pe = new ParseException(line, column, ParseException.MissingLeftParenthesis, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
-		
+		match(Token.L_PARENT);
 		Access access = access();
-		
-		try{
-			match(Token.R_PARENT);
-		}
-		catch(ParseException e){
-			ParseException pe = new ParseException(line, column, ParseException.MissingRightParenthesis, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
-		
-		try{
-			match(Token.SEMI);
-		}
-		catch(ParseException e){
-			ParseException pe = new ParseException(line, column, ParseException.MissingSemicolon, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
+		match(Token.R_PARENT);
+		match(Token.SEMI);
 		return new InputStatement(access, line, column);
 	}
 	
@@ -403,35 +291,14 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符output_stmt
 	 * <output_stmt> ::= "output" "(" <expr> ")" ";"
 	 * @return 输出语句的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private OutputStatement output_stmt() throws ParseException {
+	private OutputStatement output_stmt() {
 		match(Token.OUTPUT);
-		try{
-			match(Token.L_PARENT);
-		}
-		catch(ParseException e){
-			ParseException pe = new ParseException(line, column, ParseException.MissingLeftParenthesis, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
-		
+		match(Token.L_PARENT);
 		Expression expr = expr();
-		
-		try{
-			match(Token.R_PARENT);
-		}
-		catch(ParseException e){
-			ParseException pe = new ParseException(line, column, ParseException.MissingRightParenthesis, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
-		
-		try{
-			match(Token.SEMI);
-		}
-		catch(ParseException e){
-			ParseException pe = new ParseException(line, column, ParseException.MissingSemicolon, CantoException.LevelError);
-			System.out.println(pe.getExceptionMsg());
-		}
+		match(Token.R_PARENT);
+		match(Token.SEMI);
 		return new OutputStatement(expr, line, column);
 	}
 	
@@ -439,9 +306,9 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符expr
 	 * <expr> ::= <expr> <bi_op_1> <expr_1> | <expr_1>
 	 * @return 表达式的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private Expression expr() throws ParseException {
+	private Expression expr() {
 		Expression expr = null;
 		expr = expr_1();
 		while (tokenType == Token.OR_OR) {		
@@ -455,9 +322,9 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符expr_1
 	 * <expr_1> ::= <expr_1> <bi_op_2> <expr_2> | <expr_2>
 	 * @return 表达式的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */	
-	private Expression expr_1() throws ParseException {
+	private Expression expr_1() {
 		Expression expr;
 		expr = expr_2();
 		while (tokenType == Token.AND_AND) {	
@@ -471,9 +338,9 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符expr_2
 	 * <expr_2> ::= <expr_2> <bi_op_3> <expr_3> | <expr_3>
 	 * @return 表达式的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */	
-	private Expression expr_2() throws ParseException {
+	private Expression expr_2() {
 		Expression expr;
 		expr = expr_3();
 		boolean flag = true;
@@ -499,9 +366,9 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符expr_3
 	 * <expr_3> ::= <expr_3> <bi_op_4> <expr_4> | <expr_4>
 	 * @return 表达式的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */	
-	private Expression expr_3() throws ParseException {
+	private Expression expr_3() {
 		Expression expr;
 		expr = expr_4();
 		boolean flag = true; 
@@ -535,9 +402,9 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符expr_4
 	 * <expr_4> ::= <expr_4> <bi_op_5> <expr_5> | <expr_5>
 	 * @return 表达式的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */	
-	private Expression expr_4() throws ParseException {
+	private Expression expr_4() {
 		Expression expr;
 		expr = expr_5();
 		boolean flag = true;
@@ -563,9 +430,9 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符expr_5
 	 * <expr_5> ::= <expr_5> <bi_op_6> <expr_6> | <expr_6>
 	 * @return 表达式的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */	
-	private Expression expr_5() throws ParseException {
+	private Expression expr_5() {
 		Expression expr;
 		expr = expr_6();
 		while (tokenType == Token.TIMES) {
@@ -579,9 +446,9 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符expr_6
 	 * <expr_6> ::= <un_op> <expr_7> | <expr_7>
 	 * @return 表达式的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */	
-	private Expression expr_6() throws ParseException {
+	private Expression expr_6() {
 		Expression expr;
 		switch (tokenType) {
 		case Token.PLUS :
@@ -600,7 +467,8 @@ public class LLParser implements canto.Parser {
 			expr = expr_7();
 			break;
 		default :
-			throw new ParseException();
+			exception.add(ErrorRecord.wrongExpression(line, column));
+			expr = null;
 		}
 		return expr;
 	}
@@ -609,9 +477,9 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符expr_7
 	 * <expr_7> ::= "(" <expr> ")" | <access> | <literal>
 	 * @return 表达式的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */	
-	private Expression expr_7() throws ParseException {
+	private Expression expr_7() {
 		Expression expr;
 		switch (tokenType) {
 		case Token.L_PARENT :
@@ -626,7 +494,8 @@ public class LLParser implements canto.Parser {
 			expr = literal();
 			break;
 		default :
-			throw new ParseException();
+			exception.add(ErrorRecord.wrongExpression(line, column));
+			expr = null;
 		}
 		return expr;
 	}
@@ -635,41 +504,47 @@ public class LLParser implements canto.Parser {
 	 * 向下推导非终极符access
 	 * <access> ::= id
 	 * @return 
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private Access access() throws ParseException {
-		if (tokenType == Token.ID) return id();
-		else throw new ParseException();
+	private Access access() {
+		if (tokenType == Token.ID) {
+			return id();
+		} else {
+			exception.add(ErrorRecord.missingToken(line, column, tokenType));
+			return null;
+		}
 	}
 	
 	/**
 	 * 向下推导非终极符literal
 	 * <literal> ::= integer_literal
 	 * @return 常量的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private Literal literal() throws ParseException {
+	private Literal literal() {
 		if (tokenType == Token.INTEGER_LITERAL) {
 			Literal literal = new IntegerLiteral((Integer)nextToken.getAttribute(), line, column);
 			move();
 			return literal;
 		} else {
-			throw new ParseException();
+			exception.add(ErrorRecord.missingToken(line, column, tokenType));
+			return null;
 		}
 	}
 	
 	/**
 	 * 读入非终极符id，将其转换化标识符的AST结点
 	 * @return 标识符的AST结点
-	 * @throws ParseException
+	 * @throws ErrorRecord
 	 */
-	private Identifier id() throws ParseException {
+	private Identifier id() {
 		if (tokenType == Token.ID) {
 			Identifier id = new Identifier(nextToken.getLexeme(), line, column);
 			move();
 			return id;
 		} else {
-			throw new ParseException();
+			exception.add(ErrorRecord.missingToken(line, column, tokenType));
+			return null;
 		}
 	}
 

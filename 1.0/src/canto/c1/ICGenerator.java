@@ -1,6 +1,5 @@
 package canto.c1;
 
-import canto.CantoException;
 import canto.c1.ast.ASTNode;
 import canto.c1.ast.ASTScanner;
 import canto.c1.ast.Access;
@@ -32,6 +31,8 @@ import canto.c1.ast.Statement;
 import canto.c1.ast.StatementList;
 import canto.c1.ast.SubExpression;
 import canto.c1.ast.WhileStatement;
+import canto.c1.error.ErrorRecord;
+import canto.c1.error.CompileException;
 
 import canto.c1.ic.Add;
 import canto.c1.ic.Goto;
@@ -77,9 +78,12 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public InstructionList generateIC() throws CantoException {
-		((ASTNode) ast).accept(this);
-		return instructionList;
+	public void generateIC() throws CompileException {
+		try {
+			((ASTNode) ast).accept(this);
+		} catch (Exception e) {
+			throw new CompileException(ErrorRecord.icGenerateError());
+		}
 	}
 
 	@Override
@@ -93,22 +97,22 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(Program node) throws CantoException {
+	public void visit(Program node) throws Exception {
 		super.visit(node);
 	}
 
 	@Override
-	public void visit(StatementList node) throws CantoException {
+	public void visit(StatementList node) throws Exception {
 		super.visit(node);
 	}
 
 	@Override
-	public void visit(Block node) throws CantoException {
+	public void visit(Block node) throws Exception {
 		super.visit(node);
 	}
 
 	@Override
-	public void visit(AssignmentStatement node) throws CantoException {
+	public void visit(AssignmentStatement node) throws Exception {
 		super.visit(node);
 		Operand src = (Operand) node.getExpression().getProperty("result");
 		Location dst;
@@ -124,12 +128,12 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 
 	// ExpressionStatement ?
 	@Override
-	public void visit(ExpressionStatement node) throws CantoException {
+	public void visit(ExpressionStatement node) throws Exception {
 		super.visit(node);
 	}
 
 	@Override
-	public void visit(IfStatement node) throws CantoException {
+	public void visit(IfStatement node) throws Exception {
 
 		// 新建条件正误时候跳转的Label,先设置子节点的falseLabel
 		Label falseLabel = new Label();
@@ -169,7 +173,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(WhileStatement node) throws CantoException {
+	public void visit(WhileStatement node) throws Exception {
 
 		// while循环开始处
 		Label startLabel = new Label();
@@ -197,7 +201,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(BreakStatement node) throws CantoException {
+	public void visit(BreakStatement node) throws Exception {
 		ASTNode whileLocator = node;
 		// 找到上层While语句
 		while (whileLocator.getASTType() != ASTNode.WHILE_STATEMENT) {
@@ -211,7 +215,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(ContinueStatement node) throws CantoException {
+	public void visit(ContinueStatement node) throws Exception {
 		Statement whileLocator = node;
 		while (whileLocator.getASTType() != ASTNode.WHILE_STATEMENT) {
 			whileLocator = (Statement) whileLocator.getParent();
@@ -223,7 +227,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(InputStatement node) throws CantoException {
+	public void visit(InputStatement node) throws Exception {
 		super.visit(node);
 		Access access = node.getAccess();
 		Location location = symbolTable.get(access.getName());
@@ -232,7 +236,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(OutputStatement node) throws CantoException {
+	public void visit(OutputStatement node) throws Exception {
 		super.visit(node);
 		Operand operand = (Operand) node.getExpression().getProperty("result");
 		Out out = new Out(operand);
@@ -240,7 +244,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(PosExpression node) throws CantoException {
+	public void visit(PosExpression node) throws Exception {
 		super.visit(node);
 		Label trueLabel = (Label) node.getProperty("trueLabel");
 		Label falseLabel = (Label) node.getProperty("falseLabel");
@@ -270,7 +274,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(NegExpression node) throws CantoException {
+	public void visit(NegExpression node) throws Exception {
 		super.visit(node);
 		Label trueLabel = (Label) node.getProperty("trueLabel");
 		Label falseLabel = (Label) node.getProperty("falseLabel");
@@ -301,7 +305,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(NotExpression node) throws CantoException {
+	public void visit(NotExpression node) throws Exception {
 		Label trueLabel = (Label) node.getProperty("trueLabel");
 		Label falseLabel = (Label) node.getProperty("falseLabel");
 		if (trueLabel == null && falseLabel == null) {
@@ -326,7 +330,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(AddExpression node) throws CantoException {
+	public void visit(AddExpression node) throws Exception {
 		super.visit(node);
 		Operand leftOperand = (Operand) node.getLeftOperand().getProperty(
 				"result");
@@ -356,7 +360,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(SubExpression node) throws CantoException {
+	public void visit(SubExpression node) throws Exception {
 		super.visit(node);
 		Operand leftOperand = (Operand) node.getLeftOperand().getProperty(
 				"result");
@@ -386,7 +390,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(MulExpression node) throws CantoException {
+	public void visit(MulExpression node) throws Exception {
 		super.visit(node);
 		Operand leftOperand = (Operand) node.getLeftOperand().getProperty(
 				"result");
@@ -416,7 +420,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(LessExpression node) throws CantoException {
+	public void visit(LessExpression node) throws Exception {
 		super.visit(node);
 		Operand leftOperand = (Operand) node.getLeftOperand().getProperty(
 				"result");
@@ -453,7 +457,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(LessEqualExpression node) throws CantoException {
+	public void visit(LessEqualExpression node) throws Exception {
 		super.visit(node);
 		Operand leftOperand = (Operand) node.getLeftOperand().getProperty(
 				"result");
@@ -490,7 +494,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(GreaterExpression node) throws CantoException {
+	public void visit(GreaterExpression node) throws Exception {
 		super.visit(node);
 		Operand leftOperand = (Operand) node.getLeftOperand().getProperty(
 				"result");
@@ -527,7 +531,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(GreaterEqualExpression node) throws CantoException {
+	public void visit(GreaterEqualExpression node) throws Exception {
 		super.visit(node);
 		Operand leftOperand = (Operand) node.getLeftOperand().getProperty(
 				"result");
@@ -564,7 +568,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(EqualExpression node) throws CantoException {
+	public void visit(EqualExpression node) throws Exception {
 		super.visit(node);
 		Operand leftOperand = (Operand) node.getLeftOperand().getProperty(
 				"result");
@@ -601,7 +605,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(NotEqualExpression node) throws CantoException {
+	public void visit(NotEqualExpression node) throws Exception {
 		super.visit(node);
 		Operand leftOperand = (Operand) node.getLeftOperand().getProperty(
 				"result");
@@ -638,7 +642,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(AndExpression node) throws CantoException {
+	public void visit(AndExpression node) throws Exception {
 		Label trueLabel = (Label) node.getProperty("trueLable");
 		Label falseLabel = (Label) node.getProperty("falseLabel");
 		if (trueLabel == null && falseLabel == null) {
@@ -689,7 +693,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(OrExpression node) throws CantoException {
+	public void visit(OrExpression node) throws Exception {
 		Label trueLabel = (Label) node.getProperty("trueLabel");
 		Label falseLabel = (Label) node.getProperty("falseLabel");
 		if (trueLabel == null && falseLabel == null) {
@@ -742,7 +746,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(Identifier node) throws CantoException {
+	public void visit(Identifier node) throws Exception {
 		Label trueLabel=(Label)node.getProperty("trueLabel");
 		Label falseLabel=(Label)node.getProperty("falseLabel");
 		if(trueLabel!=null&&falseLabel!=null){
@@ -788,7 +792,7 @@ public class ICGenerator extends ASTScanner implements canto.ICGenerator {
 	}
 
 	@Override
-	public void visit(IntegerLiteral node) throws CantoException {
+	public void visit(IntegerLiteral node) throws Exception {
 		canto.c1.ic.IntegerLiteral integerLiteral = new canto.c1.ic.IntegerLiteral(
 				node.getValue());
 		node.setProperty("result", integerLiteral);

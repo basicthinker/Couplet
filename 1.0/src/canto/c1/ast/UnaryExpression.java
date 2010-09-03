@@ -16,7 +16,7 @@ public abstract class UnaryExpression extends Expression {
 	public UnaryExpression(Expression operand, int line, int column) {
 		super(line, column);
 		this.operand = operand;
-		operand.setParent(this);
+		if (operand != null) operand.setParent(this);
 	}
 
 	/**

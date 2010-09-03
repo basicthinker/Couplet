@@ -1,7 +1,5 @@
 package canto.c1.ast;
 
-import canto.CantoException;
-
 /**
  * BREAK语句结点
  */
@@ -17,7 +15,7 @@ public class BreakStatement extends Statement {
 	}
 	
 	@Override
-	public void accept(ASTVisitor visitor) throws CantoException {
+	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

@@ -1,6 +1,12 @@
 {
 	input(t);
-	input(x);
-	if((!(x&&t))||x>t) output(1);
-	else output(0);
+	x = 1;
+	while (x > 0 && x < 10 && x!=5) {
+		x = - 5 + x * t;
+		if (t <= 0) break;
+		else {
+			t = x || 5;
+		}
+	}
+	output(x);
 }

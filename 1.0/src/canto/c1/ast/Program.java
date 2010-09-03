@@ -1,7 +1,5 @@
 package canto.c1.ast;
 
-import canto.CantoException;
-
 /**
  * 程序结点
  */
@@ -17,11 +15,11 @@ public class Program extends ASTNode {
 	public Program(Block body, int line, int column) {
 		super(line, column);
 		this.body = body;
-		body.setParent(this);
+		if (body != null) body.setParent(this);
 	}
 	
 	@Override
-	public void accept(ASTVisitor visitor) throws CantoException {
+	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

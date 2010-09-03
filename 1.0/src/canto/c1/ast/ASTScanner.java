@@ -1,7 +1,5 @@
 package canto.c1.ast;
 
-import canto.CantoException;
-
 /**
  * AST的扫描器
  *   该扫描器实现了AST访问者接口；
@@ -13,35 +11,35 @@ import canto.CantoException;
 public class ASTScanner implements ASTVisitor {
 
 	@Override
-	public void visit(Program node) throws CantoException {
+	public void visit(Program node) throws Exception {
 		node.getBody().accept(this);
 	}
 
 	@Override
-	public void visit(StatementList node) throws CantoException {
+	public void visit(StatementList node) throws Exception {
 		for (Statement item : node.getList()) {
 			item.accept(this);
 		}
 	}
 	
 	@Override
-	public void visit(Block node) throws CantoException {
+	public void visit(Block node) throws Exception {
 		node.getStatementList().accept(this);
 	}
 	
 	@Override
-	public void visit(AssignmentStatement node) throws CantoException {
+	public void visit(AssignmentStatement node) throws Exception {
 		node.getAccess().accept(this);
 		node.getExpression().accept(this);
 	}
 	
 	@Override
-	public void visit(ExpressionStatement node) throws CantoException {
+	public void visit(ExpressionStatement node) throws Exception {
 		node.getExpression().accept(this);
 	}
 
 	@Override
-	public void visit(IfStatement node) throws CantoException {
+	public void visit(IfStatement node) throws Exception {
 		node.getCondition().accept(this);
 		node.getThenStatement().accept(this);
 		Statement elseStatement = node.getElseStatement();
@@ -49,116 +47,116 @@ public class ASTScanner implements ASTVisitor {
 	}
 
 	@Override
-	public void visit(WhileStatement node) throws CantoException {
+	public void visit(WhileStatement node) throws Exception {
 		node.getCondition().accept(this);
 		node.getBody().accept(this);
 	}
 	
 	@Override
-	public void visit(BreakStatement node) throws CantoException {
+	public void visit(BreakStatement node) throws Exception {
 	}
 
 	@Override
-	public void visit(ContinueStatement node) throws CantoException {
+	public void visit(ContinueStatement node) throws Exception {
 	}
 	
 	@Override
-	public void visit(InputStatement node) throws CantoException {
+	public void visit(InputStatement node) throws Exception {
 		node.getAccess().accept(this);
 	}
 
 	@Override
-	public void visit(OutputStatement node) throws CantoException {
+	public void visit(OutputStatement node) throws Exception {
 		node.getExpression().accept(this);
 	}
 	
 	@Override
-	public void visit(PosExpression node) throws CantoException {
+	public void visit(PosExpression node) throws Exception {
 		node.getOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(NegExpression node) throws CantoException {
+	public void visit(NegExpression node) throws Exception {
 		node.getOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(NotExpression node) throws CantoException {
+	public void visit(NotExpression node) throws Exception {
 		node.getOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(AddExpression node) throws CantoException {
+	public void visit(AddExpression node) throws Exception {
 		node.getLeftOperand().accept(this);
 		node.getRightOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(SubExpression node) throws CantoException {
+	public void visit(SubExpression node) throws Exception {
 		node.getLeftOperand().accept(this);
 		node.getRightOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(MulExpression node) throws CantoException {
+	public void visit(MulExpression node) throws Exception {
 		node.getLeftOperand().accept(this);
 		node.getRightOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(LessExpression node) throws CantoException {
+	public void visit(LessExpression node) throws Exception {
 		node.getLeftOperand().accept(this);
 		node.getRightOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(LessEqualExpression node) throws CantoException {
+	public void visit(LessEqualExpression node) throws Exception {
 		node.getLeftOperand().accept(this);
 		node.getRightOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(GreaterExpression node) throws CantoException {
+	public void visit(GreaterExpression node) throws Exception {
 		node.getLeftOperand().accept(this);
 		node.getRightOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(GreaterEqualExpression node) throws CantoException {
+	public void visit(GreaterEqualExpression node) throws Exception {
 		node.getLeftOperand().accept(this);
 		node.getRightOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(EqualExpression node) throws CantoException {
+	public void visit(EqualExpression node) throws Exception {
 		node.getLeftOperand().accept(this);
 		node.getRightOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(NotEqualExpression node) throws CantoException {
+	public void visit(NotEqualExpression node) throws Exception {
 		node.getLeftOperand().accept(this);
 		node.getRightOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(AndExpression node) throws CantoException {
+	public void visit(AndExpression node) throws Exception {
 		node.getLeftOperand().accept(this);
 		node.getRightOperand().accept(this);		
 	}
 
 	@Override
-	public void visit(OrExpression node) throws CantoException {
+	public void visit(OrExpression node) throws Exception {
 		node.getLeftOperand().accept(this);
 		node.getRightOperand().accept(this);		
 	}
 	
 	@Override
-	public void visit(Identifier node) throws CantoException {
+	public void visit(Identifier node) throws Exception {
 	}
 
 	@Override
-	public void visit(IntegerLiteral node) throws CantoException {
+	public void visit(IntegerLiteral node) throws Exception {
 	}
 
 }

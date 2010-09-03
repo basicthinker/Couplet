@@ -1,41 +1,19 @@
 package canto;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 /**
- * 
- * @author WANGZHE
- *
+ * Canto异常类的顶层抽象类
  */
 @SuppressWarnings("serial")
 public abstract class CantoException extends Exception {
 	
-	protected final int lineNumber;
-	protected final int columnNumber;
-	protected final int exceptionType;
-	protected final int exceptionLevel;
-	protected String exceptionMsg;
+	/**
+	 * 输出异常信息
+	 * @param outStrm 输出流
+	 * @throws IOException 输出异常
+	 */
+	public abstract void outputInfo(OutputStream outStrm) throws IOException;
 	
-	/**定义异常的等级*/
-	public static final int LevelError = 0;
-	public static final int LevelWarning = 1;
-	
-	//protected final String exceptionMsg;
-	
-	public CantoException(int lineNumber, int columnNumber, int exceptionType, int exceptionLevel){
-		this.lineNumber = lineNumber;
-		this.columnNumber = columnNumber;
-		this.exceptionType = exceptionType;
-		this.exceptionMsg = null;
-		this.exceptionLevel = exceptionLevel;
-	}
-	
-	public int getLineNumber(){
-		return lineNumber;
-	}
-	
-	public int getColumnNumber(){
-		return columnNumber;
-	}
-	
-	public abstract String getExceptionMsg();
-
 }

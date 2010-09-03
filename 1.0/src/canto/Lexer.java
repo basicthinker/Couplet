@@ -11,7 +11,7 @@ public interface Lexer {
 
 	public void open(InputStreamReader inStr) throws IOException;
 	
-	public List<Token> scan() throws IOException;
+	public void scan() throws CantoException;
 	
 	public List<Token> getTokenList();
 	

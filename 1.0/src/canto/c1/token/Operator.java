@@ -17,7 +17,7 @@ public class Operator extends Token {
 	 * @param lexeme
 	 */
 	public Operator(int line, int column, String lexeme) {
-		super(line, column, lexeme, terminalMap.get(lexeme));
+		super(line, column, lexeme, tokenCodeMap.get(lexeme));
 	}
 
 	/* (non-Javadoc)

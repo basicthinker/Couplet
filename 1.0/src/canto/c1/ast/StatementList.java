@@ -3,8 +3,6 @@ package canto.c1.ast;
 import java.util.LinkedList;
 import java.util.List;
 
-import canto.CantoException;
-
 /**
  * 语句列表结点
  */
@@ -22,7 +20,7 @@ public class StatementList extends ASTNode {
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) throws CantoException {
+	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 
@@ -45,7 +43,7 @@ public class StatementList extends ASTNode {
 	 */
 	public void addStatement(Statement statement) {
 		list.add(statement);
-		statement.setParent(this);
+		if (statement != null) statement.setParent(this);
 	}
 
 }

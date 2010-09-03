@@ -1,6 +1,9 @@
 package canto.c1;
 
 import java.util.List;
+
+import canto.c1.error.ErrorRecord;
+import canto.c1.error.CompileException;
 import canto.c1.ic.Add;
 import canto.c1.ic.Arithmetic;
 import canto.c1.ic.BinaryArithmetic;
@@ -83,7 +86,7 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 
 	/** 当前该用的寄存器对应的数字 */
 	static int regPointer = 0;
-
+	
 	public TCGenerator() {
 		program = new Program();
 		dataSegment = new DataSegment();
@@ -93,17 +96,21 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 		regMap = new String[4];
 	}
 
+
 	@Override
 	public void setIC(canto.IntermediateCode ic) {
 		this.ic = (InstructionList) ic;
 	}
 
 	@Override
-	public canto.TargetCode generateTC() throws Exception {
-		visit(ic);
-		program.setCodeSegment(codeSegment);
-		program.setDataSegment(dataSegment);
-		return program;
+	public void generateTC() throws CompileException {
+		try {
+			visit(ic);
+			program.setCodeSegment(codeSegment);
+			program.setDataSegment(dataSegment);
+		} catch (Exception e) {
+			throw new CompileException(ErrorRecord.tcGenerateError());
+		}
 	}
 
 	@Override
@@ -338,7 +345,8 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 		codeSegment.add(new MOV(dst, src));
 		freeReg(ic.getSrc());
 	}
-
+	
+	
 	/**
 	 * 根据中间代码类型，加入不同的运算
 	 * 
@@ -365,7 +373,7 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 			break;
 		}
 	}
-
+	
 	/**
 	 * 目标代码加入一个二元运算
 	 * 
@@ -444,7 +452,7 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 			addBinaryArithmetic(ic, 0);
 		}
 	}
-
+	
 	/**
 	 * 加入一个一元运算符
 	 * 

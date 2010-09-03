@@ -1,5 +1,6 @@
 package canto;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -14,9 +15,9 @@ public interface Compiler {
 	
 	public void setTarget(OutputStream outStrm);
 	
-	public void compile() throws Exception;
+	public void compile() throws CantoException;
 	
-	public void outputErrors(OutputStream outStrm);
+	public void outputErrors(OutputStream outStrm) throws IOException;
 	
 	public List<Token> getTokenList(); 
 	

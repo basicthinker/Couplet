@@ -1,7 +1,5 @@
 package canto.c1.ast;
 
-import canto.CantoException;
-
 public class NotEqualExpression extends BinaryExpression {
 
 	public NotEqualExpression(Expression leftOperand, Expression rightOperand,
@@ -10,7 +8,7 @@ public class NotEqualExpression extends BinaryExpression {
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) throws CantoException {
+	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

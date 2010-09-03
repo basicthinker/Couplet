@@ -1,7 +1,5 @@
 package canto.c1.x86;
 
-import java.io.IOException;
-
 /**
  * X86目标码的符号
  */
@@ -19,7 +17,7 @@ public class Symbol extends Memory {
 	}
 
 	@Override
-	public void accept(X86Visitor visitor) throws IOException {
+	public void accept(X86Visitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

@@ -1,7 +1,5 @@
 package canto.c1.ast;
 
-import canto.CantoException;
-
 /**
  * CONTINUE语句结点
  */
@@ -17,7 +15,7 @@ public class ContinueStatement extends Statement {
 	}
 	
 	@Override
-	public void accept(ASTVisitor visitor) throws CantoException {
+	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

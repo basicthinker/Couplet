@@ -1,7 +1,5 @@
 package canto.c1.x86;
 
-import java.io.IOException;
-
 /**
  * X86目标码的基类
  */
@@ -41,6 +39,6 @@ public abstract class X86TargetCode implements canto.TargetCode {
 	 * @param visitor 访问者
 	 * @throws IOException 
 	 */
-	public abstract void accept(X86Visitor visitor) throws IOException;
+	public abstract void accept(X86Visitor visitor) throws Exception;
 	
 }

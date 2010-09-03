@@ -1,9 +1,10 @@
 package canto.c1;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InputStream;
+
+import canto.CantoException;
+import canto.c1.error.AssemblyException;
 
 public class Main {
 
@@ -11,11 +12,13 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		try {
-			
+
+		try {			
+
 			// 检查文件名，并去除扩展名
-			String fullName = args.length > 0 ? args[0] : "sample\\C1-Sample.canto";
+			String fullName = args.length > 0 ? args[0] : "sample/C1-Sample.canto";
 			String nonextName = null;
+			
 			if ((fullName != null) && (fullName.length() > 0)) {
 	            int k = fullName.lastIndexOf('.');
 	            if ((k >-1) && (k < (fullName.length()))) {
@@ -41,34 +44,29 @@ public class Main {
 			// 以下是汇编、连接阶段 			
 			Process process;
 			int status;
-			InputStream feedback; 
-			byte[] infoBuffer = new byte[1000];			
+			
 			// 汇编
-			process = Runtime.getRuntime().exec("tools\\ml /c /coff /Fo" + 
+			process = Runtime.getRuntime().exec("tools/ml /c /coff /Fo" + 
 					nonextName + ".obj " + nonextName + ".asm");
 			status = process.waitFor();
 			if (status != 0) {
-				feedback = process.getInputStream();			
-				for (int i = 0; i > -1; i = feedback.read(infoBuffer)) {
-	                System.err.print(new String(infoBuffer, 0, i));
-	            }
-				throw new Exception("汇编错误");
-			}	
+				throw new AssemblyException(process.getInputStream());
+			}
+
 			// 连接
 			process = Runtime.getRuntime().exec(
-					"tools\\link /subsystem:console /OUT:" + 
+					"tools/link /subsystem:console /OUT:" + 
 					nonextName + ".exe " + nonextName + ".obj");
 			status = process.waitFor();
 			if (status != 0) {
-				feedback = process.getInputStream();
-				for (int i = 0; i > -1; i = feedback.read(infoBuffer)) {
-	                System.err.print(new String(infoBuffer, 0, i));
-	            }
-				throw new Exception("连接错误");
+				throw new AssemblyException(process.getInputStream());
 			}
 			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			System.out.println("编译成功！");
+			
+		} catch (CantoException e) {
+			e.outputInfo(System.err);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

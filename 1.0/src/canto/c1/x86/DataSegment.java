@@ -1,6 +1,5 @@
 package canto.c1.x86;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class DataSegment extends X86TargetCode {
 	}
 
 	@Override
-	public void accept(X86Visitor visitor) throws IOException {
+	public void accept(X86Visitor visitor) throws Exception {
 		visitor.visit(this);		
 	}
 	

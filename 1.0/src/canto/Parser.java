@@ -15,10 +15,10 @@ public interface Parser {
 	
 	/**
 	 * 进行语法分析
-	 * @return 生成的AST
+	 * @return 编译是否成功
 	 * @throws Exception
 	 */
-	public AbstractSyntaxTree parse() throws Exception;
+	public void parse() throws CantoException;
 	
 	/**
 	 * 获取生成的AST

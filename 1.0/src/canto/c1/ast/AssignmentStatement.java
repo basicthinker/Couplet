@@ -1,7 +1,5 @@
 package canto.c1.ast;
 
-import canto.CantoException;
-
 /**
  * 赋值语句结点
  */
@@ -23,12 +21,12 @@ public class AssignmentStatement extends Statement {
 		super(line, column);
 		this.access = access;
 		this.expression = expression;
-		access.setParent(this);
-		expression.setParent(this);
+		if (access != null) access.setParent(this);
+		if (expression != null) expression.setParent(this);
 	}
 	
 	@Override
-	public void accept(ASTVisitor visitor) throws CantoException {
+	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

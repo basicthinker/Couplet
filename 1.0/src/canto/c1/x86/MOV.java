@@ -1,7 +1,5 @@
 package canto.c1.x86;
 
-import java.io.IOException;
-
 /**
  * X86目标码的MOV指令
  */
@@ -24,7 +22,7 @@ public class MOV extends Instruction {
 	}
 
 	@Override
-	public void accept(X86Visitor visitor) throws IOException {
+	public void accept(X86Visitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

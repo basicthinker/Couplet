@@ -22,8 +22,8 @@ public abstract class BinaryExpression extends Expression {
 		super(line, column);
 		this.leftOperand = leftOperand;
 		this.rightOperand = rightOperand;
-		leftOperand.setParent(this);
-		rightOperand.setParent(this);
+		if (leftOperand != null) leftOperand.setParent(this);
+		if (rightOperand != null) rightOperand.setParent(this);
 	}
 
 	/**

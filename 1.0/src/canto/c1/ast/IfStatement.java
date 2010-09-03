@@ -1,7 +1,5 @@
 package canto.c1.ast;
 
-import canto.CantoException;
-
 /**
  * IF语句结点
  */
@@ -17,7 +15,7 @@ public class IfStatement extends Statement {
 	private final Statement elseStatement;
 			
 	/**
-	 * 构造一个带有THEN语句和ELSE语句的IF语句 
+	 * 构造一个IF语句 
 	 * @param condition 条件表达式
 	 * @param thenStatement THEN语句
 	 * @param elseStatement ELSE语句
@@ -28,28 +26,13 @@ public class IfStatement extends Statement {
 		this.condition = condition;
 		this.thenStatement = thenStatement;
 		this.elseStatement = elseStatement;
-		condition.setParent(this);
-		thenStatement.setParent(this);
-		elseStatement.setParent(this);
-	}
-	
-	/**
-	 * 构造一个只带有THEN语句IF语句 
-	 * @param condition 条件表达式
-	 * @param thenStatement THEN语句
-	 */
-	public IfStatement(Expression condition, Statement thenStatement, 
-			int line, int column) {
-		super(line, column);
-		this.condition = condition;
-		this.thenStatement = thenStatement;
-		this.elseStatement = null;
-		condition.setParent(this);
-		thenStatement.setParent(this);
+		if (condition != null) condition.setParent(this);
+		if (thenStatement != null)thenStatement.setParent(this);
+		if (elseStatement != null) elseStatement.setParent(this);
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) throws CantoException {
+	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

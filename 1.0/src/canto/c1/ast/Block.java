@@ -1,7 +1,5 @@
 package canto.c1.ast;
 
-import canto.CantoException;
-
 /**
  * BLOCK语句结点
  */
@@ -17,11 +15,11 @@ public class Block extends Statement {
 	public Block(StatementList statementList, int line, int column) {
 		super(line, column);
 		this.statementList = statementList;
-		statementList.setParent(this);
+		if (statementList != null) statementList.setParent(this);
 	}
 	
 	@Override
-	public void accept(ASTVisitor visitor) throws CantoException {
+	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

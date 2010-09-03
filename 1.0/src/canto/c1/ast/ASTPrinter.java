@@ -1,7 +1,6 @@
 package canto.c1.ast;
 
 import canto.AbstractSyntaxTree;
-import canto.CantoException;
 
 /**
  * 该类用于打印AST结构
@@ -12,7 +11,7 @@ public class ASTPrinter extends ASTScanner {
 	int depth = 0;
 	
 	@Override
-	public void visit(Program node) throws CantoException {
+	public void visit(Program node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Prgoram :");
 		depth++;
@@ -21,7 +20,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(StatementList node) throws CantoException {
+	public void visit(StatementList node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("StatementList :");
 		depth++;
@@ -30,7 +29,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(Block node) throws CantoException {
+	public void visit(Block node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Block :");
 		depth++;
@@ -39,7 +38,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(AssignmentStatement node) throws CantoException {
+	public void visit(AssignmentStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Assignment :");
 		depth++;
@@ -48,7 +47,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(ExpressionStatement node) throws CantoException {
+	public void visit(ExpressionStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Expression Statement :");
 		depth++;
@@ -57,7 +56,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(IfStatement node) throws CantoException {
+	public void visit(IfStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("If :");
 		depth++;
@@ -66,7 +65,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(WhileStatement node) throws CantoException {
+	public void visit(WhileStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("While :");
 		depth++;
@@ -75,19 +74,19 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(BreakStatement node) throws CantoException {
+	public void visit(BreakStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Break");
 	}
 
 	@Override
-	public void visit(ContinueStatement node) throws CantoException {
+	public void visit(ContinueStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Continue");
 	}
 	
 	@Override
-	public void visit(InputStatement node) throws CantoException {
+	public void visit(InputStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Input :");
 		depth++;
@@ -96,7 +95,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(OutputStatement node) throws CantoException {
+	public void visit(OutputStatement node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Output :");
 		depth++;
@@ -105,7 +104,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(PosExpression node) throws CantoException {
+	public void visit(PosExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Pos :");
 		depth++;
@@ -114,7 +113,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(NegExpression node) throws CantoException {
+	public void visit(NegExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Neg :");
 		depth++;
@@ -123,7 +122,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(NotExpression node) throws CantoException {
+	public void visit(NotExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Not :");
 		depth++;
@@ -132,7 +131,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(AddExpression node) throws CantoException {
+	public void visit(AddExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Add :");
 		depth++;
@@ -141,7 +140,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(SubExpression node) throws CantoException {
+	public void visit(SubExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Sub :");
 		depth++;
@@ -150,7 +149,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(MulExpression node) throws CantoException {
+	public void visit(MulExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Mul :");
 		depth++;
@@ -159,7 +158,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(LessExpression node) throws CantoException {
+	public void visit(LessExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Less :");
 		depth++;
@@ -168,7 +167,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(LessEqualExpression node) throws CantoException {
+	public void visit(LessEqualExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Less Equal :");
 		depth++;
@@ -177,7 +176,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(GreaterExpression node) throws CantoException {
+	public void visit(GreaterExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Greater :");
 		depth++;
@@ -186,7 +185,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(GreaterEqualExpression node) throws CantoException {
+	public void visit(GreaterEqualExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Greater Equal :");
 		depth++;
@@ -195,7 +194,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(EqualExpression node) throws CantoException {
+	public void visit(EqualExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Equal :");
 		depth++;
@@ -204,7 +203,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(NotEqualExpression node) throws CantoException {
+	public void visit(NotEqualExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Not Equal :");
 		depth++;
@@ -213,7 +212,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(AndExpression node) throws CantoException {
+	public void visit(AndExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("And :");
 		depth++;
@@ -222,7 +221,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(OrExpression node) throws CantoException {
+	public void visit(OrExpression node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Or :");
 		depth++;
@@ -231,7 +230,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 	
 	@Override
-	public void visit(Identifier node) throws CantoException {
+	public void visit(Identifier node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Identifier : " + node.getName() + "");
 		depth++;
@@ -240,7 +239,7 @@ public class ASTPrinter extends ASTScanner {
 	}
 
 	@Override
-	public void visit(IntegerLiteral node) throws CantoException {
+	public void visit(IntegerLiteral node) throws Exception {
 		for (int i = 0; i < depth; i++) System.out.print("\t");
 		System.out.println("Literal : " + node.getValue() + "");
 		depth++;
@@ -248,7 +247,7 @@ public class ASTPrinter extends ASTScanner {
 		depth--;
 	}
 	
-	public void print(AbstractSyntaxTree ast) throws CantoException {
+	public void print(AbstractSyntaxTree ast) throws Exception {
 		((ASTNode)ast).accept(this);
 	}
 	

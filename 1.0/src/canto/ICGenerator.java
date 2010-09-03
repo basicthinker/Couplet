@@ -14,10 +14,10 @@ public interface ICGenerator {
 	
 	/**
 	 * 得到中间代码
-	 * @return 生成的中间代码
+	 * @return 中间代码生成是否成功
 	 * @throws Exception 
 	 */
-	public IntermediateCode generateIC() throws Exception;
+	public void generateIC() throws CantoException;
 	
 	/**
 	 * 获取生成的中间代码

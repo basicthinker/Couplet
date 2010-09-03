@@ -8,7 +8,7 @@ public class Keyword extends Token {
 	 * @param lexeme
 	 */
 	public Keyword(int line, int column, String lexeme) {
-		super(line, column, lexeme, terminalMap.get(lexeme));
+		super(line, column, lexeme, tokenCodeMap.get(lexeme));
 	}
 
 	/* (non-Javadoc)

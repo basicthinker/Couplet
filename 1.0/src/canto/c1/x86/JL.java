@@ -1,7 +1,5 @@
 package canto.c1.x86;
 
-import java.io.IOException;
-
 /**
  * X86目标码的JL指令
  */
@@ -16,7 +14,7 @@ public class JL extends Jump {
 	}
 	
 	@Override
-	public void accept(X86Visitor visitor) throws IOException {
+	public void accept(X86Visitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 	

@@ -1,7 +1,5 @@
 package canto.c1.ast;
 
-import canto.CantoException;
-
 /**
  * WHILE语句结点
  */
@@ -23,12 +21,12 @@ public class WhileStatement extends Statement {
 		super(line, column);
 		this.condition = condition;
 		this.body = body;
-		condition.setParent(this);
-		body.setParent(this);
+		if (condition != null) condition.setParent(this);
+		if (body != null) body.setParent(this);
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) throws CantoException {
+	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

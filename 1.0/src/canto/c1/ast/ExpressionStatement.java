@@ -1,7 +1,5 @@
 package canto.c1.ast;
 
-import canto.CantoException;
-
 /**
  * 表达式语句结点
  */
@@ -18,11 +16,11 @@ public class ExpressionStatement extends Statement {
 	public ExpressionStatement(Expression expression, int line, int column) {
 		super(line, column);
 		this.expression = expression;
-		expression.setParent(this);
+		if (expression != null) expression.setParent(this);
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) throws CantoException {
+	public void accept(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 

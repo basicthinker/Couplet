@@ -10,10 +10,10 @@ public interface TCGenerator {
 	
 	/**
 	 * 生成目标代码
-	 * @return 生成的目标代码
+	 * @return 目标代码生成是否成功
 	 * @throws Exception 
 	 */
-	public TargetCode generateTC() throws Exception;
+	public void generateTC() throws CantoException;
 	
 	/**
 	 * 获取生成的目标代码

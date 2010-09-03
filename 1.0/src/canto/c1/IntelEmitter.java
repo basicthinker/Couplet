@@ -4,7 +4,10 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import canto.CantoException;
 import canto.TargetCode;
+import canto.c1.error.CompileException;
+import canto.c1.error.ErrorRecord;
 import canto.c1.x86.ADD;
 import canto.c1.x86.CMP;
 import canto.c1.x86.CodeSegment;
@@ -52,13 +55,19 @@ public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 	}
 
 	@Override
-	public void emmit(TargetCode tc) throws IOException {
-		((X86TargetCode)tc).accept(this);
-		outBuf.close();
+	public void emmit(TargetCode tc) throws CantoException, IOException {
+		try {
+			((X86TargetCode)tc).accept(this);
+			outBuf.close();
+		} catch (IOException e) {
+			throw new CompileException(ErrorRecord.ioError());
+		} catch (Exception e) {
+			throw new CompileException(ErrorRecord.compileError());
+		}
 	}
 	
 	@Override
-	public void visit(Program tc) throws IOException {
+	public void visit(Program tc) throws Exception {
 		// 为了写入准确的库文件位置，获取系统当前路径
 		String currentPath = System.getProperty("user.dir");
 		outBuf.write(".586\n");
@@ -70,7 +79,7 @@ public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 	}
 
 	@Override
-	public void visit(DataSegment tc) throws IOException {
+	public void visit(DataSegment tc) throws Exception {
 		outBuf.write(".DATA\n");
 		outBuf.write("INT_IN_FMT BYTE \"%d\", 0\n");
 		outBuf.write("INT_OUT_FMT BYTE \"%d\", 13, 10, 0\n");
@@ -82,7 +91,7 @@ public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 	}
 
 	@Override
-	public void visit(CodeSegment tc) throws IOException {
+	public void visit(CodeSegment tc) throws Exception {
 		outBuf.write(".CODE\n");
 		outBuf.write("START:\n");
 		for (Instruction instr : tc.getInstructionList()) {
@@ -95,7 +104,7 @@ public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 	}
 
 	@Override
-	public void visit(DataDefine tc) throws IOException {
+	public void visit(DataDefine tc) throws Exception {
 		outBuf.write(tc.getName() + " ");
 		tc.getType().accept(this);
 		boolean isFirst = true;
@@ -112,12 +121,12 @@ public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 	}
 	
 	@Override
-	public void visit(Label tc) throws IOException {
+	public void visit(Label tc) throws Exception {
 		outBuf.write(tc.getName() + ":");
 	}
 	
 	@Override
-	public void visit(MOV tc) throws IOException {
+	public void visit(MOV tc) throws Exception {
 		outBuf.write("MOV ");
 		tc.getDst().accept(this);
 		outBuf.write(", ");
@@ -125,19 +134,19 @@ public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 	}
 
 	@Override
-	public void visit(PUSH tc) throws IOException {
+	public void visit(PUSH tc) throws Exception {
 		outBuf.write("PUSH ");
 		tc.getSrc().accept(this);
 	}
 
 	@Override
-	public void visit(POP tc) throws IOException {
+	public void visit(POP tc) throws Exception {
 		outBuf.write("POP ");
 		tc.getDst().accept(this); 
 	}
 
 	@Override
-	public void visit(ADD tc) throws IOException {
+	public void visit(ADD tc) throws Exception {
 		outBuf.write("ADD ");
 		tc.getDst().accept(this);
 		outBuf.write(", ");
@@ -145,7 +154,7 @@ public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 	}
 
 	@Override
-	public void visit(SUB tc) throws IOException {
+	public void visit(SUB tc) throws Exception {
 		outBuf.write("SUB ");
 		tc.getDst().accept(this);
 		outBuf.write(", ");
@@ -153,7 +162,7 @@ public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 	}
 
 	@Override
-	public void visit(IMUL tc) throws IOException {
+	public void visit(IMUL tc) throws Exception {
 		outBuf.write("IMUL ");
 		tc.getDst().accept(this);
 		outBuf.write(", ");
@@ -161,13 +170,13 @@ public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 	}
 
 	@Override
-	public void visit(NEG tc) throws IOException {
+	public void visit(NEG tc) throws Exception {
 		outBuf.write("NEG ");
 		tc.getDst().accept(this); 
 	}
 
 	@Override
-	public void visit(CMP tc) throws IOException {
+	public void visit(CMP tc) throws Exception {
 		outBuf.write("CMP ");
 		tc.getOperand1().accept(this);
 		outBuf.write(", ");
@@ -175,64 +184,64 @@ public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 	}
 
 	@Override
-	public void visit(JMP tc) throws IOException {
+	public void visit(JMP tc) throws Exception {
 		outBuf.write("JMP " + tc.getTarget().getName());
 	}
 
 	@Override
-	public void visit(JE tc) throws IOException {
+	public void visit(JE tc) throws Exception {
 		outBuf.write("JE " + tc.getTarget().getName());
 	}
 
 	@Override
-	public void visit(JNE tc) throws IOException {
+	public void visit(JNE tc) throws Exception {
 		outBuf.write("JNE " + tc.getTarget().getName());
 	}
 
 	@Override
-	public void visit(JG tc) throws IOException {
+	public void visit(JG tc) throws Exception {
 		outBuf.write("JG " + tc.getTarget().getName());
 	}
 
 	@Override
-	public void visit(JGE tc) throws IOException {
+	public void visit(JGE tc) throws Exception {
 		outBuf.write("JGE " + tc.getTarget().getName());
 	}
 
 	@Override
-	public void visit(JL tc) throws IOException {
+	public void visit(JL tc) throws Exception {
 		outBuf.write("JL " + tc.getTarget().getName());
 	}
 
 	@Override
-	public void visit(JLE tc) throws IOException {
+	public void visit(JLE tc) throws Exception {
 		outBuf.write("JLE " + tc.getTarget().getName());
 	}
 
 	@Override
-	public void visit(InInteger tc) throws IOException {
+	public void visit(InInteger tc) throws Exception {
 		outBuf.write("INVOKE crt_scanf, ADDR INT_IN_FMT, ADDR ");
 		tc.getDst().accept(this); 
 	}
 
 	@Override
-	public void visit(OutInteger tc) throws IOException {
+	public void visit(OutInteger tc) throws Exception {
 		outBuf.write("INVOKE crt_printf, ADDR INT_OUT_FMT, ");
 		tc.getSrc().accept(this);
 	}
 	
 	@Override
-	public void visit(Immediate tc) throws IOException {
+	public void visit(Immediate tc) throws Exception {
 		outBuf.write(tc.getValue().toString());
 	}
 
 	@Override
-	public void visit(Symbol tc) throws IOException {
+	public void visit(Symbol tc) throws Exception {
 		outBuf.write(tc.toString());
 	}
 
 	@Override
-	public void visit(Register tc) throws IOException {
+	public void visit(Register tc) throws Exception {
 		switch (tc.getRegNum()) {
 		case Register.EAX : outBuf.write("EAX"); break;
 		case Register.EBX : outBuf.write("EBX"); break;
@@ -247,12 +256,12 @@ public class IntelEmitter implements canto.TCEmmiter, X86Visitor {
 	}
 
 	@Override
-	public void visit(Pseudo tc) throws IOException {
+	public void visit(Pseudo tc) throws Exception {
 		outBuf.write(tc.getCode() + "\n");
 	}
 
 	@Override
-	public void visit(DataType tc) throws IOException {
+	public void visit(DataType tc) throws Exception {
 		switch (tc.getType()) {
 		case DataType.BYTE : outBuf.write("DB"); break;
 		case DataType.WORD : outBuf.write("DW"); break;

@@ -1,7 +1,5 @@
 package canto.c1.x86;
 
-import java.io.IOException;
-
 /**
  * X86目标码的整数输出指令（一次输出一个整数）
  */
@@ -19,7 +17,7 @@ public class OutInteger extends Out {
 	}
 	
 	@Override
-	public void accept(X86Visitor visitor) throws IOException {
+	public void accept(X86Visitor visitor) throws Exception {
 		visitor.visit(this);
 	}
 	
