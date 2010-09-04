@@ -65,7 +65,7 @@ public class Main {
 			System.out.println("编译成功！");
 			
 		} catch (CantoException e) {
-			e.outputInfo(System.err);
+			e.outputInfo(System.out);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

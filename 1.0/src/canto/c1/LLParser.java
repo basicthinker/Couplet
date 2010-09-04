@@ -81,6 +81,8 @@ public class LLParser implements canto.Parser {
 			tokenIterator = tokenList.listIterator();
 			move();		
 			treeRoot = program();
+		} catch (CompileException e) {
+			throw e;
 		} catch(Exception e) {
 			e.printStackTrace();
 			exception.add(ErrorRecord.parseError());
@@ -101,8 +103,10 @@ public class LLParser implements canto.Parser {
 			column = nextToken.getColumn();
 			// 获取下一个Token的类型编码
 			tokenType = nextToken.getTokenType();
-		} else {
+		} else if (nextToken != null) {
 			nextToken = null;
+		} else {
+			exception.add(ErrorRecord.incompleteProgram(line, column));
 		}
 	}
 	
@@ -126,15 +130,13 @@ public class LLParser implements canto.Parser {
 	 * @return 程序的AST结点
 	 * @throws ErrorRecord
 	 */
-	private Program program() {
+	private Program program() throws CompileException {
 		Program program =  new Program(block(), line, column);
 		// 判断确实已经分析到Token链尾
-		if (nextToken == null) {
-			return program;
-		} else {
+		if (nextToken != null) {
 			exception.add(ErrorRecord.redundantTokens(line, column));
-			return null;
 		}
+		return program;
 	}
 	
 	/**
@@ -158,10 +160,21 @@ public class LLParser implements canto.Parser {
 	 */
 	private StatementList stmt_list() {
 		StatementList stmt_list = new StatementList(line, column);
-		while (tokenType == Token.L_BRACE || tokenType == Token.ID || 
-				tokenType == Token.IF || tokenType == Token.WHILE || 
-				tokenType == Token.INPUT || tokenType == Token.OUTPUT) {
-			stmt_list.addStatement(stmt());
+		while (true) {
+			while (tokenType == Token.L_BRACE || tokenType == Token.ID || 
+					tokenType == Token.IF || tokenType == Token.WHILE || 
+					tokenType == Token.INPUT || tokenType == Token.OUTPUT) {
+				stmt_list.addStatement(stmt());
+			}
+			// 跳过一些字符，直到遇到"}"或者某个语句的开始字符
+			while (tokenType != Token.R_BRACE 
+					&& tokenType != Token.L_BRACE && tokenType != Token.ID 
+					&& tokenType != Token.IF && tokenType != Token.WHILE 
+					&& tokenType != Token.INPUT	&& tokenType != Token.OUTPUT) {
+				exception.add(ErrorRecord.unexpectedToken(line, column, nextToken.getLexeme()));
+				move();
+			}
+			if (tokenType == Token.R_BRACE) break;
 		}
 		return stmt_list;
 	}
@@ -188,6 +201,7 @@ public class LLParser implements canto.Parser {
 			return output_stmt();
 		default:
 			exception.add(ErrorRecord.wrongStatement(line, column));
+			moveStmtFollow();
 			return null;
 		}
 	}
@@ -278,8 +292,7 @@ public class LLParser implements canto.Parser {
 	 * @throws ErrorRecord
 	 */
 	private Expression expr() {
-		Expression expr = null;
-		expr = expr_1();
+		Expression expr = expr_1();
 		while (tokenType == Token.OR_OR) {		
 			move();
 			expr = new OrExpression(expr, expr_1(), line, column); 
@@ -437,7 +450,7 @@ public class LLParser implements canto.Parser {
 			break;
 		default :
 			exception.add(ErrorRecord.wrongExpression(line, column));
-			expr = null;
+			return null;
 		}
 		return expr;
 	}
@@ -464,7 +477,7 @@ public class LLParser implements canto.Parser {
 			break;
 		default :
 			exception.add(ErrorRecord.wrongExpression(line, column));
-			expr = null;
+			return null;
 		}
 		return expr;
 	}
@@ -480,6 +493,7 @@ public class LLParser implements canto.Parser {
 			return id();
 		} else {
 			exception.add(ErrorRecord.missingToken(line, column, tokenType));
+			moveExprFollow();
 			return null;
 		}
 	}
@@ -497,6 +511,7 @@ public class LLParser implements canto.Parser {
 			return literal;
 		} else {
 			exception.add(ErrorRecord.missingToken(line, column, tokenType));
+			moveExprFollow();
 			return null;
 		}
 	}
@@ -513,8 +528,40 @@ public class LLParser implements canto.Parser {
 			return id;
 		} else {
 			exception.add(ErrorRecord.missingToken(line, column, tokenType));
+			moveExprFollow();
 			return null;
 		}
 	}
-
+	
+	/**
+	 * 向后移动Token直到遇到一个Expr的Follow集中的一个元素
+	 * @throws CompileException
+	 */
+	private void moveExprFollow() {
+		while (tokenType != Token.EQUAL && tokenType != Token.SEMI 
+				&& tokenType != Token.R_PARENT && tokenType != Token.PLUS
+				&& tokenType != Token.MINUS && tokenType != Token.TIMES
+				&& tokenType != Token.OR_OR && tokenType != Token.AND_AND
+				&& tokenType != Token.EQUAL_EQUAL && tokenType != Token.NOT_EQUAL
+				&& tokenType != Token.LESS && tokenType != Token.LESS_EQUAL
+				&& tokenType != Token.GREATER && tokenType != Token.GREATER_EQUAL) {
+			exception.add(ErrorRecord.unexpectedToken(line, column, nextToken.getLexeme()));
+			move();
+		}
+	}
+	
+	/**
+	 * 向后移动Token直到遇到一个Stmt的Follow集中的一个元素
+	 * @throws CompileException
+	 */
+	private void moveStmtFollow() {
+		while (tokenType != Token.L_BRACE && tokenType != Token.R_BRACE 
+				&& tokenType != Token.IF && tokenType != Token.ELSE
+				&& tokenType != Token.WHILE && tokenType != Token.INPUT
+				&& tokenType != Token.OUTPUT && tokenType != Token.ID) {
+			exception.add(ErrorRecord.unexpectedToken(line, column, nextToken.getLexeme()));
+			move();
+		}
+	}
+	
 }

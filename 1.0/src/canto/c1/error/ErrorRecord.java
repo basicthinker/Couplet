@@ -21,10 +21,12 @@ public class ErrorRecord implements canto.ErrorRecord {
 	// 语法分析阶段的错误
 	public static final int PARSE_ERROR = 2000;
 	public static final int MISSING_TOKEN = 2001;
-	public static final int WRONG_STATEMENT = 2002;
-	public static final int WRONG_EXPRESSION = 2003;
-	public static final int WRONG_ADDRESS = 2004;
-	public static final int REDUNDANT_TOKENS = 2005;
+	public static final int UNEXPECTED_TOKEN = 2002;
+	public static final int WRONG_STATEMENT = 2003;
+	public static final int WRONG_EXPRESSION = 2004;
+	public static final int WRONG_ADDRESS = 2005;
+	public static final int REDUNDANT_TOKENS = 2006;
+	public static final int INCOMPELTE_PROGRAM = 2007; 
 	// 中间代码生成阶段的错误	
 	public static final int IC_GENERATE_ERROR = 3000;
 	// 目标代码生成阶段的错误
@@ -51,7 +53,9 @@ public class ErrorRecord implements canto.ErrorRecord {
 		infoMap.put(ILLEGAL_IDENTIFIER, "词法错误：非法的标识符");
 		infoMap.put(PARSE_ERROR, "未知的语法分析错误");
 		infoMap.put(MISSING_TOKEN, "语法错误：丢失期待的字符");
+		infoMap.put(UNEXPECTED_TOKEN, "语法错误：未期待的字符");
 		infoMap.put(REDUNDANT_TOKENS, "语法错误：程序末尾有多余的字符");
+		infoMap.put(REDUNDANT_TOKENS, "语法错误：程序末尾不完整");
 		infoMap.put(WRONG_STATEMENT, "语法错误：错误的语句");
 		infoMap.put(WRONG_EXPRESSION, "语法错误：错误的表达式");
 		infoMap.put(IC_GENERATE_ERROR, "未知的中间代码生成错误");
@@ -194,13 +198,15 @@ public class ErrorRecord implements canto.ErrorRecord {
 	}
 	
 	/**
-	 * 创建一条语法分析时的末尾冗余Token的错误
+	 * 创建一条语法分析时的未期待的Token的错误
 	 * @param line 错误所在位置的行号
 	 * @param column 错误所在位置的列号
-	 * @return 末尾冗余Token错误
+	 * @param lexme 错误所涉及的Token字符
+	 * @return 未期待的Token错误
 	 */
-	public static ErrorRecord redundantTokens(int line, int column) {
-		return new ErrorRecord(REDUNDANT_TOKENS, line, column);
+	public static ErrorRecord unexpectedToken(int line, int column, String lexme) {
+		return new ErrorRecord(UNEXPECTED_TOKEN, line, column, 
+				"\"" + lexme + "\"");
 	}
 	
 	/**
@@ -221,6 +227,26 @@ public class ErrorRecord implements canto.ErrorRecord {
 	 */
 	public static ErrorRecord wrongExpression(int line, int column) {
 		return new ErrorRecord(WRONG_EXPRESSION, line, column);
+	}
+	
+	/**
+	 * 创建一条语法分析时的末尾冗余Token的错误
+	 * @param line 错误所在位置的行号
+	 * @param column 错误所在位置的列号
+	 * @return 末尾冗余Token错误
+	 */
+	public static ErrorRecord redundantTokens(int line, int column) {
+		return new ErrorRecord(REDUNDANT_TOKENS, line, column);
+	}
+	
+	/**
+	 * 创建一条语法分析时的程序末尾不完整的错误
+	 * @param line 错误所在位置的行号
+	 * @param column 错误所在位置的列号
+	 * @return 程序末尾不完整错误
+	 */
+	public static ErrorRecord incompleteProgram(int line, int column) {
+		return new ErrorRecord(INCOMPELTE_PROGRAM, line, column);
 	}
 	
 	/**
