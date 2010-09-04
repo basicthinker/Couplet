@@ -1,6 +1,11 @@
 {
-  if (t>0) bcdef 5488 = 52222535;
-  else a = 3;
-  b = a * 5;
-  output(b);
+	input(t);
+	x = 1;
+	while (x > 0 && x < 10 && x!=5) {
+		x = - 5 + x * t;
+		if (t <= 0) {
+			t = x || 5;
+		}
+	}
+	output(x);
 }
