@@ -70,10 +70,9 @@ public class Compiler implements canto.Compiler {
 			List<canto.Token> tokenList = getTokenList();
 			System.out.println("Output Token List :");
 			for (canto.Token token : tokenList) {
-				System.out.print("Line " + token.getLine() + " Column " + token.getColumn() + ": ");
-				System.out.print(token.getLexeme() + "\twith ");
-				if (token.getAttribute() == null) System.out.println("null");
-				else System.out.println(token.getAttribute().toString());
+				System.out.print("Line " + token.getLine() + " Column " + token.getColumn() + ": \t");
+				System.out.print(token.getClass().getSimpleName() + " ");
+				System.out.println("\"" + token.getLexeme() + "\"");
 			}
 			System.out.println();
 			

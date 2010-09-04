@@ -78,20 +78,25 @@ public class Lexer implements canto.Lexer {
 				} else if ('0' <= intBufChar && intBufChar <= '9') {
 					
 					intBufChar = recognizeInteger((char)intBufChar, lexBuf);
-					String lexeme = lexBuf.toString();
-					tokenList.add(new IntegerLiteral(line, column, lexeme));
-					
-					column += lexeme.length();
+					if ('a' <= intBufChar && intBufChar <= 'z' 
+						|| 'A' <= intBufChar && intBufChar <= 'Z') {
+						intBufChar = recognizeWord((char)intBufChar, lexBuf);
+						String lexeme = lexBuf.toString();
+						exception.add(ErrorRecord.illegalIdentifier(line, 
+								column, lexeme));
+					} else {
+						int intValue = Integer.parseInt(lexBuf.toString());
+						tokenList.add(new IntegerLiteral(line, column, intValue));
+					}
+					column += lexBuf.length();
 					
 				} else if (intBufChar == ' '  ) {
 					
-					//intBufChar = skipWhiteSpaces();
 					intBufChar = inBuf.read();
 					column += 1;
 					
 				} else if (intBufChar == '\t') {
 					
-					//intBufChar = skipWhiteSpaces();
 					do {
 						column += 1;
 					} while (column % tabWith != 0);
@@ -212,8 +217,9 @@ public class Lexer implements canto.Lexer {
 		lexBuf.append(prefix);
 		int intNextChar = inBuf.read();
 		while (intNextChar != -1) {
-			if ('a' <= intNextChar && intNextChar <= 'z'
-				|| 'A' <= intNextChar && intNextChar <= 'Z') {
+			if (intNextChar == '_' || 'a' <= intNextChar && intNextChar <= 'z'
+				|| 'A' <= intNextChar && intNextChar <= 'Z'
+				|| '0' <= intNextChar && intNextChar <= '9') {
 				lexBuf.append((char)intNextChar);
 				intNextChar = inBuf.read();
 			} else break;

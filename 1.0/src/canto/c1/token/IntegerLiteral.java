@@ -15,11 +15,11 @@ public class IntegerLiteral extends Token {
 	/**
 	 * @param line
 	 * @param column
-	 * @param lexeme
+	 * @param value
 	 */
-	public IntegerLiteral(int line, int column, String lexeme) {
-		super(line, column, lexeme, INTEGER_LITERAL);
-		value = Integer.parseInt(lexeme);
+	public IntegerLiteral(int line, int column, int value) {
+		super(line, column, String.valueOf(value), INTEGER_LITERAL);
+		this.value = value;
 	}
 
 	/* (non-Javadoc)

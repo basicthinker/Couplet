@@ -17,6 +17,7 @@ public class ErrorRecord implements canto.ErrorRecord {
 	// 词法分析阶段的错误
 	public static final int LEX_ERROR = 1000;
 	public static final int ILLEGAL_CHARACTER = 1001;
+	public static final int ILLEGAL_IDENTIFIER = 1002;
 	// 语法分析阶段的错误
 	public static final int PARSE_ERROR = 2000;
 	public static final int MISSING_TOKEN = 2001;
@@ -46,7 +47,8 @@ public class ErrorRecord implements canto.ErrorRecord {
 		infoMap.put(COMPILE_ERROR, "未知的编译错误");
 		infoMap.put(IO_ERROR, "编译过程中的I/O错误");
 		infoMap.put(LEX_ERROR, "未知的词法分析错误");
-		infoMap.put(ILLEGAL_CHARACTER, "词法错误：非法字符");
+		infoMap.put(ILLEGAL_CHARACTER, "词法错误：非法的字符");
+		infoMap.put(ILLEGAL_IDENTIFIER, "词法错误：非法的标识符");
 		infoMap.put(PARSE_ERROR, "未知的语法分析错误");
 		infoMap.put(MISSING_TOKEN, "语法错误：丢失期待的字符");
 		infoMap.put(REDUNDANT_TOKENS, "语法错误：程序末尾有多余的字符");
@@ -61,10 +63,10 @@ public class ErrorRecord implements canto.ErrorRecord {
 	 * @param type 错误类型编号
 	 */
 	private ErrorRecord(int type) {
-		this.extraInfo = null;
 		this.line = 0;
 		this.column = 0;
 		this.type = type;
+		this.extraInfo = "";
 	}
 	
 	/**
@@ -77,7 +79,7 @@ public class ErrorRecord implements canto.ErrorRecord {
 		this.type = type;
 		this.line = line;
 		this.column = column;		
-		this.extraInfo = null;
+		this.extraInfo = "";
 	}
 	
 	/**
@@ -160,6 +162,17 @@ public class ErrorRecord implements canto.ErrorRecord {
 				"\"" + ch + "\"");
 	}
 	
+	/**
+	 * 创建一条词法分析时遇到非法标识符的错误
+	 * @param line 错误所在位置的行号
+	 * @param column 错误所在位置的列号
+	 * @param ch 错误所涉及的标识符
+	 * @return 非法标识符错误
+	 */
+	public static ErrorRecord illegalIdentifier(int line, int column, String id) {
+		return new ErrorRecord(ILLEGAL_IDENTIFIER, line, column, 
+				"\"" + id + "\"");
+	}	
 	/**
 	 * 创建一条具体信息未知的通用的语法分析错误
 	 * @return 通用的语法分析错误
