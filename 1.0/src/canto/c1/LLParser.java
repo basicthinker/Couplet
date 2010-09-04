@@ -164,7 +164,7 @@ public class LLParser implements canto.Parser {
 			while (tokenType == Token.L_BRACE || tokenType == Token.ID || 
 					tokenType == Token.IF || tokenType == Token.WHILE || 
 					tokenType == Token.INPUT || tokenType == Token.OUTPUT) {
-				stmt_list.addStatement(stmt());
+				stmt_list.add(stmt());
 			}
 			// 跳过一些字符，直到遇到"}"或者某个语句的开始字符
 			while (tokenType != Token.R_BRACE 

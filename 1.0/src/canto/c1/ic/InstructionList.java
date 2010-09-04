@@ -32,7 +32,7 @@ public class InstructionList extends IntermediateCode {
 	 * 向中间代码指令序列的末尾添加一条指令
 	 * @param instruction 新增的指令
 	 */
-	public void addInstruction(Instruction instruction) {
+	public void add(Instruction instruction) {
 		list.add(instruction);
 	}
 

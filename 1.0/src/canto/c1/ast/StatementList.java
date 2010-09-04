@@ -41,7 +41,7 @@ public class StatementList extends ASTNode {
 	 * 向语句列表中加入一个语句
 	 * @param statement 待加入的语句
 	 */
-	public void addStatement(Statement statement) {
+	public void add(Statement statement) {
 		list.add(statement);
 		if (statement != null) statement.setParent(this);
 	}

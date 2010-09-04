@@ -40,7 +40,7 @@ public class DataSegment extends X86TargetCode {
 	 * 向数据定义序列链表中增加一个数据定义
 	 * @param dataDefine 新增的数据定义
 	 */
-	public void addDataDefine(DataDefine dataDefine) {
+	public void add(DataDefine dataDefine) {
 		dataDefineList.add(dataDefine);
 	}
 

@@ -21,7 +21,6 @@ import canto.c1.ic.JGT;
 import canto.c1.ic.JLE;
 import canto.c1.ic.JLT;
 import canto.c1.ic.JNE;
-import canto.c1.ic.Label;
 import canto.c1.ic.Mov;
 import canto.c1.ic.Mul;
 import canto.c1.ic.Neg;
@@ -44,6 +43,7 @@ import canto.c1.x86.JE;
 import canto.c1.x86.JG;
 import canto.c1.x86.JL;
 import canto.c1.x86.JMP;
+import canto.c1.x86.Label;
 import canto.c1.x86.Location;
 import canto.c1.x86.MOV;
 import canto.c1.x86.Memory;
@@ -86,7 +86,7 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 
 	/** 当前该用的寄存器对应的数字 */
 	static int regPointer = 0;
-	
+
 	public TCGenerator() {
 		program = new Program();
 		dataSegment = new DataSegment();
@@ -95,7 +95,6 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 		registerTable = new SymbolTable<Register>();
 		regMap = new String[4];
 	}
-
 
 	@Override
 	public void setIC(canto.IntermediateCode ic) {
@@ -127,8 +126,8 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 	}
 
 	@Override
-	public void visit(Label ic) throws Exception {
-		canto.c1.x86.Label label = new canto.c1.x86.Label(ic.toString());
+	public void visit(canto.c1.ic.Label ic) throws Exception {
+		Label label = new Label(ic.toString());
 		codeSegment.add(label);
 	}
 
@@ -142,8 +141,8 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 
 	private Register assign(Immediate imme) {
 		// 为一个立即数分配寄存器
-		Register register=assign();
-		regMap[register.getRegNum()]=imme.toString();
+		Register register = assign();
+		regMap[register.getRegNum()] = imme.toString();
 		registerTable.put(imme.toString(), register);
 		return register;
 	}
@@ -163,9 +162,10 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 		String regContent = regMap[regPointer];
 		if (!symbolTable.isExist(regContent)) {
 			// 在数据段加入需要挪入内存变量的定义
-			DataDefine dataDefine = new DataDefine(regContent, DataType
-					.newDoubleWord(), new Immediate[] { new Immediate(0) });
-			dataSegment.addDataDefine(dataDefine);
+			DataDefine dataDefine = new DataDefine(regContent,
+					DataType.newDoubleWord(),
+					new Immediate[] { new Immediate(0) });
+			dataSegment.add(dataDefine);
 			symbolTable.put(regContent, new Symbol(regContent));
 		}
 		// 代码段加入寄存器当前值挪入内存的代码
@@ -190,9 +190,7 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 
 	/**
 	 * 将中间代码的操作数转成目标代码的操作数
-	 * 
-	 * @param operand
-	 *            输入的中间代码操作数
+	 * @param operand 输入的中间代码操作数
 	 * @return 相应的目标代码操作数
 	 */
 	private Operand getTCOperand(canto.c1.ic.Operand operand) {
@@ -209,7 +207,7 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 					DataDefine dataDefine = new DataDefine(operandName,
 							DataType.newDoubleWord(),
 							new Immediate[] { new Immediate(0) });
-					dataSegment.addDataDefine(dataDefine);
+					dataSegment.add(dataDefine);
 					// 在symbolTable中加入新的名值对应
 					Symbol symbol = new Symbol(operandName);
 					symbolTable.put(operandName, symbol);
@@ -249,8 +247,7 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 
 	@Override
 	public void visit(Goto ic) throws Exception {
-		canto.c1.x86.Label target = new canto.c1.x86.Label(ic.getTarget()
-				.toString());
+		Label target = new Label(ic.getTarget().toString());
 		codeSegment.add(new JMP(target));
 	}
 
@@ -258,17 +255,20 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 		// 加入一个比较的目标代码语句
 		Operand operand1 = getTCOperand(ic.getOperand1());
 		Operand operand2 = getTCOperand(ic.getOperand2());
-		if(operand1.getTCType()==X86TargetCode.REGISTER && operand2.getTCType()==X86TargetCode.REGISTER){
-			codeSegment.add(new CMP(operand1, operand2));			
-		}else if(operand1.getTCType()==X86TargetCode.SYMBOL && operand2.getTCType()==X86TargetCode.SYMBOL) {
+		if (operand1.getTCType() == X86TargetCode.REGISTER
+				&& operand2.getTCType() == X86TargetCode.REGISTER) {
+			codeSegment.add(new CMP(operand1, operand2));
+		} else if (operand1.getTCType() == X86TargetCode.SYMBOL
+				&& operand2.getTCType() == X86TargetCode.SYMBOL) {
 			Register register = assign((Memory) operand1);
 			codeSegment.add(new MOV(register, operand1));
 			codeSegment.add(new CMP(register, operand2));
-		}else if(operand1.getTCType()==X86TargetCode.IMMEDIATE && operand2.getTCType()==X86TargetCode.IMMEDIATE){
-			Register register=assign((Immediate)operand1);
+		} else if (operand1.getTCType() == X86TargetCode.IMMEDIATE
+				&& operand2.getTCType() == X86TargetCode.IMMEDIATE) {
+			Register register = assign((Immediate) operand1);
 			codeSegment.add(new MOV(register, operand1));
 			codeSegment.add(new CMP(register, operand2));
-		}else {
+		} else {
 			codeSegment.add(new CMP(operand1, operand2));
 		}
 	}
@@ -276,56 +276,48 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 	@Override
 	public void visit(JEQ ic) throws Exception {
 		addCmp(ic);
-		canto.c1.x86.Label target = new canto.c1.x86.Label(ic.getTarget()
-				.toString());
+		Label target = new Label(ic.getTarget().toString());
 		codeSegment.add(new JE(target));
 	}
 
 	@Override
 	public void visit(JNE ic) throws Exception {
 		addCmp(ic);
-		canto.c1.x86.Label target = new canto.c1.x86.Label(ic.getTarget()
-				.toString());
+		Label target = new Label(ic.getTarget().toString());
 		codeSegment.add(new canto.c1.x86.JNE(target));
 	}
 
 	@Override
 	public void visit(JLT ic) throws Exception {
 		addCmp(ic);
-		canto.c1.x86.Label target = new canto.c1.x86.Label(ic.getTarget()
-				.toString());
+		Label target = new Label(ic.getTarget().toString());
 		codeSegment.add(new JL(target));
 	}
 
 	@Override
 	public void visit(JLE ic) throws Exception {
 		addCmp(ic);
-		canto.c1.x86.Label target = new canto.c1.x86.Label(ic.getTarget()
-				.toString());
+		Label target = new Label(ic.getTarget().toString());
 		codeSegment.add(new canto.c1.x86.JLE(target));
 	}
 
 	@Override
 	public void visit(JGT ic) throws Exception {
 		addCmp(ic);
-		canto.c1.x86.Label target = new canto.c1.x86.Label(ic.getTarget()
-				.toString());
+		Label target = new Label(ic.getTarget().toString());
 		codeSegment.add(new JG(target));
 	}
 
 	@Override
 	public void visit(JGE ic) throws Exception {
 		addCmp(ic);
-		canto.c1.x86.Label target = new canto.c1.x86.Label(ic.getTarget()
-				.toString());
+		Label target = new Label(ic.getTarget().toString());
 		codeSegment.add(new canto.c1.x86.JGE(target));
 	}
 
 	/**
 	 * 清除中间代码操作数和寄存器间的关系
-	 * 
-	 * @param icOperand
-	 *            中间代码操作数
+	 * @param icOperand 中间代码操作数
 	 */
 	private void freeReg(canto.c1.ic.Operand icOperand) {
 		String name = icOperand.toString();
@@ -345,17 +337,12 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 		codeSegment.add(new MOV(dst, src));
 		freeReg(ic.getSrc());
 	}
-	
-	
+
 	/**
 	 * 根据中间代码类型，加入不同的运算
-	 * 
-	 * @param ic
-	 *            中间代码
-	 * @param dst
-	 *            目的操作数
-	 * @param src
-	 *            源操作数
+	 * @param ic 中间代码
+	 * @param dst 目的操作数
+	 * @param src 源操作数
 	 */
 	private void caseAdd(Arithmetic ic, Location dst, Operand src) {
 		switch (ic.getICType()) {
@@ -373,14 +360,11 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 			break;
 		}
 	}
-	
+
 	/**
 	 * 目标代码加入一个二元运算
-	 * 
-	 * @param ic
-	 *            输入的中间代码
-	 * @param flag
-	 *            标志参数，0表示中间代码的两个源操作数均不是Temp类型，1表示第一个是，2表示第二个是
+	 * @param ic 输入的中间代码
+	 * @param flag 标志参数，0表示中间代码的两个源操作数均不是Temp类型，1表示第一个是，2表示第二个是
 	 */
 	private void addBinaryArithmetic(BinaryArithmetic ic, int flag) {
 		canto.c1.ic.Operand icSrc1 = ic.getSrc1();
@@ -452,14 +436,11 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 			addBinaryArithmetic(ic, 0);
 		}
 	}
-	
+
 	/**
 	 * 加入一个一元运算符
-	 * 
-	 * @param ic
-	 *            输入的中间代码
-	 * @param flag
-	 *            标志参数，为1表示源操作数为Temp，2表示为Variable，0表示为常数
+	 * @param ic 输入的中间代码
+	 * @param flag 标志参数，为1表示源操作数为Temp，2表示为Variable，0表示为常数
 	 */
 	private void addUnaryArithmetic(UnaryArithmetic ic, int flag) {
 		canto.c1.ic.Operand icSrc = ic.getSrc();
@@ -495,19 +476,13 @@ public class TCGenerator implements canto.TCGenerator, ICVisitor {
 
 	@Override
 	public void visit(Variable ic) throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void visit(Temp ic) throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void visit(IntegerLiteral ic) throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 }
