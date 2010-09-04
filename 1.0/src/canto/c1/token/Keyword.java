@@ -1,6 +1,6 @@
 package canto.c1.token;
 
-public class Keyword extends Token {
+public class Keyword extends TokenBase {
 
 	/**
 	 * @param line

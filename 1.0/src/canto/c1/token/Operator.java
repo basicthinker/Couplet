@@ -8,7 +8,7 @@ package canto.c1.token;
  * @author basicthinker
  *
  */
-public class Operator extends Token {
+public class Operator extends TokenBase {
 	
 
 	/**

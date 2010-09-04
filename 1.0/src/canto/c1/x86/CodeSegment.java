@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * X86目标码的代码段
  */
-public class CodeSegment extends X86TargetCode {
+public class CodeSegment implements X86TargetCode {
 
 	/** 存储指令序列的链表 */
 	private List<Instruction> instructionList;

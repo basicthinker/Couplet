@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 中间代码的指令序列
  */
-public class InstructionList extends IntermediateCode {
+public class InstructionList implements IntermediateCode {
 
 	/** 存储一序列中间代码指令的列表 */
 	private List<Instruction> list;

@@ -3,7 +3,7 @@ package canto.c1.ast;
 /**
  * 程序结点
  */
-public class Program extends ASTNode {
+public class Program extends ASTNodeBase {
 
 	/** 程序体的Block */
 	private final Block body;

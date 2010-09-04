@@ -1,9 +1,9 @@
 package canto.c1.x86;
 
 /**
- * X86目标码的基类
+ * C1语言X86目标码的顶层接口
  */
-public abstract class X86TargetCode implements canto.TargetCode {
+public interface X86TargetCode extends canto.TargetCode {
 
 	/** 定义TC类型编号常量 */ 
 	public static final int PROGRAM = 1;
@@ -39,6 +39,6 @@ public abstract class X86TargetCode implements canto.TargetCode {
 	 * @param visitor 访问者
 	 * @throws IOException 
 	 */
-	public abstract void accept(X86Visitor visitor) throws Exception;
+	public void accept(X86Visitor visitor) throws Exception;
 	
 }

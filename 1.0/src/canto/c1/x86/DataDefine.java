@@ -3,7 +3,7 @@ package canto.c1.x86;
 /**
  * X86目标码的数据定义
  */
-public class DataDefine extends X86TargetCode {
+public class DataDefine implements X86TargetCode {
 
 	/** 存储所定义数据的符号名 */
 	private final String name;

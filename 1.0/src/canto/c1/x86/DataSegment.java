@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * X86目标码的数据段
  */
-public class DataSegment extends X86TargetCode {
+public class DataSegment implements X86TargetCode {
 
 	/** 存储数据定义序列的链表 */
 	private List<DataDefine> dataDefineList;

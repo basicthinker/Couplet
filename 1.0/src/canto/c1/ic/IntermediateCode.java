@@ -1,9 +1,9 @@
 package canto.c1.ic;
 
 /**
- * C1语言中间代码的基类
+ * C1语言中间代码的顶层接口
  */
-public abstract class IntermediateCode implements canto.IntermediateCode {
+public interface IntermediateCode extends canto.IntermediateCode {
 	
 	/** 定义IC类型编号常量 */ 
 	public static final int INSTRUCTION_LIST = 1;
@@ -30,6 +30,6 @@ public abstract class IntermediateCode implements canto.IntermediateCode {
 	 * 接受访问者访问IC的方法
 	 * @param visitor 访问者
 	 */
-	public abstract void accept(ICVisitor visitor) throws Exception;
+	public void accept(ICVisitor visitor) throws Exception;
 	
 }

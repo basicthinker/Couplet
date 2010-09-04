@@ -8,7 +8,7 @@ package canto.c1.token;
  * @author basicthinker
  *
  */
-public class IntegerLiteral extends Token {
+public class IntegerLiteral extends TokenBase {
 
 	private final int value;
 	

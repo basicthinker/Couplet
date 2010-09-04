@@ -8,7 +8,7 @@ package canto.c1.token;
  * @author basicthinker
  *
  */
-public class Punctuation extends Token {
+public class Punctuation extends TokenBase {
 
 	/**
 	 * @param line

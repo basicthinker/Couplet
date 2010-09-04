@@ -3,7 +3,7 @@ package canto.c1.error;
 import java.util.HashMap;
 import java.util.Map;
 
-import canto.c1.token.Token;
+import canto.c1.token.TokenBase;
 
 /**
  * C1语言的错误记录
@@ -194,7 +194,7 @@ public class ErrorRecord implements canto.ErrorRecord {
 	 */
 	public static ErrorRecord missingToken(int line, int column, int tokenType) {
 		return new ErrorRecord(MISSING_TOKEN, line, column, 
-				"\"" + Token.getCodeToken(tokenType) + "\"");
+				"\"" + TokenBase.getCodeToken(tokenType) + "\"");
 	}
 	
 	/**

@@ -3,7 +3,7 @@ package canto.c1.x86;
 /**
  * 表示整个程序的X86目标码的数据结构
  */
-public class Program extends X86TargetCode {
+public class Program implements X86TargetCode {
 
 	/** 存储程序的数据段 */
 	private DataSegment dataSegment;

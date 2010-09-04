@@ -8,7 +8,7 @@ package canto.c1.token;
  * @author basicthinker
  *
  */
-public class Identifier extends Token {
+public class Identifier extends TokenBase {
 
 	/**
 	 * @param line

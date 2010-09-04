@@ -3,7 +3,7 @@ package canto.c1.x86;
 /**
  * X86目标码的数据类型
  */
-public class DataType extends X86TargetCode {
+public class DataType implements X86TargetCode {
 
 	/** 定义数据类型编号常量 */
 	public static final int BYTE = 1;

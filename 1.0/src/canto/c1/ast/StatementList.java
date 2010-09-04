@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 语句列表结点
  */
-public class StatementList extends ASTNode {
+public class StatementList extends ASTNodeBase {
 
 	/** 用于存放语句的List容器 */
 	private final List<Statement> list;
