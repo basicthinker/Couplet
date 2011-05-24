@@ -38,7 +38,7 @@ public class Compiler implements couplet.Compiler {
 	}
 
 	/* (non-Javadoc)
-	 * @see canto.Compiler#setSource(java.io.InputStream)
+	 * @see couplet.Compiler#setSource(java.io.InputStream)
 	 */
 	@Override
 	public void setSource(InputStream inStrm) {
@@ -46,7 +46,7 @@ public class Compiler implements couplet.Compiler {
 	}
 
 	/* (non-Javadoc)
-	 * @see canto.Compiler#setTarget(java.io.OutputStream)
+	 * @see couplet.Compiler#setTarget(java.io.OutputStream)
 	 */
 	@Override
 	public void setTarget(OutputStream outStrm) {
@@ -54,7 +54,7 @@ public class Compiler implements couplet.Compiler {
 	}
 	
 	/* (non-Javadoc)
-	 * @see canto.Compiler#compile()
+	 * @see couplet.Compiler#compile()
 	 */
 	@Override
 	public void compile() throws CompileException {
@@ -117,7 +117,7 @@ public class Compiler implements couplet.Compiler {
 	}
 
 	/* (non-Javadoc)
-	 * @see canto.Compiler#outputErrors(java.io.OutputStream)
+	 * @see couplet.Compiler#outputErrors(java.io.OutputStream)
 	 */
 	@Override
 	public void outputErrors(OutputStream outStrm) throws IOException {
@@ -125,7 +125,7 @@ public class Compiler implements couplet.Compiler {
 	}
 
 	/* (non-Javadoc)
-	 * @see canto.Compiler#getTokenList()
+	 * @see couplet.Compiler#getTokenList()
 	 */
 	@Override
 	public List<couplet.Token> getTokenList() {
@@ -133,7 +133,7 @@ public class Compiler implements couplet.Compiler {
 	}
 
 	/* (non-Javadoc)
-	 * @see canto.Compiler#getSyntaxTree()
+	 * @see couplet.Compiler#getSyntaxTree()
 	 */
 	@Override
 	public couplet.AbstractSyntaxTree getAST() {
@@ -141,7 +141,7 @@ public class Compiler implements couplet.Compiler {
 	}
 	
 	/* (non-Javadoc)
-	 * @see canto.Compiler#getIntermediateCode()
+	 * @see couplet.Compiler#getIntermediateCode()
 	 */
 	@Override
 	public couplet.IntermediateCode getIC() {

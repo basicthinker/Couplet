@@ -1,7 +1,7 @@
 package couplet;
 
 /**
- * 目标码的顶层接口
+ * 目标码的顶层接口，独立于语言版本
  */
 public interface TargetCode {
 

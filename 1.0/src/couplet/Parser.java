@@ -3,7 +3,7 @@ package couplet;
 import java.util.List;
 
 /**
- * 语法分析器的顶层接口 
+ * 语法分析器的顶层接口，独立于语言版本
  */
 public interface Parser {
 	

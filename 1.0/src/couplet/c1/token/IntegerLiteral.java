@@ -23,7 +23,7 @@ public class IntegerLiteral extends TokenBase {
 	}
 
 	/* (non-Javadoc)
-	 * @see canto.c1.Token#getAttribute()
+	 * @see couplet.c1.Token#getAttribute()
 	 */
 	@Override
 	public Integer getAttribute() {

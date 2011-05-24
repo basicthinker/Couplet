@@ -17,7 +17,7 @@ public class Main {
 		try {			
 
 			// 检查文件名，并去除扩展名
-			String fullName = args.length > 0 ? args[0] : "sample/C1-Sample.canto";
+			String fullName = args.length > 0 ? args[0] : "sample/C1-Sample.couplet";
 			String nonextName = null;
 			
 			if ((fullName != null) && (fullName.length() > 0)) {

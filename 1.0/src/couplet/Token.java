@@ -15,10 +15,22 @@ public interface Token {
 	 */
 	public int getColumn();
 	
+	/**
+	 * 得到Token的相应显示字符串
+	 * @return
+	 */
 	public String getLexeme();
 	
+	/**
+	 * 得到Token对应的值
+	 * @return
+	 */
 	public Object getAttribute();
 	
+	/**
+	 * 得到Token的类型
+	 * @return
+	 */
 	public int getTokenType();
 	
 }

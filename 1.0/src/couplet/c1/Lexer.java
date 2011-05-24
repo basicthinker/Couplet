@@ -35,7 +35,7 @@ public class Lexer implements couplet.Lexer {
 	}
 	
 	/* (non-Javadoc)
-	 * @see canto.Lexer#open(java.io.InputStreamReader)
+	 * @see couplet.Lexer#open(java.io.InputStreamReader)
 	 */
 	@Override
 	public void open(InputStreamReader inStr) throws IOException {
@@ -45,7 +45,7 @@ public class Lexer implements couplet.Lexer {
 	}
 
 	/* (non-Javadoc)
-	 * @see canto.Lexer#scan()
+	 * @see couplet.Lexer#scan()
 	 */
 	@Override
 	public void scan() throws CompileException {

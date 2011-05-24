@@ -1,7 +1,7 @@
 package couplet;
 
 /**
- * 符号表的顶层接口
+ * 符号表的顶层接口，存储任何语言都需要的变量信息
  */
 public interface SymbolTable<INFO_TYPE> {
 	

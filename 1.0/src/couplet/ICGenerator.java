@@ -2,7 +2,7 @@ package couplet;
 
 /**
  * @author Goodness
- *
+ * 中间代码产生器顶层接口，包涵生成中间代码过程中所需要的一般方法
  */
 public interface ICGenerator {
 

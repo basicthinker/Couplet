@@ -1,5 +1,10 @@
 package couplet;
 
+/**
+ * 目标代码生成器顶层接口，独立于语言版本
+ * @author Goodness
+ *
+ */
 public interface TCGenerator {
 	
 	/**
