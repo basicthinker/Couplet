@@ -4,7 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import couplet.CantoException;
+import couplet.CoupletException;
 import couplet.TargetCode;
 import couplet.c1.error.CompileException;
 import couplet.c1.error.ErrorRecord;
@@ -56,7 +56,7 @@ public class IntelEmitter implements couplet.TCEmmiter, X86Visitor {
 	}
 
 	@Override
-	public void emmit(TargetCode tc) throws CantoException, IOException {
+	public void emmit(TargetCode tc) throws CoupletException, IOException {
 		try {
 			((X86TargetCode)tc).accept(this);
 			outBuf.close();

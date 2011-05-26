@@ -18,9 +18,9 @@ public interface Lexer {
 	
 	/**
 	 * 浏览检查整个输入流，得到Token链表
-	 * @throws CantoException
+	 * @throws CoupletException
 	 */
-	public void scan() throws CantoException;
+	public void scan() throws CoupletException;
 	
 	/**
 	 * 得到Token链表

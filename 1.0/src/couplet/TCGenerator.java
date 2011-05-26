@@ -18,7 +18,7 @@ public interface TCGenerator {
 	 * @return 目标代码生成是否成功
 	 * @throws Exception 
 	 */
-	public void generateTC() throws CantoException;
+	public void generateTC() throws CoupletException;
 	
 	/**
 	 * 获取生成的目标代码

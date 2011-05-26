@@ -3,7 +3,7 @@ package couplet.c1;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import couplet.CantoException;
+import couplet.CoupletException;
 import couplet.c1.error.AssemblyException;
 
 
@@ -65,7 +65,7 @@ public class Main {
 			
 			System.out.println("编译成功！");
 			
-		} catch (CantoException e) {
+		} catch (CoupletException e) {
 			e.outputInfo(System.out);
 		} catch (Exception e) {
 			e.printStackTrace();

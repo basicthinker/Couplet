@@ -1,7 +1,7 @@
 package couplet;
 
 /**
- * Canto语言错误记录的顶层接口
+ * couplet语言错误记录的顶层接口
  * @author Administrator
  *
  */

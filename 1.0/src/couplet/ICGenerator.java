@@ -17,7 +17,7 @@ public interface ICGenerator {
 	 * @return 中间代码生成是否成功
 	 * @throws Exception 
 	 */
-	public void generateIC() throws CantoException;
+	public void generateIC() throws CoupletException;
 	
 	/**
 	 * 获取生成的中间代码

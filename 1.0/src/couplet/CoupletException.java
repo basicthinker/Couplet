@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Canto异常类的顶层抽象类
+ * couplet异常类的顶层抽象类
  */
 @SuppressWarnings("serial")
-public abstract class CantoException extends Exception {
+public abstract class CoupletException extends Exception {
 	
 	/**
 	 * 输出异常信息

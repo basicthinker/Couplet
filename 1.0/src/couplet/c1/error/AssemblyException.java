@@ -6,11 +6,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import couplet.CantoException;
+import couplet.CoupletException;
 
 
 @SuppressWarnings("serial")
-public class AssemblyException extends CantoException {
+public class AssemblyException extends CoupletException {
 
 	private String info;
 	

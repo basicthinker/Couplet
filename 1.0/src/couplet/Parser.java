@@ -18,7 +18,7 @@ public interface Parser {
 	 * @return 编译是否成功
 	 * @throws Exception
 	 */
-	public void parse() throws CantoException;
+	public void parse() throws CoupletException;
 	
 	/**
 	 * 获取生成的AST

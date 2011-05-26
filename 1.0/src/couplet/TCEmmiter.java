@@ -19,9 +19,9 @@ public interface TCEmmiter {
 	/**
 	 * 开始将目标代码转化成字符流，并发射到相应媒介中
 	 * @param tc 源目标代码
-	 * @throws CantoException 需抛出的和语言相关的异常
+	 * @throws CoupletException 需抛出的和语言相关的异常
 	 * @throws IOException 需抛出的输入输出异常
 	 */
-	public void emmit(TargetCode tc) throws CantoException, IOException;
+	public void emmit(TargetCode tc) throws CoupletException, IOException;
 	
 }

@@ -23,9 +23,9 @@ public interface Compiler {
 	
 	/**
 	 * 开始编译，编译的入口程序
-	 * @throws CantoException 抛出编译过程中产生的异常
+	 * @throws CoupletException 抛出编译过程中产生的异常
 	 */
-	public void compile() throws CantoException;
+	public void compile() throws CoupletException;
 	
 	/**
 	 * 输出错误

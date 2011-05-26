@@ -7,11 +7,11 @@ import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import java.util.List;
 
-import couplet.CantoException;
+import couplet.CoupletException;
 
 
 @SuppressWarnings("serial")
-public class CompileException extends CantoException {
+public class CompileException extends CoupletException {
 
 	protected List<ErrorRecord> errorList;
 	
